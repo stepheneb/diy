@@ -1,0 +1,11 @@
+xml.activity do
+  if timestamp
+    xml.timestamp(timestamp)
+  end
+  xml.id(activity.id)
+  xml.name(activity.name)
+  xml.public(activity.public)
+  if ! timestamp
+    xml << render(:partial => 'user', :locals => {:user => activity.user, :timestamp => nil}) 
+  end
+end

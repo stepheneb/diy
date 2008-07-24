@@ -1,0 +1,10 @@
+--- 
+:application_name: ITSI Do It Yourself
+:page_title_prefix: ITSI DIY
+:logo: itsi_logo.gif
+:home_link: http://itsi.concord.org/
+:stylesheet: itsi
+:external_otrunk_activities_title: External OTrunk Activities
+:show_external_otrunk_activities: false
+:hide_activities: false
+:hide_models: false

@@ -1,0 +1,9 @@
+<% content = web_content(params[:content], params[:textile] == 'true') -%>
+<%= content %>
+<% errors = xhtml_errors?(content)
+  unless errors.blank? -%>
+  <div class="xhtmlError">
+    <h3>XHTML Errors Detected: </h3>
+    <pre><%= web_content(errors.join("\n"), false) %></pre>
+  </div>
+<% end -%>

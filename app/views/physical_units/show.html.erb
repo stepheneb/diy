@@ -1,0 +1,33 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Show',
+  :authorable_object => @physical_unit,
+  :all_viewable_objects => @all_viewable_physical_units, 
+  :all_editable_objects => @all_editable_physical_units }) %>
+
+<div class="pageEdit">
+  <p>
+    <span class="SectionTitle">Name: </span><%= @physical_unit.name %>
+  </p>
+  <p>
+    <span class="SectionTitle">Quantity measured: </span><%= @physical_unit.quantity %>
+  </p>
+  <p>
+    <span class="SectionTitle">Description:</span><br />
+    <%= @physical_unit.description  %>
+  </p>
+  <p>
+    <span class="SectionTitle">Unit symbol: </span><%= @physical_unit.unit_symbol %>
+  </p>
+  <p>
+    <span class="SectionTitle">Unit symbol (in plain text): </span><%= @physical_unit.unit_symbol_text %>
+  </p>
+  <p>
+    Is this an SI unit? <br />
+    Is it one of the seven base units from which the other units are derived?
+  <p>
+    <span class="SectionTitle">SI: <%= boolean_to_yes_no(@physical_unit.si) %></span>&nbsp;&nbsp;&nbsp;
+    <span class="SectionTitle">Base Unit: <%= boolean_to_yes_no(@physical_unit.base_unit) %></span>&nbsp;&nbsp;&nbsp;
+  </p>
+</div>

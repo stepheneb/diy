@@ -1,0 +1,56 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => nil,
+  :function => 'Index',
+  :authorable_object_class => Model, 
+  :authorable_object_pages => @model_pages,
+  :all_viewable_objects => @all_viewable_models, 
+  :all_editable_objects => @all_editable_models }) %> 
+
+<div class="activityList">
+<table cellpadding="5" cellspacing="0">
+    <% for model in @models
+      model_activities =  model.activities.select {|a| a.contains_active_model(model) } %>
+    <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+      <td width="20px" >
+        <%= link_to 'Run', sail_jnlp_run_url(:id => model, :vid => current_user.vendor_interface.id, :uid => current_user.id, :savedata => true, :authoring => nil, :nobundles => (if model.nobundles then "nobundles" else "" end)),
+        :title => "Start the model: #{model.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> <br />
+        <%= link_to 'Show', model_path(model), :title => 'Show the model specification' %><br />
+        <% restrict_to 'admin || manager || teacher || member' do %>
+          <%= link_to 'Copy', {:action => 'copy', :id => model, :page => params[:page] },
+          :title => "Make a copy of the model: '#{model.name}' and start editing it." %><br />
+          <% if model.changeable?(current_user) %>
+            <%= link_to 'Edit', edit_model_path(model), :title => "Make changes in #{model.name}." %><br />
+            <% if model_activities.length == 0 -%>
+              <%= link_to 'Delete', model_path(model), :confirm => "Are you sure you want to delete the model: #{model.name}?", :method => :delete %>
+            <% else -%>
+              <%= link_to 'Delete', '#', :title => "This model can't be deleted because it is used by #{pluralize(model.activities.length, 'activity')}." %>
+            <% end -%>
+          <% end -%>
+        <% end %>
+
+      </td>
+      <td width="100%">
+        <span class="listTitle"><%= model.id %>: <%= h(model.name) %>, <%= model.model_type.name %></span><br />
+        <%= h(truncate(model.description, 160)) %><br />
+        <span class="modelAttribute">
+          DIY Author: <strong><%= model.user.name %></strong>; 
+          Credits: <%= model.credits %>
+          <% if model.parent %>
+	    ; Copied from: <%= model.parent_id %> (<%= link_to "compare", :action => "compare", :id => model.id, :other => model.parent_id %>)
+	      <% end %>
+		  <br/>
+          <%= pluralize(model_activities.length, 'activity uses', 'activities use') %> this model.
+          
+          <% if model_activities.length > 0 %>
+            Show:
+            <select onchange="window.location = this.value">
+              <%= options_for_select model_activities.collect {|a| ["#{a.id}: #{truncate(a.name, 40)}", url_for(:controller => '/activities', :action => 'show', :id => a.id)] }.unshift(['Select activity:', url_for(:controller => '/models', :action => "index", :page => session[:page] || 1 )]) %>
+            </select>
+          <% end %>
+        </span>
+      </td>
+    </tr>
+    <% end %>
+</table>
+</div>

@@ -1,0 +1,39 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => nil,
+  :function => 'Create',
+  :authorable_object => @otrunk_report_template,
+  :authorable_object_class => OtrunkReportTemplate, 
+  :all_viewable_objects => @all_viewable_otrunk_report_templates, 
+  :all_editable_objects => @all_editable_otrunk_report_templates }) %> 
+
+<div class="pageEdit">
+<% form_for(:otrunk_report_template, :url => otrunk_report_templates_path, :html => { :method => :post }) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+      <%= submit_tag 'Create' %> <%= submit_tag 'Create and keep editing' %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+  <%= render :partial => 'form', :object => f %>
+  <div class="bottom">
+    <div class='editbox'>
+      <%= submit_tag 'Create' %> <%= submit_tag 'Create and keep editing' %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+<% end %>
+</div>
+
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => nil,
+  :function => 'Create',
+  :authorable_object => @otrunk_report_template,
+  :authorable_object_class => OtrunkReportTemplate, 
+  :all_viewable_objects => @all_viewable_otrunk_report_templates, 
+  :all_editable_objects => @all_editable_otrunk_report_templates }) %> 

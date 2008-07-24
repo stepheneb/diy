@@ -1,0 +1,38 @@
+<tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+  <td width="20px" >
+    <% restrict_to 'manager || admin' do %>
+      <%= link_to 'Show', user %><br />
+    <% end -%>
+    <% restrict_to 'admin' do %>
+      <%= link_to 'Edit', edit_user_path(user) %><br />
+      <%= link_to 'Delete', user, :confirm => "Are you sure you want to delete the user: #{user.name}, login: #{user.login}, email: #{user.email}?", :method => :delete %>
+    <% end -%>
+  </td>
+  <td width="100%">
+    <span class="listTitle"><%= user.id %>: <%= h(user.name) %></span><br />
+    <span class="modelAttribute">
+      Roles: <strong><%= user.roles.collect {|r| r.title }.join(', ') %></strong>;
+      Username: <strong><%= user.login %></strong>;
+      Email: <strong><%= user.email %></strong>; 
+      Probeware: <strong><%= user.vendor_interface.name %></strong><br />
+      Activities authored: <strong><%= user.activities.length %></strong>
+      <% if user.activities.length > 0 %>
+        <select onchange="window.location = this.value">
+          <%= options_for_select user.activities.collect {|a| ["#{a.id}: #{truncate(a.name, 36)}", activity_path(a)] }.unshift(['Select Activity:', url_for(:action => "index", :page => session[:page] || 1 )]) %>
+        </select>
+      <% end %>
+      , Activities with learner data: <strong><%= user.learners.length %></strong>
+      <% if user.learners.length > 0 %>
+        <select onchange="window.location = this.value">
+          <%= options_for_select user.learners.find_all {|l| l.runnable}.collect {|l| a = l.runnable; ["#{a.id}: #{truncate(a.name, 36)}", url_for(:controller => l.runnable_type.underscore.pluralize, :action => "usage", :id => l.runnable_id)]}.unshift(['Select Activity:', url_for(:action => "index", :page => session[:page] || 1 )]) %>
+        </select>
+      <% end %><br />
+      Models authored: <strong><%= user.models.length %></strong>
+      <% if user.models.length > 0 %>
+        <select onchange="window.location = this.value">
+          <%= options_for_select user.models.collect {|a| ["#{a.id}: #{truncate(a.name, 36)}", model_path(a)] }.unshift(['Select Model:', url_for(:action => "index", :page => session[:page] || 1 )]) %>
+        </select>
+      <% end %><br />         
+    </span>
+  </td>
+</tr>

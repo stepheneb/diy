@@ -1,0 +1,38 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Create',
+  :authorable_object => @model_type,
+  :authorable_object_class => ModelType, 
+  :all_viewable_objects => @all_viewable_model_types, 
+  :all_editable_objects => @all_editable_model_types }) %>
+
+<div class="pageEdit">
+<% form_for(:model_type, :url => model_types_path, :html => { :method => :post }) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+      <%= submit_tag "Create" %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+  <%= render :partial => 'form', :object => f %>
+  <div class="bottom">
+    <div class='editbox'>
+      <%= submit_tag "Create" %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+<% end %>
+</div>
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => false,
+  :function => 'Create',
+  :authorable_object => @model_type,
+  :authorable_object_class => ModelType, 
+  :all_viewable_objects => @all_viewable_model_types, 
+  :all_editable_objects => @all_editable_model_types }) %>

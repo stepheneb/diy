@@ -1,0 +1,28 @@
+<% differences = @otrunk_report_template.html_difference(@other_otrunk_report_template) -%>
+<p>
+	<table>
+		<tr>
+			<td rowspan='4'>Key</td>
+			<td><span class="match">No changes</span></td>
+		</tr>
+		<tr><td><span class="only_a">Only in <%= @otrunk_report_template.id %></td></tr>
+		<tr><td><span class="only_b">Only in <%= @other_otrunk_report_template.id %></span></td></tr>
+		<tr><td><span class="changed">Changed in both</span></td></tr>
+	</table>
+</p>
+<p>
+	<table style="table-layout: fixed">
+		<tr>
+			<td>  </td>
+			<td>Current otrunk_report_template (<%= @otrunk_report_template.id %>)</td>
+			<td>Parent (<%= @other_otrunk_report_template.id %>)</td>
+		</tr>
+		<% differences.keys.sort.each do |k| -%>
+		<tr valign='top'>
+			<td style='width: 250px'><%= k %></td>
+			<td style='width: 500px'><%= differences[k][0].gsub("\n","<br/>") %></td>
+			<td style='width: 500px'><%= differences[k][1].gsub("\n","<br/>") %></td>
+		</tr>
+		<% end -%>
+	</table>
+</p>

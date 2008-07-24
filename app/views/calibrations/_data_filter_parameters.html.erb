@@ -1,0 +1,13 @@
+<p><%= data_filter.description %></p>
+<% if data_filter.k0_active %>
+  <span class="SectionTitle">k0 value: </span><%= text_field 'calibration', 'k0', :size => 8 %><br />
+<% end %>
+<% if data_filter.k1_active %>
+  <span class="SectionTitle">k1 value: </span><%= text_field 'calibration', 'k1', :size => 8 %><br />
+<% end %>
+<% if data_filter.k2_active %>
+  <span class="SectionTitle">k2 value: </span><%= text_field 'calibration', 'k2', :size => 8 %><br />
+<% end %>
+<% if data_filter.k3_active %>
+  <span class="SectionTitle">k3 value: </span><%= text_field 'calibration', 'k3', :size => 8 %><br />
+<% end %>

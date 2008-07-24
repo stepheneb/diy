@@ -1,0 +1,7 @@
+<div class="pageHeader">
+  <h2>Select probeware vendor interface:</h2>
+</div>
+<%= start_form_tag :action => 'update_interface', :id => current_user.vendor_interface.id %>
+  <%= render :partial => 'interface' %>
+  <%= submit_tag 'Save' %>
+<%= end_form_tag %>

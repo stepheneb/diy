@@ -1,0 +1,9 @@
+<%= error_messages_for :model_type %>
+<p><span class="SectionTitle">Name</span><br /><%= form.text_field :name, :size => 72 %></p>
+<p><span class="SectionTitle">Url</span><br /><%= form.text_field :url, :size => 72 %></p>
+<p><span class="SectionTitle">Authorable <%= form.check_box :authorable %></p>
+<p><span class="SectionTitle">Sizeable <%= form.check_box :sizeable %></p>
+<p><span class="SectionTitle">OTrunk Object Class</span><br /><%= form.text_field :otrunk_object_class, :size => 72 %></p>
+<p><span class="SectionTitle">OTrunk View Class</span><br /><%= form.text_field :otrunk_view_class, :size => 72 %></p>
+<p><span class="SectionTitle">Description</span><br /><%= form.text_area :description, :cols => 96, :rows => 4 %></p>
+<p><span class="SectionTitle">Credits</span><br /><%= form.text_area :credits, :cols => 96, :rows => 4  %></p>

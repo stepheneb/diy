@@ -1,0 +1,53 @@
+
+#
+# SDS configuration file
+#
+
+#development:
+#  host: http://localhost:3001/5
+#  jnlp_id: 19
+#  curnit_id: 63
+#  username: user
+#  password: password
+#
+#production:
+#  host: http://localhost:3001/5
+#  jnlp_id: 19
+#  curnit_id: 63
+#  username: user
+#  password: password
+#
+#test:
+#  host: http://localhost:3001/5
+#  jnlp_id: 19
+#  curnit_id: 63
+#  username: user
+#  password: password
+#
+# development:
+#   host: http://rails.dev.concord.org/sds/5
+#   jnlp_id: 19
+#   curnit_id: 63
+#   username: user
+#   password: password
+# 
+# production:
+#   host: http://rails.dev.concord.org/sds/5
+#   jnlp_id: 19
+#   curnit_id: 63
+#   username: user
+#   password: password
+
+development:
+  host: http://saildataservice.concord.org/5
+  jnlp_id: 19
+  curnit_id: 63
+  username: 
+  password: 
+
+production:
+  host: http://saildataservice.concord.org/5
+  jnlp_id: 19
+  curnit_id: 63
+  username: 
+  password: 

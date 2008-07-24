@@ -1,0 +1,18 @@
+<p>
+  <b>Probe type:</b>
+  <%=h @probe.probe_type_id %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%=h @probe.name %>
+</p>
+
+<p>
+  <b>Model:</b>
+  <%=h @probe.model %>
+</p>
+
+
+<%= link_to 'Edit', edit_probe_path(@probe) %> |
+<%= link_to 'Back', probes_path %>

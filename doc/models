@@ -1,0 +1,35 @@
+User
+  belongs_to :vendor_interface
+  has_and_belongs_to_many :roles, options = {:join_table => "#{RAILS_DATABASE_PREFIX}roles_users"}
+  has_many :activities
+  has_many :memberships
+  has_many :groups, :through => :memberships
+  has_many :roles, :through => :memberships
+  has_many :learners
+
+Learner
+  belongs_to :user
+  has_many :activities
+  has_many :learner_sessions
+
+Activity
+  belongs_to :probe_type
+  belongs_to :user
+  has_many :learner_sessions
+  has_many :learners, :through => :learner_sessions
+
+LearnerSession
+  belongs_to :learner
+  belongs_to :activity
+  
+Group
+  has_many :memberships
+  has_many :users, :through => :memberships
+
+Membership
+  belongs_to :user
+  belongs_to :group
+  belongs_to :role
+
+Role
+  has_many :memberships

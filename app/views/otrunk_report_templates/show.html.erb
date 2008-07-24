@@ -1,0 +1,34 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Show',
+  :authorable_object => @otrunk_report_template,
+  :authorable_object_class => OtrunkReportTemplate, 
+  :all_viewable_objects => @all_viewable_otrunk_report_templates, 
+  :all_editable_objects => @all_editable_otrunk_report_templates }) %> 
+
+<p><span class="SectionTitle">Name: </span><%= @otrunk_report_template.name%></p>
+<p><span class="SectionTitle">DIY Author: </span><%= @otrunk_report_template.user.name%></p>
+<p><span class="SectionTitle">Public: </span><strong><%= boolean_to_yes_no(@otrunk_report_template.public) %></strong></p>
+<p><span class="SectionTitle">Description:</span><br /><%= @otrunk_report_template.description %></p>
+<% restrict_to 'admin || manager' do %>
+<p><span class="SectionTitle">External otml url:</span><br /><%= @otrunk_report_template.external_otml_url %></p>
+<% unless @otrunk_report_template.external_otml_url.blank? %>
+  <p><span class="SectionTitle">Always get the otml update from external url:</span>
+  <%= boolean_to_yes_no(@otrunk_report_template.external_otml_always_update) %></p>
+<% end %>
+
+<p><span class="SectionTitle">OTML:</span><br /><%= display_xml(@otrunk_report_template.otml) %></p>
+<% end %>
+
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => false,
+  :function => 'Show',
+  :authorable_object => @otrunk_report_template,
+  :authorable_object_class => OtrunkReportTemplate, 
+  :all_viewable_objects => @all_viewable_otrunk_report_templates, 
+  :all_editable_objects => @all_editable_otrunk_report_templates }) %> 
+
+<%= link_to 'Edit', edit_otrunk_report_template_path(@otrunk_report_template) %> |
+<%= link_to 'Back', otrunk_report_templates_path %>

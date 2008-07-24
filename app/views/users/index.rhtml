@@ -1,0 +1,14 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Index',
+  :authorable_object_class => User, 
+  :all_viewable_objects => @all_viewable_users, 
+  :all_editable_objects => @all_editable_users }) %> 
+
+<div class="activityList">
+  <table cellpadding="5" cellspacing="0">
+    <%= render :partial => 'user', :collection => @users %>
+  </table>
+</div>
+

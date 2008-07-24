@@ -1,0 +1,56 @@
+<%= error_messages_for :calibration %>
+<p>
+  <span class="SectionTitle">Name</span><br />
+  <%= form.text_field :name, :size => 72 %>
+</p>
+<p>
+  <span class="SectionTitle">Description</span><br />
+  <%= form.text_area :description, :cols => 96, :rows => 4  %>
+</p>
+<p>
+  <span class="SectionTitle">What type of probe is this calibration for: </span>
+  <%= form.select(:probe_type_id, ProbeType.find(:all).map {|pt| [pt.name, pt.id]}) %>
+</p>
+<p>
+  <span class="SectionTitle">What are the physical units this calibration returns: </span>
+  <%= form.select(:physical_unit_id, PhysicalUnit.find(:all).map {|pu| ["#{pu.quantity}: #{pu.name}", pu.id]}) %>
+</p>
+
+<p>
+  <span class="SectionTitle">What are the default axis settings: </span><br />
+  <table>
+    <tr><td></td><td><b>Y Axis</b></td></tr>
+    <tr><td>Maximum:</td><td><%= form.text_field :y_axis_max, :size => 8 %></td></tr>
+    <tr><td>Minimum:</td><td><%= form.text_field :y_axis_min, :size => 8 %></td></tr>
+    <tr>
+      <td><b>X Axis</b></td>
+      <td>Minimum:</td><td><%= form.text_field :x_axis_min, :size => 8 %></td>
+      <td>&nbsp;&nbsp;&nbsp;</td>
+      <td>Maximum:</td><td><%= form.text_field :x_axis_max, :size => 8 %></td>
+    </tr>
+  </table>
+</p>
+
+<% if controller.action_name == 'edit' %>
+  <p>
+    <span class="SectionTitle">Is this is the default calibration for the probe type: <%= @calibration.probe_type.name %>?
+    </span><%= form.check_box :default_calibration %>
+  </p>
+<% end %>
+
+<p>
+  <span class="SectionTitle">Which data filter should be used: </span>
+  <%= form.select(:data_filter_id, DataFilter.find(:all).map {|df| [df.name, df.id]}) %>
+</p>
+
+<%= observe_field 'calibration_data_filter_id', 
+  :frequency => 1,
+  :update => 'calibration_parameters',
+  :with => "'data_filter_id=' + escape(value)",
+  :url => { :action => "data_filter_parameters" } %>
+
+<p>
+  <div id='calibration_parameters'>
+    <%= render :partial => 'data_filter_parameters', :object => form, :locals => { :data_filter => @calibration.data_filter } %>
+  </div>
+</p>

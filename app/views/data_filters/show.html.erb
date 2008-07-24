@@ -1,0 +1,28 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Show',
+  :authorable_object => @data_filter,
+  :all_viewable_objects => @all_viewable_data_filters, 
+  :all_editable_objects => @all_editable_data_filters }) %>
+
+<div class="pageEdit">
+  <p>
+    <span class="SectionTitle">Name: </span><%= @data_filter.name %>
+  </p>
+  <p>
+    <span class="SectionTitle">Description:</span><br />
+    <%= @data_filter.description  %>
+  </p>
+  <p>
+    <span class="SectionTitle">Otrunk object class: </span><%= @data_filter.otrunk_object_class %>
+  </p>
+  <p>
+    A list of the equation coefficients that are used in calibrations based on the <% @data_filter.name %> data filter:
+  <p>
+    <span class="SectionTitle">k0: </span><%= boolean_to_yes_no(@data_filter.k0_active) %>&nbsp;&nbsp;&nbsp;
+    <span class="SectionTitle">k1: </span><%= boolean_to_yes_no(@data_filter.k1_active) %>&nbsp;&nbsp;&nbsp;
+    <span class="SectionTitle">k2: </span><%= boolean_to_yes_no(@data_filter.k2_active) %>&nbsp;&nbsp;&nbsp;
+    <span class="SectionTitle">k3: </span><%= boolean_to_yes_no(@data_filter.k3_active) %>&nbsp;&nbsp;&nbsp;
+  </p>
+</div>

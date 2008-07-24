@@ -1,0 +1,39 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Create',
+  :authorable_object => @activity,
+  :authorable_object_class => Activity, 
+  :all_viewable_objects => @all_viewable_activities, 
+  :all_editable_objects => @all_editable_activities }) %>
+
+<div class="pageEdit">
+<% form_for(:activity, @activity, :url => { :action => "create" }, :html => { :id => 'edit_form' }) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+      <%= submit_tag "Create" %> <%= submit_tag 'Create and keep editing' %> <%= submit_tag 'Cancel' %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+  <%= render :partial => 'form' %>
+  <div class="bottom">
+    <div class='editbox'>
+      <%= submit_tag "Create" %> <%= submit_tag 'Create and continue editing' %> <%= submit_tag 'Cancel' %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+<% end %>
+</div>
+
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => false,
+  :function => 'Create',
+  :authorable_object => @activity,
+  :authorable_object_class => Activity, 
+  :all_viewable_objects => @all_viewable_activities, 
+  :all_editable_objects => @all_editable_activities }) %>

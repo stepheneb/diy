@@ -1,0 +1,43 @@
+<div class="pageHeader">
+  <p><span class="pageTitle"><%= @class_name_titleized %> Usage: <%= h(@external_otrunk_activity.name) %></span></p>
+  <p>
+    <% tooltip = "List all the public #{@class_name_titleized.pluralize}" %>
+    <% if current_user.email != 'anonymous'
+        tooltip <<  " as well any #{@class_name_titleized.pluralize} you have made and marked as private."
+      end %>
+    <%= link_to "Return to #{@class_name_titleized} List", {:action => 'index', :page => session[:page] || 1 }, :title => tooltip  %>
+  </p>
+  <div class='clearBoth'>&nbsp;</div>
+  <hr />
+</div>
+
+<div class="pageEdit">
+  <p>This page lists each user who has run the <%= @class_name_titleized %>: <span class="activityName"><%= h(@external_otrunk_activity.name) %></span>. You can view 
+    any person's work on this <%= @class_name_titleized %> by clicking one of the links below. This will start up the <%= @class_name_titleized %> however saving data back 
+    to the portal will be disabled. Viewing allows you to see other people's work without any danger of accidently 
+    changing their data. While viewing their work you can use the menu command <span class="menuCommand">File: Export to html ...</span> 
+    to make a complete copy of the <%= @class_name_titleized %> and all their data as a set of html files you can view or print in your browser.
+  </p>
+  <% if @learners.length == 0 %>
+  <p>Nobody has run this <%= @class_name_titleized %> as a learner yet.</p>
+  <% else %>
+  <p>
+    <ul>
+      <% @learners.each do |learner| %>
+      <li>
+        <%= link_to "View #{learner.user.name}'s work on this #{@class_name_titleized}", {:action => 'sail_jnlp', :uid => learner.user.id, :vid => current_user.vendor_interface.id, :id => @external_otrunk_activity, :savedata => nil, :reporting => ((@external_otrunk_activity.custom_reporting_mode && ! @external_otrunk_activity.custom_reporting_mode.empty?) ? @external_otrunk_activity.custom_reporting_mode : nil), :nobundles => '' }, {:title => "View the work #{learner.user.name} has done on the  #{@class_name_titleized} '#{h(@external_otrunk_activity.name)}'. Saving data back to this portal will be disabled."} %>, 
+        <span class="modelAttribute"><%= link_to "(html)", {:action => 'html_export_jnlp', :uid => learner.user.id, :vid => current_user.vendor_interface.id, :id => @external_otrunk_activity, :savedata => nil, :reporting => ((@external_otrunk_activity.custom_reporting_mode && ! @external_otrunk_activity.custom_reporting_mode.empty?) ? @external_otrunk_activity.custom_reporting_mode : nil), :nobundles => '' }, {:title => "View the html version of the work."} %>, 
+        (<%= pluralize(learner.learner_sessions.length, 'session') %>)</span> <br  />
+      </li>
+      <% end %>
+    </ul>
+  </p>
+  <% end %>  
+</div>
+
+<div class="pageHeader">
+  <div class='clearBoth'>&nbsp;</div>
+  <hr />
+  <%= link_to "Return to #{@class_name_titleized} List", {:action => 'index', :page => session[:page] || 1 }, :title => tooltip  %> 
+</div>
+

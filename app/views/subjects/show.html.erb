@@ -1,0 +1,23 @@
+<p>
+  <b>Name:</b>
+  <%=h @subject.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @subject.description %>
+</p>
+
+<p>
+  <b>Created on:</b>
+  <%=h @subject.created_on %>
+</p>
+
+<p>
+  <b>Updated on:</b>
+  <%=h @subject.updated_on %>
+</p>
+
+
+<%= link_to 'Edit', edit_subject_path(@subject) %> |
+<%= link_to 'Back', subjects_path %>

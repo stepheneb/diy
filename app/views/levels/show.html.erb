@@ -1,0 +1,23 @@
+<p>
+  <b>Name:</b>
+  <%=h @level.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @level.description %>
+</p>
+
+<p>
+  <b>Created on:</b>
+  <%=h @level.created_on %>
+</p>
+
+<p>
+  <b>Updated on:</b>
+  <%=h @level.updated_on %>
+</p>
+
+
+<%= link_to 'Edit', edit_level_path(@level) %> |
+<%= link_to 'Back', levels_path %>

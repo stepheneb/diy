@@ -1,0 +1,27 @@
+<h1>Editing probe</h1>
+
+<%= error_messages_for :probe %>
+
+<% form_for(@probe) do |f| %>
+  <p>
+    <b>Probe type</b><br />
+    <%= f.text_field :probe_type_id %>
+  </p>
+
+  <p>
+    <b>Name</b><br />
+    <%= f.text_field :name %>
+  </p>
+
+  <p>
+    <b>Model</b><br />
+    <%= f.text_field :model %>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @probe %> |
+<%= link_to 'Back', probes_path %>

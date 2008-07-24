@@ -1,0 +1,7 @@
+--- 
+:address: smtp.host.com
+:authentication: :login
+:password: abc123
+:user_name: username
+:port: 25
+:domain: mywebapp.host.com

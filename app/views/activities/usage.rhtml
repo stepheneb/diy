@@ -1,0 +1,42 @@
+<div class="pageHeader">
+  <p><span class="pageTitle">Activity Usage: <%= h(@activity.name) %></span></p>
+  <p>
+    <% tooltip = 'List all the public activities' %>
+    <% if current_user.email != 'anonymous'
+        tooltip <<  " as well any activities you have made and marked as private."
+      end %>
+    <%= link_to 'Return to Activity List', {:action => 'index', :page => session[:page] || 1 }, :title => tooltip  %>
+  </p>
+  <div class='clearBoth'>&nbsp;</div>
+  <hr />
+</div>
+
+<div class="pageEdit">
+  <p>This page lists each user who has run the activity: <span class="activityName"><%= h(@activity.name) %></span>. You can view 
+    any person's work on this activity by clicking one of the links below. This will start up the activity however saving data back 
+    to the Do It Yourself portal will be disabled. Viewing allows you to see other people's work without any danger of accidently 
+    changing their data. While viewing their work you can use the menu command <span class="menuCommand">File: Export to html ...</span> 
+    to make a complete copy of the activity and all their data as a set of html files you can view or print in your browser.
+  </p>
+  <% if @learners.length == 0 %>
+  <p>Nobody has run this activity as a learner yet.</p>
+  <% else %>
+  <p>
+    <ul>
+      <% @learners.each do |learner| %>
+      <li>
+        <%= link_to "View #{learner.user.name}'s work on this activity", sail_jnlp_view_url(:id => @activity, :vid => current_user.vendor_interface.id, :uid => learner.user.id, :nobundles => ''), {:title => "View the work #{learner.user.name} has done on the activity '#{h(@activity.name)}'. Saving data back to this portal will be disabled."} %>, 
+        <span class="modelAttribute">(<%= pluralize(learner.learner_sessions.length, 'session') %>)</span> <br  />
+      </li>
+      <% end %>
+    </ul>
+  </p>
+  <% end %>  
+</div>
+
+<div class="pageHeader">
+  <div class='clearBoth'>&nbsp;</div>
+  <hr />
+  <%= link_to 'Return to Activity List', {:action => 'index', :page => session[:page] || 1 }, :title => tooltip  %> 
+</div>
+

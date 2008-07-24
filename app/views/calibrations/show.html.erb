@@ -1,0 +1,47 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Show',
+  :authorable_object => @calibration,
+  :all_viewable_objects => @all_viewable_calibrations, 
+  :all_editable_objects => @all_editable_calibrations }) %>
+
+<div class="pageEdit">
+  <p>
+    <span class="SectionTitle">Name: </span><%= @calibration.name %>
+  </p>
+  <% if @calibration.default_calibration %>
+    <p>
+      This is the default calibration for the probe type: <% @calibration.probe_type.name %>
+  <% end %>
+  <p>
+    <span class="SectionTitle">Description:</span><br />
+    <%= @calibration.description  %>
+  </p>
+  <p>
+    <span class="SectionTitle">Probetype: </span><%= @calibration.probe_type.name %>
+  </p>
+  <p>
+    <span class="SectionTitle">Data Filter: </span><%= @calibration.data_filter.name %><br />
+    <%= @calibration.data_filter.description %>
+  </p>
+  <p>
+    <span class="SectionTitle">Units: </span><%= "#{@calibration.physical_unit.quantity}:#{@calibration.physical_unit.name}" %>
+  </p>
+  <p>
+    A list of the equation coefficients that are used in calibrations based on the <% @calibration.data_filter.name %> data filter:
+  <p>
+    <% if @calibration.data_filter.k0_active %>
+      <span class="SectionTitle">k0: </span><%= @calibration.k0 %><br />
+    <% end %>
+    <% if @calibration.data_filter.k1_active %>
+      <span class="SectionTitle">k1: </span><%= @calibration.k1 %><br />
+    <% end %>
+    <% if @calibration.data_filter.k2_active %>
+      <span class="SectionTitle">k2: </span><%= @calibration.k2 %><br />
+    <% end %>
+    <% if @calibration.data_filter.k3_active %>
+      <span class="SectionTitle">k3: </span><%= @calibration.k3 %><br />
+    <% end %>
+  </p>
+</div>

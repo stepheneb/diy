@@ -1,0 +1,7 @@
+<p>
+  <span class="SectionTitle">Select the probeware interface you will be using:</span>
+</p>
+<p>
+  <span class="SectionTitle">Interface: </span>
+  <%= interface.select(:vendor_interface_id,  VendorInterface.find(:all).map { |i| [i.name, i.id] } )%>
+</p>

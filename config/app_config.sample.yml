@@ -1,0 +1,12 @@
+--- 
+:application_name: Do It Yourself
+:page_title_prefix: DIY
+:logo: diy_logo.gif
+:home_link: http://www.concord.org/
+:stylesheet: diy
+:external_otrunk_activities_title: Custom Activities
+:show_external_otrunk_activities: false
+:cache_external_otrunk_activities: false
+:hide_activities: false
+:hide_models: false
+:disable_anonymous_running: true

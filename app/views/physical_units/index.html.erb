@@ -1,0 +1,44 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Index',
+  :authorable_object_pages => @physical_unit_pages,
+  :all_viewable_objects => @all_viewable_physical_units, 
+  :all_editable_objects => @all_viewable_physical_units }) %>
+
+<div class="activityList">
+<table cellpadding="5" cellspacing="0">
+    <% for physical_unit in @physical_units %>
+      <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+        <td width="20px" >
+          <%= link_to 'Show', physical_unit_path(physical_unit), :title => 'Show the physical unit specification' %><br />
+          <% restrict_to 'admin || manager' do %>
+              <%= link_to 'Edit', edit_physical_unit_path(physical_unit), :title => "Make changes in #{physical_unit.name}." %><br />
+          <% end %>   
+          <% restrict_to 'admin || manager' do %> 
+            <%= link_to 'Delete', physical_unit, :confirm => "Are you sure you want to delete Physical Unit: #{physical_unit.full_name}?", 
+              :method => :delete, :title => "Delete Physical Unit: #{@physical_unit.id} #{@physical_unit.name}" %>              
+          <% end %>           
+        </td>
+        <td width="100%">
+          <span class="listTitle"><%= physical_unit.full_name %>, <%= physical_unit.unit_symbol %></span><br />
+          <%= h(truncate(physical_unit.description, 160)) %><br />
+          <span class="modelAttribute">
+            DIY Author: <strong><%= (physical_unit.user ? physical_unit.user.name : "") %></strong><br />
+            <%= pluralize(physical_unit.calibrations.length, 'calibration uses', 'calibrations use') %> <%= physical_unit.quantity %>: <%= h(physical_unit.name) %>.
+            <% if physical_unit.calibrations.length > 0 %>
+              Show:
+              <select onchange="window.location = this.value">
+                <%= options_for_select physical_unit.calibrations.collect {|m| ["#{m.id}: #{truncate(m.name, 40)}", url_for(:controller => '/calibrations', :action => 'show', :id => m.id)] }.unshift(['Select calibration:', url_for(:controller => '/physical_units', :action => "index", :page => session[:page] || 1 )]) %>
+              </select>
+            <% end %>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+</table>
+</div>
+<% content_for(:footer) do %> 
+  <p>When you create a standard unit in the DIY please follow scientific conventions for capitalization and spelling. Here's a <%= link_to 'Unit style guide',
+   'http://confluence.concord.org/display/TMS/Stephen%27s+unit+style+guide', :popup => true %> with pointers to other references. If you are making up your own units just try to be consistent.</p>
+<% end %>

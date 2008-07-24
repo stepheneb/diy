@@ -1,0 +1,29 @@
+
+<p>The <%= APP_PROPERTIES[:application_name] %>  microportal lets students and teachers anywhere build their own probeware activities which can then be run as Java webstart applications on MacOS X, Windows, and Linux computers The activities can be used with probeware from five different vendors: Data Harvest, Fourier, Pasco, ImagiWorks, and Vernier.</p>
+
+
+<% tooltip = 'List all the public activities' %>
+<% 
+  if current_user.email != 'anonymous'
+    tooltip <<  " as well any activities you have made and marked as private."
+  end 
+%>
+<% unless APP_PROPERTIES[:hide_activities] %>
+<p>Click this link <%= link_to "Activities", activities_path, :title => tooltip %> to see the existing activities. You can even make your own!</p>
+
+<div id='activity'>
+  <h3>Try out an activity!</h3>
+  <%= image_tag("boywithaquarium_small.png") %>
+  <ol>
+      <% if current_user.email == 'anonymous' %>
+        <li>Register as a User and Login: <%= link_to "Login/Register", login_path, :title => 'Unless you register and login all your work will be combined with work done by all the other anonymous users.' %> </li>
+      <% end %>
+    <li>If you are using probes make sure and first select the interface you are using: <%= link_to current_user.vendor_interface.name, interface_user_path(current_user) %>.</li>
+    <li>And start the Java webstart activity:   
+      <%= link_to h(@activity.name), {:controller => 'activities', :action => 'sail_jnlp', :uid => current_user.id, :vid => current_user.vendor_interface.id, :id => @activity, :savedata => true , :authoring => nil, :nobundles => ''},
+      :title => "Start #{@activity.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %>   
+    </li>
+  </ol>
+</div>
+<% end %>
+<p>The <%= APP_PROPERTIES[:application_name] %> microportal was developed using the <a href="http://www.rubyonrails.org/">Ruby on Rails</a> web framework and uses Java applications developed at Concord Consortium for the <a href="http://teemss2.concord.org/">TEEMSS2</a> project. Learner data network-persistence is provided by <a href = "http://www.telscenter.org/confluence/display/SAIL">SAIL</a>, the Scalable Architecture for Interactive Learning. Activity assembly, interactive components, and fine-grained persistence provided by Concord Consortium's <a href = "http://confluence.concord.org/display/TMS/OTrunk">OTrunk</a> framework.</p>

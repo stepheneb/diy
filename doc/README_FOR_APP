@@ -1,0 +1,204 @@
+The DIY uses Edge Rails. Run rake doc:rails to create updated rails documentation. View the doc at doc/api/index.html.
+
+Use this README file to introduce your application and point to useful places in the API for learning more.
+Run "rake appdoc" to generate API documentation for your models and controllers.
+
+----
+
+<p>
+<%= in_place_editor_field :current_user, :first_name %> 
+</p>
+<p>
+<%= text_field_with_auto_complete :vendor_interface, :name %>
+</p>
+
+<%= in_place_select_editor_field(
+             :current_user,
+             :vendor_interface,
+             current_user.vendor_interface.name,
+             {},
+             :select_options => @vendor_interfaces) %>
+#             :select_options => options_from_collection_for_select(@vendor_interfaces, 'id', 'name')) %>
+
+
+----Use this README file to introduce your application and point to useful places in the API for learning more.
+Run "rake appdoc" to generate API documentation for your models and controllers.
+
+
+
+<p>
+<%= in_place_editor_field :current_user, :first_name %> 
+</p>
+<p>
+<%= text_field_with_auto_complete :vendor_interface, :name %>
+</p>
+
+<p>
+<%= in_place_editor_field :current_user, :vendor_interface %> 
+</p>
+
+----
+
+----
+
+diy has two kinds of users: registered users and anonymous users
+users have roles within groups: administrator, manager, editor, member
+roles are associated with permissions for viewing, editing, and managing groups and group artifacts
+all users are members of the diy group
+registered users are editors of the diy group
+registered users are managers of their own private group
+editors of groups can create new activities; copy and derive from existing activities; and determine visibility/copying permissions of created activities
+
+users become learners when they try-out activities
+groups have attributes of description, visibility, who can become a member, etc, whether members can 
+registered users can create additional groups
+
+users have many groups through group_membership
+users have many activities through authorship
+learners have many activities through participation
+groups have many activities through publication
+
+----
+
+
+When a user registers in DIY create a sail user in SDS.
+  Save in local user model:
+    sds_sail_user_id
+
+When a user successfully logs check to see if they have a sail user attribute. If not make sail user for them.
+	
+<?xml version="1.0" encoding="UTF-8"?> 
+<user> 
+  <portal-id>5</portal-id> 
+  <uuid>a80c267a-b3a6-11db-9cbd-0016cb896dcd</uuid>
+  <id>929</id> 
+  <first-name>Anonymous</first-name> 
+  <last-name>User</last-name> 
+</user>
+
+When new activity is saved make an sds_offering for it:
+
+	<offering> 
+		<name>Otrunk DIY test</name> 
+		<portal-id>5</portal-id> 
+		<curnit-id>62</curnit-id> 
+		<jnlp-id>19</jnlp-id> 
+	</offering>
+
+	the jnlp and curnit are fixed for now:
+		curnit: teemss2diy_curnit
+		jnlp: teemss2diy_jnlp
+
+	 	<jnlp> 
+	 		<name>sail-otrunk-teemss2diy-test.jnlp</name> 
+	 		<portal-id>5</portal-id> 
+	 		<url>http://localhost:3000/jnlp/sail-otrunk-teemss2diy-test.jnlp</url> 
+	 		<id>19</id> 
+	 	</jnlp>
+	 	
+	 	<curnit> 
+	 		<name>otrunk-curnit-external-diytest</name> 
+	 		<portal-id>5</portal-id> 
+	 		<url>http://localhost:3000/curnits/otrunk-curnit-external-diytest.jar</url> 
+	 		<id>62</id> 
+	 	</curnit>
+
+	save in local Activity model:
+		sds_offering_id
+
+When user runs existing activity first make sure sds_offering exists -- if not make one.
+	Then make sure user is also an sds_sail_user -- if not make them a user
+	Then make sure that the user is a activity_learner-- if not make a workgroup with their sds_sail_user and associate with this sds_offering
+	Then run activity by rendering sds jnlp for activity (offering), workgroup (activity_learner), workgroup_version (shouldn't change from 0) and add as a parameter:
+	
+	user has many activity
+  (user is an author of many activities)
+
+	learner is a user
+	an activity has many particpants
+
+
+		sailotrunk.otmlurl = escaped: <url to activity otml>
+		
+		?sailotrunk.otmlurl=file%3A///home/scott/EclipseWorkspaces/Current/OTrunkExamples/DynamicView/dynamic-view.otml
+		
+When activity usage is displayed find out from SDS:
+	How many workgroups?
+		How many sessions per workgroup?
+		Date of first session.
+		Date of last session.
+	Display as diy username and attributes:
+	Render a jnlp url for showing the activity_learner. If activity_learner is not current_user add the view_only attribute.
+	
+
+----
+
+Probeware: multi-page
+
+----page1 ----
+
+Activity name
+
+*Standards/objectives
+72, 10
+
+Introduction/discovery question
+72, 10
+
+*Thinking about the question
+** text_query (content + text area)
+** optional 2 more text_querys
+
+Materials
+72, 10
+
+Safety
+72, 10
+
+Procedure
+72, 10
+
+Prediction
+72, 10
+** optional 2 queries (text_query and graph_prediction)
+
+Collect Data
+72, 10
+
+Probe Type: 
+
+Observation
+text_query
+
+--- page2 ---
+
+Procedure
+72, 10
+
+Prediction
+72, 10
+** optional 2 queries (text_query and graph_prediction)
+
+Collect Data
+72, 10
+
+Probe Type: 
+
+Observation
+text_query
+
+---- page3 ----
+
+Technical Hints
+
+---- page4 ----
+
+Analysis
+72, 10
+
+Conclusion
+72, 10
+
+Further Investigation
+72, 10
+

@@ -1,0 +1,40 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Index',
+  :authorable_object_pages => @data_filter_pages,
+  :all_viewable_objects => @all_viewable_data_filters, 
+  :all_editable_objects => @all_editable_data_filters }) %>
+
+<div class="activityList">
+<table cellpadding="5" cellspacing="0">
+    <% for data_filter in @data_filters %>
+      <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+        <td width="20px" >
+          <%= link_to 'Show', data_filter_path(data_filter), :title => 'Show the data_filter specification' %><br />
+          <% restrict_to 'admin || manager' do %>
+              <%= link_to 'Edit', edit_data_filter_path(data_filter), :title => "Make changes in #{data_filter.name}." %><br />
+          <% end %>   
+          <% restrict_to 'admin || manager' do %> 
+            <%= link_to 'Delete', data_filter, :confirm => "Are you sure you want to delete Data Filter: #{data_filter.id} #{data_filter.name}?", 
+              :method => :delete, :title => "Delete Data Filter: #{@data_filter.id} #{@data_filter.name}" %>              
+          <% end %>           
+        </td>
+        <td width="100%">
+          <span class="listTitle"><%= data_filter.id %>: <%= h(data_filter.name) %></span><br />
+          <%= h(truncate(data_filter.description, 160)) %><br />
+          <span class="modelAttribute">
+            DIY Author: <strong><%= (data_filter.user ? data_filter.user.name : "") %></strong><br />
+            <%= pluralize(data_filter.calibrations.length, 'calibration uses', 'calibrations use') %> this data filter.
+            <% if data_filter.calibrations.length > 0 %>
+              Show:
+              <select onchange="window.location = this.value">
+                <%= options_for_select data_filter.calibrations.collect {|m| ["#{m.id}: #{truncate(m.name, 40)}", url_for(:controller => '/calibrations', :action => 'show', :id => m.id)] }.unshift(['Select calibration:', url_for(:controller => '/data_filters', :action => "index", :page => session[:page] || 1 )]) %>
+              </select>
+            <% end %>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+</table>
+</div>

@@ -1,0 +1,22 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Create',
+  :authorable_object => @physical_unit,
+  :all_viewable_objects => @all_viewable_physical_units, 
+  :all_editable_objects => @all_editable_physical_units }) %>
+
+<div class="pageEdit">
+<% form_for(:physical_unit, :url => physical_units_path, :html => { :method => :post }) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+      <%= submit_tag "Create" %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+  <%= render :partial => 'form', :object => f %>
+<% end %>
+</div>
+

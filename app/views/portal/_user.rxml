@@ -1,0 +1,10 @@
+xml.user do
+  if timestamp
+    xml.timestamp(timestamp)
+  end
+  xml.login(user.login)
+  xml.id(user.id)
+  xml.email(user.email)
+  xml.first_name(user.first_name)
+  xml.last_name(user.last_name)
+end

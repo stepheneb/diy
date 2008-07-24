@@ -1,0 +1,33 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => true,
+  :function => 'Show',
+  :authorable_object => @external_otrunk_activity,
+  :authorable_object_class => ExternalOtrunkActivity, 
+  :all_viewable_objects => @all_viewable_external_otrunk_activities, 
+  :all_editable_objects => @all_editable_external_otrunk_activities }) %> 
+
+<p><span class="SectionTitle">Name: </span><%= @external_otrunk_activity.name%></p>
+<p><span class="SectionTitle">DIY Author: </span><%= @external_otrunk_activity.user.name%></p>
+<p><span class="SectionTitle">Public: </span><strong><%= boolean_to_yes_no(@external_otrunk_activity.public) %></strong></p>
+<p><span class="SectionTitle">Description:</span><br /><%= @external_otrunk_activity.description %></p>
+<% restrict_to 'admin || manager' do %>
+<p><span class="SectionTitle">External otml url:</span><br /><%= @external_otrunk_activity.external_otml_url %></p>
+<% unless @external_otrunk_activity.external_otml_url.blank? %>
+  <p><span class="SectionTitle">Always get the otml update from external url:</span>
+  <%= boolean_to_yes_no(@external_otrunk_activity.external_otml_always_update) %></p>
+<% end %>
+<p><span class="SectionTitle">Custom reporting view mode:</span><br /><%= @external_otrunk_activity.custom_reporting_mode %></p>
+<p><span class="SectionTitle">Don't load prior session data:</span><br /><%= boolean_to_yes_no(@external_otrunk_activity.nobundles) %></p>
+
+<p><span class="SectionTitle">OTML:</span><br /><%= display_xml(@external_otrunk_activity.otml) %></p>
+<% end %>
+
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => true,
+  :function => 'Show',
+  :authorable_object => @external_otrunk_activity,
+  :authorable_object_class => ExternalOtrunkActivity, 
+  :all_viewable_objects => @all_viewable_external_otrunk_activities, 
+  :all_editable_objects => @all_editable_external_otrunk_activities }) %> 

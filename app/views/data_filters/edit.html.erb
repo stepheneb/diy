@@ -1,0 +1,21 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Edit',
+  :authorable_object => @data_filter,
+  :all_viewable_objects => @all_viewable_data_filters, 
+  :all_editable_objects => @all_editable_data_filters }) %>
+
+<div class="pageEdit">
+<% form_for(:data_filter, :url => data_filter_path, :html => { :method => :put }) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+      <%= submit_tag "Save" %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+  <%= render :partial => 'form', :object => f %>
+<% end %>
+</div>

@@ -1,0 +1,26 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Index',
+  :authorable_object_class => Activity, 
+  :all_viewable_objects => @all_viewable_activities, 
+  :all_editable_objects => @all_editable_activities }) %>
+
+  <div class="activityList">
+    <table cellpadding="5" cellspacing="0">
+      <%= render :partial => 'activity', :collection => @activities %>
+    </table>
+  </div>
+
+<% 
+# FIXME: This bottom "header" shouldn't be rendered unless there is a collection 
+%>
+
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => false,
+  :function => 'Index',
+  :authorable_object_class => Activity, 
+  :authorable_object_pages => @activity_pages,
+  :all_viewable_objects => @all_viewable_activities, 
+  :all_editable_objects => @all_editable_activities }) %>

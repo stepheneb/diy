@@ -1,0 +1,12 @@
+<h1>Editing learner</h1>
+
+<%= error_messages_for :learner %>
+
+<% form_for(@learner) do |f| %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @learner %> |
+<%= link_to 'Back', learners_path %>

@@ -1,0 +1,65 @@
+<h2>Statistics</h2>
+<p>
+	<%= link_to "Last 1 month", :controller => 'statistics', :action => 'month', :months => 1 %> (<%= link_to "csv", :controller => 'statistics', :action => 'month', :months => 1, :format => "csv" %>) |
+	<%= link_to "Last 3 months", :controller => 'statistics', :action => 'month', :months => 3 %> (<%= link_to "csv", :controller => 'statistics', :action => 'month', :months => 3, :format => "csv" %>) |
+	<%= link_to "Last 6 months", :controller => 'statistics', :action => 'month', :months => 6 %> (<%= link_to "csv", :controller => 'statistics', :action => 'month', :months => 6, :format => "csv" %>) |
+	<%= link_to "Lifetime", :controller => 'statistics', :action => 'total' %> (<%= link_to "csv", :controller => 'statistics', :action => 'total', :format => "csv" %>)
+</p>
+<% @final.keys.sort.each do |k| -%>
+    <% v = @final[k] -%>
+	<% count = 0 -%>
+	<h3><%= k %></h3>
+<table cellspacing='0' cellpadding='5'>
+	<thead align='left'>
+		<th>Rank</td>
+		<th><%= link_to "# of Users", :sort_by => 'users' %></th>
+		<th><%= link_to "# of sessions", :sort_by => 'sessions' %></th>
+		<th>Activity id</th>
+		<th>Activity author</th>
+		<th>Activity title</th>
+	</thead>
+	<tbody>
+		<% v.each do |a| -%>
+			<tr>
+				<td><%= count += 1 %></td>
+				<td>
+					<% begin -%>
+						<%= link_to "#{a[:count]}", :controller => a[:controller], :id => a[:activity].id, :action => 'usage' %>
+					<% rescue => e %>
+						<%= a[:count] %>
+						<!-- <%= "#{e}" %> -->
+					<% end %>
+				</td>
+				<td>
+					<% begin -%>
+						<%= link_to "#{a[:session_count]}", :controller => a[:controller], :id => a[:activity].id, :action => 'usage' %>
+					<% rescue => e %>
+						<%= a[:session_count] %>
+						<!-- <%= "#{e}" %> -->
+					<% end %>
+				</td>
+				<td>
+					<% begin -%>
+						<%= link_to "#{a[:activity].id}", :controller => a[:controller], :id => a[:activity].id, :action => 'show' %>
+					<% rescue => e %>
+						<%= a[:activity].id %>
+						<!-- <%= "#{e}" %> -->
+					<% end %>
+				</td>
+				<td>
+					<%= a[:activity].user ? a[:activity].user.name : "unknown" %>
+				</td>
+				<td>
+					<% begin -%>
+						<%= link_to "#{a[:activity].name}", :controller => a[:controller], :id => a[:activity].id, :action => 'show'  %>
+					<% rescue => e %>
+						<%= a[:activity].name %>
+						<!-- <%= "#{e}" %> -->
+					<% end %>
+				</td>
+			</tr>
+		<% end -%>
+	</tbody>
+</table>
+<% end -%>
+<br/>

@@ -1,0 +1,424 @@
+body {
+	font-family: verdana, arial, helvetica, sans-serif;
+	background-color: #ffffff; 
+	color: #333333; 
+	margin: 0px;
+	padding: 0px;
+	font-size: 86%;
+}
+
+#banner {
+	background-color: #B58A2B;
+	padding: 10px 0px;
+	border-bottom: 2px solid #05356A;
+	color: #05356A;
+	position: relative;
+}
+
+#banner h1 {
+	font-size: 3em;
+	text-align: center;
+	margin: 0;
+	padding: 0;
+}
+
+#logo img {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	border: 0px;
+}
+
+
+pre {
+	background-color: #eee;
+	padding: 10px;
+}
+
+a:link {
+	font-weight: bold;
+	color: #032357;
+}
+a:visited {
+	font-weight: bold;
+	color: #123584;
+}
+a:hover { 
+	font-weight: bold;
+	color: #ffffff; 
+	background-color:#032357; 
+}
+
+a.smaller {
+  font-size:   0.8em;
+  font-weight: 600;
+}
+
+
+
+hr {
+	height: 0px;
+	border-bottom: 1px solid #000000;
+}
+
+
+.search {
+	float: right;
+	margin-right: 0px;
+	background-color: #ddffdd;
+	border: 1px solid #228822;
+	padding: 1px 5px 1px 5px;
+}
+
+#activity {
+}
+
+#activity img {
+	float: right;
+	border: 0px;
+	padding: 20px;
+}
+
+#columns {
+}
+
+#main {
+	margin-left: 14em;
+	margin-right: 0em;
+	padding-top: 2em;
+	padding-left: 2em;
+	padding-right: 1em;
+	background: white;
+}
+
+#side {
+	float: left;
+	padding-top: 1em;
+	padding-left: 1em;
+	padding-bottom: 1em;
+	width: 13em;
+	background: #032357;
+}
+
+#notice {
+	border: 2px solid red;
+	padding: 1em;
+	margin-bottom: 2em;
+	background-color: #f0f0f0;
+	font: bold smaller sans-serif;
+}
+
+#side a {
+	color: #ffffff;
+	font-size; 0.85em;	
+}
+
+#side p {
+	color: #B58A2B;
+  font-weight: bold;
+  font-size: 0.95em;
+}
+
+#side a:hover {
+	text-decoration: underline;
+	background-color: transparent;
+}
+
+.pageHeader {
+  clear: right;
+	padding-bottom: 1em;
+	width: 95%;
+}
+
+.pageHeader a {
+	text-decoration: none;
+	font-weight: 800;
+	font-size: 0.9em;
+}
+.required {
+	text-decoration: none;
+	font-weight: 400;
+	color: red;
+	font-size: 0.9em;
+	font-style: italic;
+}
+
+.top {
+  clear: right;
+  width: 100%;
+  height: 30px;
+	padding: 1px 5px 1px 2px;
+}
+
+.bottom {
+  clear: both;
+  width: 100%;
+  height: 30px;
+	padding: 1px 5px 1px 2px;
+}
+.editbox {
+  float: left;
+	padding: 6px 5px 6px 5px;
+}
+
+.flashbox {
+  float: left;
+  height 80px;
+	padding: 10px 5px 8px 10px;
+}
+
+.flash {
+	text-decoration: none;
+	font-weight: 400;
+	color: green;
+	font-size: 0.9em;
+	font-style: italic;
+}
+
+.pageEditForm {
+  clear: right;
+  float:left;
+	width: 95%;
+	font-size: 12px;	
+}
+
+.pageEditForm textarea {
+	width: 100%;
+	padding: 4px 4px 4px 4px;
+}
+
+form {
+  clear: right;
+}
+
+.menuCommand {
+	font-weight: 600;
+	font-size: 0.9em;
+}
+
+.modelAttribute {
+	font-style: italic;
+	font-size: 0.8em;
+}
+
+.smallerLink {
+	font-style: italic;
+	font-size: 0.8em;
+}
+
+.pageTitle {
+	color: #244;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size:	 18px;
+	font-weight: bold;
+	text-align: left;
+}
+
+.SectionTitle {
+	color:	#244;
+	font-weight: bold;
+	font-size: larger;
+}
+
+.listActivityName {
+	font-weight: 600;
+	font-size: 0.9em;
+}
+
+.activityList {
+	width: 95%;
+	border: 1px solid silver;
+}
+
+.activityList a {
+	font-size: 0.9em;
+	font-weight: bold;
+}
+
+.activityListUseage {
+	font-style: italic;
+}
+
+.listTitle {
+	color:	#244;
+	font-weight: bold;
+	font-size: 1.0em;
+}
+
+.ListActions {
+	font-size: .8em;
+	text-align: left;
+	padding-left: 1em;
+}
+
+.ListLine0 {
+	background: #F1E8D2;
+	width: 100%;
+}
+
+.ListLine1 {
+	background: #EBD5A3;
+}
+
+.ListLine0notchangeable {
+	background: #d0e8e8;
+}
+
+.ListLine1notchangeable {
+	background: #e8a0e8;
+}
+
+.fieldPreview {
+	background-image: url(../images/preview.gif);
+	width: 95%;
+	margin: 0px; 
+	padding: 10px 20px 10px 10px; 
+	font-family: Optima; 
+	background-color: rgb(255, 252, 248);
+	border-width: 2px; 
+	border-color: rgb(255, 199, 171); 
+	border-style: solid;
+}
+
+
+.fieldWithErrors {
+	padding: 4px;
+	background-color: rgb(255, 40, 40);
+	display: table;
+}
+
+#errorExplanation {
+	width: 400px;
+	border: 4px solid rgb(255, 40, 40);
+	padding: 7px;
+	padding-bottom: 12px;
+	margin-bottom: 20px;
+	background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+	text-align: left;
+	font-weight: bold;
+	padding: 5px 5px 5px 15px;
+	margin: -7px;
+	background-color: #f44;
+	color: #fff;
+}
+
+#errorExplanation p {
+	color: #333;
+	margin-bottom: 0;
+	padding: 5px;
+}
+
+#errorExplanation ul li {
+	list-style: square;
+}
+
+.xhtmlError {
+	font: italic 9pt sans-serif;
+	margin: 15px 5px 15px 5px;
+	padding: 10px 10px 10px 10px;
+	background-color: rgb(244, 206, 206);
+}
+
+.xhtmlError hr {
+	color: red;
+	height: 1px;
+}
+
+div.uploadStatus {
+	margin: 5px;
+}
+
+div.progressBar {
+	margin: 5px;
+}
+
+div.progressBar div.border {
+	background-color: #fff;
+	border: 1px solid gray;
+	width: 100%;
+}
+
+div.progressBar div.background {
+	background-color: #333;
+	height: 18px;
+	width: 0%;
+}
+
+.notice {
+	color: #009900;
+}
+
+/* These styles are used for the extra development server information */
+
+#about {
+	position: absolute;
+	right: 2px;
+	top: 2px;
+	padding: 4px;
+	color: #ffffff;
+	background-color: #000000;
+	text-align: right;
+}
+
+#about a {
+	color: #ffffff;
+}
+
+#about-content {
+	margin-top: 5px;
+	background-color: #ffffdd;
+	border: 1px solid #ffcc00;
+}
+
+#about-content table {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-collapse: collapse;
+}
+
+#about-content td {
+	padding: 10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-size: 10px;
+	font-weight: normal;
+}
+
+#about-content td.name {
+	color: #555555;
+	text-align: right;
+}
+
+#about-content td.value {
+	color: #000000;
+	text-align: left;
+}
+
+#about-content.failure {
+	background-color: #ffcccc;
+	border: 1px solid #fc0000;
+}
+
+#about-content.failure p {
+	margin: 0;
+	padding: 10px;
+}
+
+.only_a {
+	color: blue;
+}
+
+.only_b {
+	color: red;
+}
+
+.changed {
+	color: yellow;
+}
+
+.match {
+	color: green;
+}

@@ -1,0 +1,25 @@
+class Report < ActiveRecord::Base
+  set_table_name "#{RAILS_DATABASE_PREFIX}reports"
+  belongs_to :user
+  belongs_to :reportable, :polymorphic => true  
+  belongs_to :otrunk_report_template
+  include Changeable
+  self.extend SearchableModel
+  
+  @@searchable_attributes = %w{name description}
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+  end
+  
+  include OtrunkSystem
+  include SdsRunnable
+
+  before_create :generate_uuid
+
+  def short_name
+    self.otrunk_report_template.short_name + '_for_' + self.reportable.short_name
+  end    
+
+end
