@@ -139,9 +139,17 @@ class ReportsController < ApplicationController
     render :text => "#{@report.short_name}: #{@report.reportable.id}, #{@report.otrunk_report_template.id}" 
   end
   
+  def report_template_otml
+    # the save is required so the otml will be updated
+    # there is an otml method in the otrunk_report_template which does this same thing
+    # but we don't have that controller here.
+    @report.otrunk_report_template.save
+    @report.otrunk_report_template.otml
+  end
+  
   def otml
     @report = Report.find(params[:id])
-    otml_report_template = Hpricot.XML(@report.otrunk_report_template.otml)
+    otml_report_template = Hpricot.XML(report_template_otml)
     if @report.otrunk_report_template.external_otml_always_update
       codebase = File.dirname(@report.otrunk_report_template.external_otml_url)
     else
@@ -155,13 +163,17 @@ class ReportsController < ApplicationController
     user_list.first[:id] = "7a9876a6-e64c-11dc-bee7-001b631eb2da!/user_list"
     otml_activity = Hpricot.XML(@report.reportable.otml)
     otml_activity_uuid = otml_activity.search("/otrunk[@id]").first[:id]
+    
     script_object = otml_report_template.search("//*[@local_id='script_object']")
-    script_object.first[:id] = otml_activity_uuid + "!/activity_script"
+    if not script_object.blank?
+      script_object.first[:id] = otml_activity_uuid + "!/activity_script"      
+    end
+    
     rubric_include_element = nil
     unless codebase.empty?
       otml_report_template.search("/otrunk").set(:codebase,  codebase)
       rubric_include_element = otml_activity.search("//*[@local_id='external_rubric_url']")
-      if rubric_include_element
+      if not rubric_include_element.blank?
         rubric_uri = URI.parse(rubric_include_element.first[:href])
         unless rubric_uri.host
           rubric_uri = URI.join(codebase + '/', rubric_uri.path)
