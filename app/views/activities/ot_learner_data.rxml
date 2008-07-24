@@ -1,0 +1,11 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
+xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "http://xml.apache.org/xslt", "id" => @model.uuid) { 
+  ot_user_list_imports(xml)
+  xml.objects {
+    xml.OTUserList("local_id"" => "user_list") {
+      @bundle_content_ids.each do |bc|
+        xml.OTUserDatabaseRef("url" => #{SdsConnect::Connect.config['host']}/bundle_contents/#{bc}/ot_learner_data.xml)
+      end
+    }
+  }
+}

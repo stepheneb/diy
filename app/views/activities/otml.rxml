@@ -1,0 +1,164 @@
+calibration1 = 
+if @activity.probe_type && @activity.probe_type.calibrations.length > 0 && @activity.collectdata1_calibration_active
+  Calibration.find(@activity.collectdata1_calibration_id)
+else
+    nil
+end
+calibration2 = 
+if @activity.second_probe_type && @activity.second_probe_type.calibrations.length > 0 && @activity.collectdata2_calibration_active
+  Calibration.find(@activity.collectdata2_calibration_id)
+else
+  nil
+end
+calibration3 = 
+if @activity.third_probe_type && @activity.third_probe_type.calibrations.length > 0 && @activity.collectdata3_calibration_active
+  Calibration.find(@activity.collectdata3_calibration_id)
+else
+  nil
+end
+calibration4 = 
+if @activity.fourth_probe_type && @activity.fourth_probe_type.calibrations.length > 0 && @activity.furtherprobe_calibration_active
+  Calibration.find(@activity.furtherprobe_calibration_id)
+else
+   nil
+end
+
+xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
+xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "http://xml.apache.org/xslt", "id" => @activity.uuid) { 
+  otml_imports(xml)
+  xml.objects {
+    xml.OTSystem {
+      otml_services(xml)
+      xml.root {
+        xml.OTCompoundDoc {
+          xml.name(h(@activity.name))
+          xml.bodyText {
+            xml.div("style" => "background-color: rgb(255, 248, 233); border: border-width: 5px; border-color: red; border-style: solid;") {
+              xml.div("style" => "margin: 0px 0px 0px 0px; padding: 0px 20px 10px 20px; font-family: Optima; border: border-width: 5px; border-color: blue; border-style: solid;") {
+                otml_activity_preamble(xml)
+                xml.h1("style" => 'letter-spacing: 3px; font-family: Optima ExtraBlack;'){ xml << h(@activity.name) }
+                response_options = []
+                if @activity.introduction_text_response then response_options << {:textbox => "to_id_5"} end
+                if @activity.introduction_drawing_response then response_options << {:drawing => "draw_id_6"} end
+                otml_content_section(xml, "Introduction/Discovery Question", @activity.introduction, @activity.textile, response_options)
+                otml_content_section(xml, "Standards", @activity.standards, @activity.textile) unless @activity.standards.blank?
+                otml_content_section(xml, "Materials", @activity.materials, @activity.textile) unless @activity.materials.blank?
+                otml_content_section(xml, "Safety", @activity.safety, @activity.textile) unless @activity.safety.blank?
+                unless @activity.proced.blank?
+                  response_options = []
+                  if @activity.proced_text_response then response_options << {:textbox => "to_id_4"} end
+                  if @activity.proced_drawing_response then response_options << {:drawing => "draw_id_1"} end
+                  otml_content_section(xml, "Procedure", @activity.proced, @activity.textile, response_options)
+                end
+                unless @activity.predict.blank?
+                  response_options = []
+                  if @activity.prediction_text_response then response_options << {:textbox => "to_id_1"} end
+                  if @activity.prediction_drawing_response then response_options << {:textbox => "draw_id_7"} end
+                  if @activity.prediction_graph_response && @activity.collectdata_probe_active
+                    response_options << {:graph => {:graph => @activity.probe_type, :id => "predict_id_1", :type => :predict } } 
+                  end
+                  otml_content_section(xml, "Prediction", @activity.predict, @activity.textile, response_options)
+                end
+                response_options = []
+                if @activity.collectdata_probe_active then response_options << {:graph => {:graph => @activity.probe_type, :id => "dc_id_1", :type => :collect, :calibration => calibration1 } } end
+                if @activity.collectdata_model_active then response_options << {:model => {:model => @activity.model, :id => "model_id_1" } } end
+                if @activity.collectdata_text_response then response_options << {:textbox => "to_id_6"} end
+                if @activity.collectdata_drawing_response then response_options << {:drawing => "draw_id_2"} end
+                if @activity.collectdata_graph_response && @activity.collectdata2_probe_active
+                  response_options << {:graph => {:graph => @activity.probe_type, :id => "predict_id_2", :type => :predict } } 
+                end
+                response_options << {:content => @activity.collectdata2 || '' }
+                if @activity.collectdata2_probe_active then response_options << {:graph => {:graph => @activity.second_probe_type, :id => "dc_id_2", :type => :collect, :calibration => calibration2 } }  end
+                if @activity.collectdata2_model_active then response_options << {:model => {:model => @activity.second_model, :id => "model_id_2" } } end
+                if @activity.collectdata2_text_response then response_options << {:textbox => "to_id_8"} end
+                if @activity.collectdata2_drawing_response then response_options << {:drawing => "draw_id_3"} end
+                response_options << {:content => @activity.collectdata3 || '' }
+                if @activity.collectdata3_probe_active then response_options << {:graph => {:graph => @activity.third_probe_type, :id => "dc_id_3", :type => :collect, :calibration => calibration3 } }  end
+                if @activity.collectdata3_model_active then response_options << {:model => {:model => @activity.third_model, :id => "model_id_3" } } end
+                if @activity.collectdata3_text_response then response_options << {:textbox => "to_id_9"} end
+                if @activity.collectdata3_drawing_response then response_options << {:drawing => "draw_id_4"} end
+                otml_content_section(xml, "Collect Data", @activity.collectdata || '', @activity.textile, response_options)
+                unless @activity.analysis.blank?
+                  response_options = []
+                  if @activity.analysis_text_response then response_options << {:textbox => "to_id_2"} end
+                  if @activity.analysis_drawing_response then response_options << {:drawing => "draw_id_8"} end
+                  otml_content_section(xml, "Analysis", @activity.analysis, @activity.textile, response_options)
+                end
+                unless @activity.conclusion.blank?
+                  response_options = []
+                  if @activity.conclusion_text_response then response_options << {:textbox => "to_id_3"} end
+                  if @activity.conclusion_drawing_response then response_options << {:drawing => "draw_id_9"} end
+                  otml_content_section(xml, "Conclusion", @activity.conclusion, @activity.textile, response_options)
+                end
+                unless @activity.further.blank?
+                  response_options = []
+                  if @activity.further_probe_active then response_options << {:graph => {:graph => @activity.fourth_probe_type, :id => "dc_id_4", :type => :collect, :calibration => calibration4 } }  end
+                  if @activity.further_model_active then response_options << {:model => {:model => @activity.fourth_model, :id => "model_id_4"} } end
+                  if @activity.further_text_response then response_options << {:textbox => "to_id_7"} end
+                  if @activity.further_drawing_response then response_options << {:drawing => "draw_id_5"} end
+                  otml_content_section(xml, "Further Investigation", @activity.further, @activity.textile, response_options)
+                end
+                otml_infobar(xml)
+              }
+            }
+          }
+          xml.documentRefs {
+            otml_textbox(xml, "to_id_1")
+            otml_textbox(xml, "to_id_2")
+            otml_textbox(xml, "to_id_3")
+            otml_textbox(xml, "to_id_4")
+            otml_textbox(xml, "to_id_5")
+            otml_textbox(xml, "to_id_6")
+            otml_textbox(xml, "to_id_7")
+            otml_textbox(xml, "to_id_8")
+            otml_textbox(xml, "to_id_9")
+            otml_drawing(xml, "draw_id_1")
+            otml_drawing(xml, "draw_id_2")
+            otml_drawing(xml, "draw_id_3")
+            otml_drawing(xml, "draw_id_4")
+            otml_drawing(xml, "draw_id_5")
+            otml_drawing(xml, "draw_id_6")
+            otml_drawing(xml, "draw_id_7")
+            otml_drawing(xml, "draw_id_8")
+            otml_drawing(xml, "draw_id_9")
+            if @activity.collectdata_probe_active
+              if @activity.prediction_graph_response
+                otml_prediction(@activity.probe_type, xml, "predict_id_1")
+                otml_datacollector(@activity.probe_type, @activity.collectdata_probe_multi, calibration1, xml, "dc_id_1", "predict_id_1")
+              else
+                otml_datacollector(@activity.probe_type, @activity.collectdata_probe_multi, calibration1, xml, "dc_id_1")
+              end
+            end
+            if @activity.collectdata2_probe_active
+              if @activity.collectdata_graph_response
+                otml_prediction(@activity.second_probe_type, xml, "predict_id_2")
+                otml_datacollector(@activity.second_probe_type, @activity.collectdata2_probe_multi, calibration2, xml, "dc_id_2", "predict_id_2")
+              else
+                otml_datacollector(@activity.second_probe_type, @activity.collectdata2_probe_multi, calibration2, xml, "dc_id_2")
+              end
+            end
+            if @activity.collectdata3_probe_active
+              otml_datacollector(@activity.third_probe_type, @activity.collectdata2_probe_multi, calibration3, xml, "dc_id_3")
+            end
+            if @activity.collectdata_model_active
+              otml_model(@activity.model, xml, "model_id_1")
+            end
+            if @activity.collectdata2_model_active
+              otml_model(@activity.second_model, xml, "model_id_2")
+            end
+            if @activity.collectdata3_model_active
+              otml_model(@activity.third_model, xml, "model_id_3")
+            end
+            if @activity.further_model_active
+              otml_model(@activity.fourth_model, xml, "model_id_4")
+            end
+            if @activity.further_probe_active
+              otml_datacollector(@activity.fourth_probe_type, @activity.further_probe_multi, calibration4, xml, "dc_id_4")
+            end
+            otml_choice(xml)
+          }
+        }
+      }
+    }
+  }
+}

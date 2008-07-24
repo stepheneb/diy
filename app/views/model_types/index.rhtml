@@ -1,0 +1,41 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Index',
+  :authorable_object_class => ModelType, 
+  :authorable_object_pages => @model_type_pages,
+  :all_viewable_objects => @all_viewable_model_types, 
+  :all_editable_objects => @all_editable_model_types }) %> 
+
+<div class="activityList">
+<table cellpadding="5" cellspacing="0">
+    <% for model_type in @model_types %>
+      <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+        <td width="20px" >
+          <%= link_to 'Show', model_type_path(model_type), :title => 'Show the model type specification' %><br />
+          <% restrict_to 'admin || manager' do %>
+              <%= link_to 'Edit', edit_model_type_path(model_type), :title => "Make changes in #{model_type.name}." %><br />
+          <% end %>              
+        </td>
+        <td width="100%">
+          <span class="listTitle"><%= model_type.id %>: <%= h(model_type.name) %></span><br />
+          <%= h(truncate(model_type.description, 160)) %><br />
+          <span class="modelAttribute">
+            DIY Author: <strong><%= (model_type.user ? model_type.user.name : "") %></strong>, 
+            Authorable: <strong><%= boolean_to_yes_no(model_type.authorable) %></strong>, 
+            Credits: <%= model_type.credits %><br />
+            <%= pluralize(model_type.models.length, 'model uses', 'models use') %> this model type.
+            <% if model_type.models.length > 0 %>
+              Show:
+              <select onchange="window.location = this.value">
+                <%= options_for_select model_type.models.collect {|m| ["#{m.id}: #{truncate(m.name, 40)}", url_for(:controller => '/models', :action => 'show', :id => m.id)] }.unshift(['Select model:', url_for(:controller => '/model_types', :action => "index", :page => session[:page] || 1 )]) %>
+              </select>
+            <% end %>
+            
+          </span>
+          
+        </td>
+      </tr>
+    <% end %>
+</table>
+</div>

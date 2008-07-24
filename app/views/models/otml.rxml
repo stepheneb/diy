@@ -1,0 +1,28 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
+xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "http://xml.apache.org/xslt", "id" => @model.uuid) { 
+  otml_imports(xml)
+  xml.objects {
+    xml.OTSystem {
+      otml_services(xml)
+      xml.root {
+        xml.OTCompoundDoc {
+          xml.name(h(@model.name))
+          xml.bodyText { 
+            xml.div("style" => "background-color: rgb(255, 248, 233); border: border-width: 5px; border-color: red; border-style: solid;") {
+              xml.div("style" => "margin: 0px 0px 0px 0px; padding: 0px 20px 10px 20px; font-family: Optima; border: border-width: 5px; border-color: blue; border-style: solid;") {
+                xml.h1("style" => 'letter-spacing: 3px; font-family: Optima ExtraBlack;'){ xml << h(@model.name) }
+                xml.h2("style" => 'letter-spacing: 3px; font-family: Optima ExtraBlack;'){ xml << h(@model.model_type.name) }
+                response_options = []
+                response_options << {:model => {:model => @model, :id => "model_id_1"} }
+                otml_content_section(xml, "Model", @model.description, @model.textile, response_options)
+              }
+            }
+          }
+          xml.documentRefs {
+            otml_model(@model, xml, "model_id_1")
+          }
+        }
+      }
+    }
+  }
+}

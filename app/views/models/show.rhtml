@@ -1,0 +1,37 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => true,
+  :function => 'Show',
+  :authorable_object => @model,
+  :authorable_object_class => Model, 
+  :all_viewable_objects => @all_viewable_models, 
+  :all_editable_objects => @all_editable_models }) %>
+
+<p><span class="SectionTitle">Name: </span><%= @model.name%></p>
+<p><span class="SectionTitle">DIY Author: </span><%= @model.user.name%></p>
+<p><span class="SectionTitle">Public: </span><strong><%= boolean_to_yes_no(@model.public) %></strong></p>
+<p><span class="SectionTitle">Url: </span><%= @model.url %></p>
+<% if @model.model_type.sizeable == true -%>
+<p><span class="SectionTitle">Width: </span><%= @model.width %></p>
+<p><span class="SectionTitle">Height: </span><%= @model.height %></p>
+<% end -%>
+<p><span class="SectionTitle">Description: </span><br /><%= @model.description %></p>
+<p><span class="SectionTitle">Instructions: </span><br /><%= @model.instructions %></p>
+<p><span class="SectionTitle">Snapshot enabled: </span><strong><%= boolean_to_yes_no(@model.snapshot_active) %></strong></p>
+<p><span class="SectionTitle">Don't return prior session data: </span><strong><%= boolean_to_yes_no(@model.nobundles) %></strong></p>
+<%= pluralize(@model_activities.length, 'activity uses', 'activities use') %> this model.
+
+<% if @model_activities.length > 0 %>
+  Show: <select onchange="window.location = this.value">
+    <%= options_for_select @model_activities.collect {|a| ["#{a.id}: #{truncate(a.name, 40)}", url_for(:controller => '/activities', :action => 'show', :id => a.id)] }.unshift(['Select activity:', url_for(:controller => '/models', :action => "index", :page => session[:page] || 1 )]) %>
+  </select>
+<% end %>
+
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => true,
+  :function => 'Show',
+  :authorable_object => @model,
+  :authorable_object_class => Model, 
+  :all_viewable_objects => @all_viewable_models, 
+  :all_editable_objects => @all_editable_models }) %>

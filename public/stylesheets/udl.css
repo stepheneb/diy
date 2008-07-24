@@ -1,0 +1,533 @@
+body {
+	font-family: "Trebuchet MS", verdana, arial, helvetica, sans-serif;
+	background-color: #ffffff; 
+	color: #000000; 
+	margin: 0px;
+	padding: 0px;
+	font-size: 93%;
+		background-image: url(../images/soft-tree.jpg);
+		background-repeat: no-repeat;
+		background-position: left top;
+}
+
+#banner {
+	padding: 10px 0px;
+	color: #CE0502;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 50px;
+	width: 100%;
+}
+
+#banner h1 {
+	font-size: 2em;
+	text-align: right;
+	margin: 0 0 0 200px;
+	padding: 0;
+	border-bottom: 1px solid #000000;
+}
+
+#logo img {
+	position: absolute;
+	top: 0px;
+	left: 6px;
+	border: 0px;
+}
+
+pre {
+	background-color: #eee;
+	padding: 10px;
+}
+
+hr {
+	height: 1px;
+	border-bottom: 1px solid #6A0E04;
+}
+
+.clearBoth {
+  clear: both;
+  line-height: 0; 
+  height: 1px;
+  display: block;
+  visibility: hidden;
+}
+
+#activity {
+}
+
+#activity img {
+	/*float: right;*/
+	border: 0px;
+	padding: 20px;
+}
+
+#columns {
+	position: absolute;
+	top: 50px;
+	left: 0px;
+	width: 100%;
+}
+
+#main {
+	/*margin-left: 20em;
+	margin-right: 0em;
+	padding-top: 2em;
+	padding-left: 2em;
+	padding-right: 1em;*/
+	position: absolute;
+	top: 0px;
+	left: 200px;
+}
+
+#main a {
+	color: #CE0502;
+}
+
+#side {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	padding: 0px 0 1em 1em;
+	width: 13em;
+}
+
+#side p {
+	color: #575757;
+}
+
+#side hr {
+	height: 0px;
+	border-bottom: 1px solid #aaffdd;
+}
+
+#side a:link {
+	color: #CE0502;
+	font-weight: bold;
+}
+
+#side a:visited {
+	color: #CE0502;
+	font-weight: bold;
+}
+
+#side a:hover {
+	color: #8B3833;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+#notice {
+	border: 2px solid red;
+	padding: 1em;
+	margin-bottom: 2em;
+	background-color: #f0f0f0;
+	font: bold smaller sans-serif;
+}
+
+a {
+	text-decoration: none;
+}
+
+.pageHeader {
+  /*float: left;*/
+	padding-bottom: 0em;
+}
+
+.pageHeader a {
+	text-decoration: none;
+	font-weight: 800;
+	font-size: 0.9em;
+}
+
+.pageHeaderLeft {
+	/*float: left; */
+	margin: 0px 0px 0px 0px;
+	padding: 6px 0px 6px 0px;
+}
+
+.pageHeaderLeft p {
+	margin: 0.5em 0em 0.5em 0em;  
+}
+
+.pageHeaderQuickLinks {
+	/*float: right;*/
+  text-align: right;
+	margin: 8px 0px 8px 0px;
+	padding: 4px 0px 4px 0px;
+}
+
+.pageHeader select {
+	font-style: sans-serif;
+	font-size: 0.8em;
+}
+
+.pageHeader label {
+	font-weight: 800;
+	font-size: 0.9em;
+}
+
+.pageNotes {
+  /*clear: right;
+  float: left;*/
+	padding-bottom: 1em;
+}
+
+.required {
+	text-decoration: none;
+	font-weight: 400;
+	color: red;
+	font-size: 0.9em;
+	font-style: italic;
+}
+
+.top {
+  width: 95%;
+	padding: 1em 0em 1em 0em;
+}
+
+.bottom {
+  width: 95%;
+	padding: 1em 0em 1em 0em;
+}
+
+.editbox {
+  /*float: left;*/
+	padding: 4px 5px 4px 5px;
+}
+
+.flashbox {
+	padding: 0.5em 1em 0.5em 1em;
+}
+
+.flash {
+	text-decoration: none;
+	font-weight: 400;
+	color: green;
+	font-size: 0.9em;
+	font-style: italic;
+}
+
+.pageEdit {
+  /*clear: right;
+  float:left;*/
+	width: 100%;
+	padding: 4px 0px 4px 0px;
+}
+
+.pageEdit p {
+	margin: 0.5em 0.5em 0.5em 0.5em;  
+}
+
+
+.pageEdit form {
+  /*clear: right;
+  float:left;*/
+	width: 90%;
+	padding: 4px 0px 4px 0px;
+	font-size: 12px;	
+}
+
+textarea {
+	width: 99%;
+	padding: 6px 8px 6px 8px;
+	border: 1px solid;
+	font-family: "Trebuchet MS", verdana, arial, helvetica, sans-serif;
+	font-size: 100%;
+}
+
+input[type="text"] {
+	padding: 2px 4px 2px 4px;
+	border: 1px solid;
+}
+
+form {
+  clear: right;
+}
+
+.menuCommand {
+	font-weight: 600;
+	font-size: 0.9em;
+}
+
+.modelAttribute {
+	font-style: italic;
+	font-size: 0.8em;
+}
+
+.smallerLink {
+	font-style: italic;
+	font-size: 0.8em;
+}
+
+.pageTitle {
+	color: #525252;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 1.5em;
+	font-weight: bold;
+	text-align: left;
+}
+
+.pageObjectName {
+	color: #525252;
+	font-family: verdana, arial, helvetica, sans-serif;
+	font-size: 1.2em;
+	font-weight: bold;
+	text-align: left;
+}
+
+.SectionTitle {
+	color:	#525252;
+	font-weight: bold;
+	font-size: 1.5em;
+}
+
+.listActivityName {
+	font-weight: bold;
+	font-size: 0.9em;
+}
+
+.activityList {
+  /*float: left;
+  position: relative;
+  clear: right;*/
+	width: 80%;
+}
+
+.activityList table {
+	border: 1px solid #cccccc;
+}
+
+.activityList table {
+	width: 80%;
+}
+
+.activityList select {
+	font-style: sans-serif;
+	font-size: 0.8em;
+}
+
+.activityList a {
+	font-size: 0.9em;
+	font-weight: bold;
+}
+
+.activityListUseage {
+	font-style: italic;
+}
+
+.listTitle {
+	color:	#525252;
+	font-weight: bold;
+	font-size: 1.0em;
+}
+
+.ListActions {
+	font-size: .8em;
+	text-align: left;
+	padding-left: 1em;
+}
+
+.ListLine0 {
+	background-color: #F6E3CE;
+}
+
+.ListLine1 {
+	background-color: #F8ECE0;
+}
+
+.ListLine0notchangeable {
+	background: rgb(229, 247, 247);
+}
+
+.ListLine1notchangeable {
+	background: rgb(243, 227, 250);
+}
+
+.fieldPreview {
+	background-image: url(../images/preview.gif);
+	width: 95%;
+	margin: 0px; 
+	padding: 10px 20px 10px 10px; 
+	font-family: Optima; 
+	background-color: rgb(255, 252, 248);
+	border-width: 2px; 
+	border-color: rgb(255, 199, 171); 
+	border-style: solid;
+}
+
+.fieldWithErrors {
+	padding: 4px;
+	background-color: rgb(255, 40, 40);
+	display: table;
+}
+
+#errorExplanation {
+	width: 400px;
+	border: 4px solid rgb(255, 40, 40);
+	padding: 7px;
+	padding-bottom: 12px;
+	margin-bottom: 20px;
+	background-color: #f0f0f0;
+}
+
+#errorExplanation h2 {
+	text-align: left;
+	font-weight: bold;
+	padding: 5px 5px 5px 15px;
+	margin: -7px;
+	background-color: #f44;
+	color: #fff;
+}
+
+#errorExplanation p {
+	color: #333;
+	margin-bottom: 0;
+	padding: 5px;
+}
+
+#errorExplanation ul li {
+	list-style: square;
+}
+
+.xhtmlError {
+	font: italic 9pt sans-serif;
+	margin: 15px 5px 15px 5px;
+	padding: 10px 10px 10px 10px;
+	background-color: rgb(244, 206, 206);
+}
+
+.xhtmlError hr {
+	color: red;
+	height: 1px;
+}
+
+div.uploadStatus {
+	margin: 5px;
+}
+
+div.progressBar {
+	margin: 5px;
+}
+
+div.progressBar div.border {
+	background-color: #fff;
+	border: 1px solid gray;
+	width: 100%;
+}
+
+div.progressBar div.background {
+	background-color: #333;
+	height: 18px;
+	width: 0%;
+}
+
+.notice {
+	color: green;
+}
+
+/* These styles are used for the extra development server information */
+
+#about {
+	position: absolute;
+	right: 3px;
+	top: 85px;
+	padding: 4px;
+	color: #ffffff;
+	background-color: #000000;
+	text-align: right;
+}
+
+#about a {
+	color: #ffffff;
+}
+
+#about-content {
+	margin-top: 5px;
+	background-color: #ffffdd;
+	border: 1px solid #ffcc00;
+}
+
+#about-content table {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-collapse: collapse;
+}
+
+#about-content td {
+	padding: 10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-size: 10px;
+	font-weight: normal;
+}
+
+#about-content td.name {
+	color: #555555;
+	text-align: right;
+}
+
+#about-content td.value {
+	color: #000000;
+	text-align: left;
+}
+
+#about-content.failure {
+	background-color: #ffcccc;
+	border: 1px solid #fc0000;
+}
+
+#about-content.failure p {
+	margin: 0;
+	padding: 10px;
+}
+
+.pagination {
+	padding: 3px;
+	margin: 3px;
+	font-size: 80%;
+}
+
+.pagination a {
+	padding: 2px 5px 2px 5px;
+	margin: 2px;
+	border: 1px solid #aaaadd;
+	text-decoration: none;
+	color: #CE0502;
+}
+
+.pagination a:hover, .pagination a:active {
+	border: 1px solid #CE0502;
+	color: #000;
+}
+
+.pagination span.current {
+	padding: 2px 5px 2px 5px;
+	margin: 2px;
+	border: 1px solid #99cc99;
+	font-weight: bold;
+	background-color: #33aa33;
+	color: #FFF;
+}
+.pagination span.disabled {
+	padding: 2px 5px 2px 5px;
+	margin: 2px;
+	border: 1px solid #eee;
+	color: #ddd;
+}
+
+.only_a {
+	color: blue;
+}
+
+.only_b {
+	color: red;
+}
+
+.changed {
+	color: yellow;
+}
+
+.match {
+	color: green;
+}

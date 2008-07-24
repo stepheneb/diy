@@ -1,0 +1,28 @@
+<p>
+  <b>Name:</b>
+  <%=h @unit.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @unit.description %>
+</p>
+
+<p>
+  <b>Notes:</b>
+  <%=h @unit.notes %>
+</p>
+
+<p>
+  <b>Created on:</b>
+  <%=h @unit.created_on %>
+</p>
+
+<p>
+  <b>Updated on:</b>
+  <%=h @unit.updated_on %>
+</p>
+
+
+<%= link_to 'Edit', edit_unit_path(@unit) %> |
+<%= link_to 'Back', units_path %>

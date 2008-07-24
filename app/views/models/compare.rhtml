@@ -1,0 +1,18 @@
+<% differences = @model.html_difference(@other_model) -%>
+<table>
+	<tr>
+		<td rowspan='4'>Key</td>
+		<td><span class="match">No changes</span></td>
+	</tr>
+	<tr><td><span class="only_a">Only in <%= @model.id %></td></tr>
+	<tr><td><span class="only_b">Only in <%= @other_model.id %></span></td></tr>
+	<tr><td><span class="changed">Changed in both</span></td></tr>
+<table>
+	<% differences.keys.sort.each do |k| -%>
+	<tr valign='top'>
+		<td><%= k %></td>
+		<td width='50%'><%= differences[k][0].gsub("\n","<br/>") %></td>
+		<td width='50%'><%= differences[k][1].gsub("\n","<br/>") %></td>
+	</tr>
+	<% end -%>
+</table>

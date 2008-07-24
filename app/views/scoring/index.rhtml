@@ -1,0 +1,120 @@
+<h3>Scoring</h3>
+<!-- Render the rubric form -->
+<!--
+for all the attributes we care about, we track added, changed and deleted
+Also, some of the attributes we track:
+- bullets added/deleted
+- numbered lists added/deleted
+- images added/deleted
+- links added/deleted
+-->
+
+<% form_tag(:action => :index) do -%>
+<%= submit_tag("Get Report") %>
+<table>
+    <tr>
+        <td>
+            <table>
+                <tr>
+                    <td>
+                        <b>Attribute</b>
+                    </td>
+                    <td>
+                        <b>Added</b>
+                    </td>
+                    <td>
+                        <b>Changed</b>
+                    </td>
+                    <td>
+                        <b>Deleted</b>
+                    </td>
+                </tr>
+                <% @attributes.keys.sort.each do |a| -%>
+				<% type = @attributes[a] -%>
+				<% next if type == :custom -%>
+                <tr>
+                    <td>
+                    	<% if a =~ /_combined/ -%>
+							<%= a.gsub("_combined", "") %>
+						<% else -%>
+                        	<%= a %>
+						<% end -%>
+                    </td>
+                    <td valign="bottom">
+                        <%= text_field_tag("rubric[#{a}][added]", @rubric[a]["added"], :size => 2) %>
+                    </td>
+                    <td valign="bottom">
+                    	<% if (a =~ /_(active|response|multi)/) -%>
+						<% elsif (type == :text || type == :string) -%>
+							<table cellpadding="0">
+								<tr>
+									<td style="font-size: smaller;">&lt; 25%</td>
+									<td style="font-size: smaller;">&lt; 50%</td>
+									<td style="font-size: smaller;">&lt; 75%</td>
+									<td style="font-size: smaller;">&lt; 100%</td>
+								</tr>
+								<tr>
+									<td>
+										<%= text_field_tag("rubric[#{a}][changed0]", @rubric["#{a}"]["changed0"], :size => 2) %>
+									</td>
+									<td>
+										<%= text_field_tag("rubric[#{a}][changed25]", @rubric["#{a}"]["changed25"], :size => 2) %>
+									</td>
+									<td>
+										<%= text_field_tag("rubric[#{a}][changed50]", @rubric["#{a}"]["changed50"], :size => 2) %>
+									</td>
+									<td>
+										<%= text_field_tag("rubric[#{a}][changed75]", @rubric["#{a}"]["changed75"], :size => 2) %>
+									</td>
+								</tr>
+							</table>
+						<% else -%>
+                        	<%= text_field_tag("rubric[#{a}][changed]", @rubric["#{a}"]["changed"], :size => 2) %>
+						<% end -%>
+                    </td>
+                    <td valign="bottom">
+                        <%= text_field_tag("rubric[#{a}][deleted]", @rubric["#{a}"]["deleted"], :size => 2) %>
+                    </td>
+                </tr>
+                <% end -%>
+            </table>
+        </td>
+        <td valign="top">
+            <table>
+                <tr>
+                <td>
+                    <b>Text attribute</b>
+                </td>
+                <td>
+                    <b>Added</b>
+                </td>
+                <td>
+                    <b>Changed</b>
+                </td>
+                <td>
+                    <b>Deleted</b>
+                </td>
+                </td>
+            </tr>
+            <% for att in @attributes.select{|k,v| v == :custom }.collect{|a| a[0]}.sort do -%>
+            <tr>
+                <td>
+                    <%= att %>
+                </td>
+                <td>
+                    <%= text_field_tag("rubric[#{att}][added]", @rubric["#{att}"]["added"], :size => 2) %>
+                </td>
+                <td>
+                    <%= text_field_tag("rubric[#{att}][changed]", @rubric["#{att}"]["changed"], :size => 2) %>
+                </td>
+                <td>
+                    <%= text_field_tag("rubric[#{att}][deleted]", @rubric["#{att}"]["deleted"], :size => 2) %>
+                </td>
+            </tr>
+            <% end -%>
+            </table>
+        </td>
+    </tr>
+</table>
+<%= submit_tag("Get Report") %>
+<% end -%>

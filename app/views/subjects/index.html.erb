@@ -1,0 +1,26 @@
+<h1>Listing subjects</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Created on</th>
+    <th>Updated on</th>
+  </tr>
+  
+<% for subject in @subjects %>
+  <tr>
+    <td><%=h subject.name %></td>
+    <td><%=h subject.description %></td>
+    <td><%=h subject.created_on %></td>
+    <td><%=h subject.updated_on %></td>
+    <td><%= link_to 'Show', subject %></td>
+    <td><%= link_to 'Edit', edit_subject_path(subject) %></td>
+    <td><%= link_to 'Destroy', subject, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New subject', new_subject_path %>

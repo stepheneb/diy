@@ -1,0 +1,258 @@
+<div class="otrunkActivity">
+
+<h1><%=h @activity.name %></h1>
+
+<div class='otrunkActivitySection'>
+  <h2>Introduction/Discovery Question</h2>
+  <div class='otrunkActivityContent'>
+    <%= web_content(@activity.introduction) %>
+    <% if @activity.introduction_text_response %>
+    <div class='otrunkActivityTextBox'>
+      <div class='otrunkActivityOpenTextResponse'>
+        <p>Place answer here!</p>
+      </div>
+    </div>
+    <% end %>
+    <% if @activity.introduction_drawing_response %>
+    <div class='otrunkActivityObject'>
+      <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+<% if @activity.materials != "" %>
+  <div class   = 'otrunkActivitySection'>
+    <h2>Materials</h2>
+    <div class = 'otrunkActivityContent'>
+      <%= web_content(@activity.materials) %>
+    </div>
+  </div>
+<% end %>
+
+<% if @activity.standards != "" %>
+  <div class='otrunkActivitySection'>
+    <h2>Standards</h2>
+    <div class='otrunkActivityContent'>
+      <%= web_content(@activity.standards) %>
+    </div>
+  </div>
+<% end %>
+
+<% if @activity.standards != "" %>
+  <div class='otrunkActivitySection'>
+    <h2>Safety</h2>
+    <div class='otrunkActivityContent'>
+      <%= web_content(@activity.safety) %>
+    </div>
+  </div>
+<% end %>
+
+<% if @activity.proced != "" %>
+  <div class='otrunkActivitySection'>
+    <h2>Procedure</h2>
+    <div class='otrunkActivityContent'>
+      <%= web_content(@activity.proced) %>
+      <% if @activity.proced_text_response %>
+      <div class='otrunkActivityTextBox'>
+        <div class='otrunkActivityOpenTextResponse'>
+          <p>Place answer here!</p>
+        </div>
+      </div>
+      <% end %>
+      <% if @activity.proced_drawing_response %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+      </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if @activity.predict != "" %>
+  <div class='otrunkActivitySection'>
+    <h2>Prediction</h2>
+    <div class='otrunkActivityContent'>
+      <%= web_content(@activity.predict) %>
+      <% if @activity.prediction_text_response %>
+        <div class='otrunkActivityTextBox'>
+          <div class='otrunkActivityOpenTextResponse'>
+            <p>Place answer here!</p>
+          </div>
+        </div>
+      <% end %>
+      <% if @activity.prediction_drawing_response %>
+        <div class='otrunkActivityObject'>
+          <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+        </div>
+      <% end %>
+      <% if @activity.prediction_graph_response %>
+        <div class='otrunkActivityObject'>
+          <%= image_tag 'otrunk_objects/prediction_graph.gif '%>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<div class='otrunkActivitySection'>
+  <h2>Collect Data</h2>
+  <div class='otrunkActivityContent'>
+    <% if @activity.collectdata != "" %>
+      <%= web_content(@activity.collectdata) %>
+    <% end %>
+    <% if @activity.collectdata_probe_active %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/probe_graph.gif '%>
+      </div>
+    <% end %>
+    <% if @activity.collectdata_model_active %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/model.gif '%>
+      </div>
+    <% end %>
+    <% if @activity.collectdata_text_response %>
+      <div class='otrunkActivityTextBox'>
+        <div class='otrunkActivityOpenTextResponse'>
+          <p>Place answer here!</p>
+        </div>
+      </div>
+    <% end %>
+    <% if @activity.collectdata_drawing_response %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+      </div>
+    <% end %>
+    <% if @activity.collectdata_graph_response %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/prediction_graph.gif '%>
+      </div>
+    <% end %>
+    
+    <% if @activity.collectdata2 != "" %>
+      <%= web_content(@activity.collectdata2) %>
+    <% end %>
+    <% if @activity.collectdata2_probe_active %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/probe_graph.gif '%>
+      </div>
+    <% end %>
+    <% if @activity.collectdata2_model_active %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/model.gif '%>
+      </div>
+    <% end %>
+    <% if @activity.collectdata2_text_response %>
+      <div class='otrunkActivityTextBox'>
+        <div class='otrunkActivityOpenTextResponse'>
+          <p>Place answer here!</p>
+        </div>
+      </div>
+    <% end %>
+    <% if @activity.collectdata2_drawing_response %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+      </div>
+    <% end %>
+
+    <% if @activity.collectdata3 != "" %>
+      <%= web_content(@activity.collectdata3) %>
+    <% end %>
+    <% if @activity.collectdata3_probe_active %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/probe_graph.gif '%>
+      </div>
+    <% end %>
+    <% if @activity.collectdata3_model_active %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/model.gif '%>
+      </div>
+    <% end %>
+    <% if @activity.collectdata3_text_response %>
+      <div class='otrunkActivityTextBox'>
+        <div class='otrunkActivityOpenTextResponse'>
+          <p>Place answer here!</p>
+        </div>
+      </div>
+    <% end %>
+    <% if @activity.collectdata3_drawing_response %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if @activity.analysis != "" %>
+  <div class='otrunkActivitySection'>
+    <h2>Analysis</h2>
+    <div class='otrunkActivityContent'>
+      <%= web_content(@activity.analysis) %>
+      <% if @activity.analysis_text_response %>
+      <div class='otrunkActivityTextBox'>
+        <div class='otrunkActivityOpenTextResponse'>
+          <p>Place answer here!</p>
+        </div>
+      </div>
+      <% end %>
+      <% if @activity.analysis_drawing_response %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+      </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if @activity.conclusion != "" %>
+  <div class='otrunkActivitySection'>
+    <h2>Conclusion</h2>
+    <div class='otrunkActivityContent'>
+      <%= web_content(@activity.conclusion) %>
+      <% if @activity.conclusion_text_response %>
+      <div class='otrunkActivityTextBox'>
+        <div class='otrunkActivityOpenTextResponse'>
+          <p>Place answer here!</p>
+        </div>
+      </div>
+      <% end %>
+      <% if @activity.conclusion_drawing_response %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+      </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if @activity.further != "" %>
+  <div class='otrunkActivitySection'>
+    <h2>Further Investigation</h2>
+    <div class='otrunkActivityContent'>
+      <%= web_content(@activity.further) %>
+      <% if @activity.further_probe_active %>
+        <div class='otrunkActivityObject'>
+          <%= image_tag 'otrunk_objects/probe_graph.gif '%>
+        </div>
+      <% end %>
+      <% if @activity.further_model_active %>
+        <div class='otrunkActivityObject'>
+          <%= image_tag 'otrunk_objects/model.gif '%>
+        </div>
+      <% end %>
+    
+      <% if @activity.further_text_response %>
+      <div class='otrunkActivityTextBox'>
+        <div class='otrunkActivityOpenTextResponse'>
+          <p>Place answer here!</p>
+        </div>
+      </div>
+      <% end %>
+      <% if @activity.further_drawing_response %>
+      <div class='otrunkActivityObject'>
+        <%= image_tag 'otrunk_objects/draw_tool.gif '%>
+      </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

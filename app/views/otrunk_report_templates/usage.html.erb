@@ -1,0 +1,39 @@
+<div class="pageHeader">
+  <p><span class="pageTitle"><%= @class_name_titleized %> Usage: <%= h(@otrunk_report_template.name) %></span></p>
+  <p>
+    <% tooltip = "List all the public #{@class_name_titleized.pluralize}" %>
+    <% if current_user.email != 'anonymous'
+        tooltip <<  " as well any #{@class_name_titleized.pluralize} you have made and marked as private."
+      end %>
+    <%= link_to "Return to #{@class_name_titleized} List", {:action => 'index', :page => session[:page] || 1 }, :title => tooltip  %>
+  </p>
+  <div class='clearBoth'>&nbsp;</div>
+  <hr />
+</div>
+
+<div class="pageEdit">
+  <p>This page lists each runnable object (Activities of various types) for which the <%= @class_name_titleized %>: <span class="activityName"><%= h(@otrunk_report_template.name) %> can be run.</span>. You can view a <span class="activityName"><%= h(@otrunk_report_template.name) %> report for 
+    any of the various Activities's by clicking one of the links below. This will start up the <%= @class_name_titleized %>. While viewing the report you can use the menu command <span class="menuCommand">File: Export to html ...</span> 
+    to make a complete copy of the <%= @class_name_titleized %> and all their data as a set of html files you can view or print in your browser.
+  </p>
+  <% if @reports.length == 0 %>
+    <p>There are no Activites using this <%= @class_name_titleized %> yet.</p>
+  <% else %>
+  <p>
+    <ul>
+      <% @reports.each do |rep| %>
+      <li>
+        <%= rep.reportable.name %>
+      </li>
+      <% end %>
+    </ul>
+  </p>
+  <% end %> 
+</div>
+
+<div class="pageHeader">
+  <div class='clearBoth'>&nbsp;</div>
+  <hr />
+  <%= link_to "Return to #{@class_name_titleized} List", {:action => 'index', :page => session[:page] || 1 }, :title => tooltip  %> 
+</div>
+

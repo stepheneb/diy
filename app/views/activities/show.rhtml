@@ -1,0 +1,25 @@
+<% content_for(:head) do %> 
+  <%= stylesheet_link_tag 'activity.css' %>
+<% end %>
+
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => true,
+  :function => 'Show',
+  :authorable_object => @activity,
+  :authorable_object_class => Activity, 
+  :all_viewable_objects => @all_viewable_activities, 
+  :all_editable_objects => @all_editable_activities }) %>
+
+<div style='clear: right; float: left'>
+  <%= render :partial => 'show' %>
+</div>
+
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => true,
+  :function => 'Show',
+  :authorable_object => @activity,
+  :authorable_object_class => Activity, 
+  :all_viewable_objects => @all_viewable_activities, 
+  :all_editable_objects => @all_editable_activities }) %>

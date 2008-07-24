@@ -1,0 +1,33 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Index',
+  :authorable_object_pages => @calibration_pages,
+  :all_viewable_objects => @all_viewable_calibrations, 
+  :all_editable_objects => @all_editable_calibrations }) %>
+
+<div class="activityList">
+<table cellpadding="5" cellspacing="0">
+    <% for calibration in @calibrations %>
+      <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+        <td width="20px" >
+          <%= link_to 'Show', calibration_path(calibration), :title => 'Show the calibration' %><br />
+          <% restrict_to 'admin || manager || teacher || member' do %>
+              <%= link_to 'Edit', edit_calibration_path(calibration), :title => "Make changes in #{calibration.name}." %><br />
+          <% end %>   
+          <% restrict_to 'admin || manager' do %> 
+            <%= link_to 'Delete', calibration, :confirm => "Are you sure you want to delete the calibration: #{calibration.id} #{calibration.name}?", 
+              :method => :delete, :title => "Delete Calibration: #{@calibration.id} #{@calibration.name}" %>              
+          <% end %>           
+        </td>
+        <td width="100%">
+          <span class="listTitle"><%= calibration.id %>: <%= h(calibration.name) %>, <%= h(calibration.probe_type.name) %></span><br />
+          <%= h(truncate(calibration.description, 160)) %><br />
+          <span class="modelAttribute">
+            DIY Author: <strong><%= (calibration.user ? calibration.user.name : "") %></strong>
+          </span>
+        </td>
+      </tr>
+    <% end %>
+</table>
+</div>

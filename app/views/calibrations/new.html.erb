@@ -1,0 +1,22 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Create',
+  :authorable_object => @calibration,
+  :all_viewable_objects => @all_viewable_calibrations, 
+  :all_editable_objects => @all_editable_calibrations }) %>
+
+<div class="pageEdit">
+<% form_for(:calibration, :url => calibrations_path, :html => { :method => :post }) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+      <%= submit_tag "Create" %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+  <%= render :partial => 'form', :object => f %>
+<% end %>
+</div>
+

@@ -1,0 +1,15 @@
+<%= error_messages_for :report %>
+
+<p>
+  <span class="SectionTitle">Select the activity: </span>
+  <%= form.select(:reportable_id, ExternalOtrunkActivity.find(:all).collect {|i| ["#{i.id}: #{i.name}", i.id ]}) %>
+</p>
+
+<p>
+  
+  <span class="SectionTitle">Select the report template: </span>
+  <% otrunk_report_templates = OtrunkReportTemplate.find(:all).collect {|i| ["#{i.id}: #{i.name}", i.id]} %>
+  <%= form.select(:otrunk_report_template_id, otrunk_report_templates) %>
+  
+</p>
+

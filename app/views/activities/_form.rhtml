@@ -1,0 +1,303 @@
+<%= error_messages_for 'activity' %>
+<div class="pageEditForm">
+	<%= hidden_field 'activity', 'parent_id' %>
+	<%= hidden_field 'activity', 'parent_version' %>
+  <p><label for="activity_name"><span class="SectionTitle">Activity Name</span></label> <span class='required'>(required)</span><br/>
+  <%= text_field 'activity', 'name', :size => 72  %></p>
+
+  <p><label for="activity_description"><span class="SectionTitle">Description</label><br/>
+  <%= text_area 'activity', 'description', "cols" => 72, :rows => 2 %></p>
+
+  <% if current_user == User.anonymous %>
+      <p>Publication status: private, 
+  <% else %>
+      <p><label for="activity_public">List as public:</label>
+      <%= check_box 'activity', 'public'  %><br />
+  <% end %>
+  <label for="activity_textile">Use Textile markup for editing:</label>
+  <%= check_box 'activity', 'textile'  %><br />
+  <small>
+    Textile is a simple markup language you can use to format text and embed images.<br />
+    Open the </small><%= link_to ("Textile Quick Reference", "http://hobix.com/textile/quick.html", 'popup' => true) %>
+  <small>in another window for a guide.</small><br/>
+  <label for="activity_nobundles">Don't load prior session data:</label>
+  <%= check_box 'activity', 'nobundles'  %><br />
+  <small>With this option selected, when the activity is run, it will start from a clean slate. Data will still be saved to the server for later review.</small>
+  </p>
+  <hr />
+
+  <p>
+    <label for="activity_introduction"><span class="SectionTitle">Introduction/Discovery Question </span></label> <span class='required'>(required)</span><br />
+    <%= text_area 'activity', 'introduction', "cols" => 96, :rows => 12 %><br />
+    <label for="activity_introduction_text_response">Open text response:</label><%= check_box 'activity', 'introduction_text_response' %><br />
+    <label for="activity_introduction_drawing_response">  Drawing response:</label><%= check_box 'activity', 'introduction_drawing_response'  %>
+  </p>
+  <%= observe_field :activity_introduction, 
+    :frequency => 10,
+    :update => 'activity_introduction_status',
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => { :action=>"check_xhtml", :controller=>"activities" } %>
+  <b>Preview:</b>
+  <div id="activity_introduction_status" class="fieldPreview">
+    <% content = web_content(@activity.introduction, @activity.textile) -%>
+    <%= content %>
+    <% if @activity.textile -%>
+      <% errors = xhtml_errors?(content)
+        unless errors.blank? -%>
+        <div class="xhtmlError">
+          <h3>XHTML Errors Detected: </h3>
+          <pre><%= web_content(errors.join("\n"), false) %></pre>
+        </div>
+      <% end -%>
+    <% end -%>
+  </div>
+  <hr />
+
+  <p>
+    <label for="activity_standards"><span class="SectionTitle">Standards/Objectives</span></label><br/>
+    <%= text_area 'activity', 'standards', "cols" => 96, :rows => 12 %>
+  </p>
+  <%= observe_field :activity_standards, 
+    :frequency => 10,
+    :update => 'activity_standards_status',
+    :complete => "Element.show('activity_standards_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_standards_status" class="fieldPreview"><%= web_content(@activity.standards) %></div>
+  <hr />
+
+  <p>
+    <label for="activity_materials"><span class="SectionTitle">Materials</span></label><br/>
+    <%= text_area 'activity', 'materials', "cols" => 96, :rows => 12  %>
+  </p>
+  <%= observe_field :activity_materials, 
+    :frequency => 10,
+    :update => 'activity_materials_status',
+    :complete => "Element.show('activity_materials_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_materials_status" class="fieldPreview"><%= web_content(@activity.materials) %></div>
+  <hr />
+
+  <p>
+    <label for="activity_safety"><span class="SectionTitle">Safety</span></label><br/>
+    <%= text_area 'activity', 'safety', "cols" => 96, :rows => 12  %>
+  </p>
+  <%= observe_field :activity_safety, 
+    :frequency => 10,
+    :update => 'activity_safety_status',
+    :complete => "Element.show('activity_safety_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_safety_status" class="fieldPreview"><%= web_content(@activity.safety) %></div>
+  <hr />
+
+  <p>
+    <label for="activity_proced"><span class="SectionTitle">Procedure</span></label><br/>
+    <%= text_area 'activity', 'proced', "cols" => 96, :rows => 12  %><br />
+    <label for="activity_proced_text_response">Open text response:</label><%= check_box 'activity', 'proced_text_response'  %><br />
+    <label for="activity_proced_drawing_response">  Drawing response:</label><%= check_box 'activity', 'proced_drawing_response'  %>
+  </p>
+  <%= observe_field :activity_proced, 
+    :frequency => 10,
+    :update => 'activity_proced_status',
+    :complete => "Element.show('activity_proced_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_proced_status" class="fieldPreview"><%= web_content(@activity.proced) %></div>
+  <hr />
+
+  <p>
+    <label for="activity_predict"><span class="SectionTitle">Prediction</span></label><br />
+    <%= text_area 'activity', 'predict', "cols" => 96, :rows => 12  %><br />
+    <label for="activity_prediction_text_response">Open text response:</label><%= check_box 'activity', 'prediction_text_response'  %><br />
+    <label for="activity_prediction_drawing_response">  Drawing response:</label><%= check_box 'activity', 'prediction_drawing_response'  %><br />
+    <label for="activity_prediction_graph_response">  Prediction graph:</label><%= check_box 'activity', 'prediction_graph_response'  %>(for probe in first collect data section)
+  </p>
+  <%= observe_field :activity_predict, 
+    :frequency => 10,
+    :update => 'activity_predict_status',
+    :complete => "Element.show('activity_predict_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_predict_status" class="fieldPreview"><%= web_content(@activity.predict) %></div>
+  <hr />
+
+  <p>
+    <label for="activity_collectdata"><span class="SectionTitle">Collect Data</span></label><br/>
+    <%= text_area 'activity', 'collectdata', "cols" => 96, :rows => 12  %><br />
+  </p>
+  <%= observe_field :activity_collectdata, 
+    :frequency => 10,
+    :update => 'activity_collectdata_status',
+    :complete => "Element.show('activity_collectdata_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_collectdata_status" class="fieldPreview"><%= web_content(@activity.collectdata) %></div>
+
+  <p>
+    <label for="activity_collectdata_probe_active"><span class="SectionTitle">Probe: </span></label>
+    <%= check_box 'activity', 'collectdata_probe_active'  %> 
+    <%= select 'activity', 'probe_type_id',  ProbeType.find(:all).map { |p| [p.name, p.id] }  %>
+    &nbsp;&nbsp;&nbsp;multiple datasets: <%= check_box 'activity', 'collectdata_probe_multi'  %>
+
+    <div id='collectdata1_calibrations'>
+      <%= render :partial => 'probe_type_calibrations', :locals => { 
+        :probe_type => @activity.probe_type, 
+        :calibration_active => 'collectdata1_calibration_active',
+        :calibration_id => 'collectdata1_calibration_id' } %>
+    </div>
+  </p>
+
+  <p>
+    <label for="activity_collectdata_model_active"><span class="SectionTitle">Model: </span></label>
+    <%= check_box 'activity', 'collectdata_model_active'  %>
+    <%= select 'activity', 'model_id',  Model.find(:all).map {|m| [m.name, m.id] }  %>
+  </p>
+  <label for="activity_collectdata_text_response">Open text response:</label><%= check_box 'activity', 'collectdata_text_response'  %><br />
+  <label for="activity_collectdata_drawing_response">  Drawing response:</label><%= check_box 'activity', 'collectdata_drawing_response'  %><br />
+  <hr />
+  <label for="activity_collectdata_graph_response">  Prediction graph response:</label><%= check_box 'activity', 'collectdata_graph_response'  %>(for probe in second section)
+
+  <p>
+    <label for="activity_collectdata2"><span class="SectionTitle">Collect Data (second section)</span></label><br/>
+    <%= text_area 'activity', 'collectdata2', "cols" => 96, :rows => 12  %><br />
+  </p>
+  <%= observe_field :activity_collectdata2, 
+    :frequency => 10,
+    :update => 'activity_collectdata2_status',
+    :complete => "Element.show('activity_collectdata2_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_collectdata2_status" class="fieldPreview"><%= web_content(@activity.collectdata2) %></div>
+
+  <p>
+    <label for="activity_collectdata2_probe_active"><span class="SectionTitle">Probe: </span></label>
+    <%= check_box 'activity', 'collectdata2_probe_active'  %>
+    <%= select 'activity', 'collectdata2_probetype_id',  ProbeType.find(:all).map { |p| [p.name, p.id] } %>
+    &nbsp;&nbsp;&nbsp;multiple datasets: <%= check_box 'activity', 'collectdata2_probe_multi'  %>
+
+    <div id='collectdata2_calibrations'>
+      <%= render :partial => 'probe_type_calibrations', :locals => { 
+        :probe_type => @activity.second_probe_type, 
+        :calibration_active => 'collectdata2_calibration_active',
+        :calibration_id => 'collectdata2_calibration_id' } %>
+    </div>
+  </p>
+  <p>
+    <label for="activity_collectdata2_model_active"><span class="SectionTitle">Model: </span></label>
+    <%= check_box 'activity', 'collectdata2_model_active'  %>
+    <%= select 'activity', 'collectdata2_model_id',  Model.find(:all).map {|m| [m.name, m.id] }  %>
+  </p>
+  <label for="activity_collectdata2_text_response">Open text response:</label><%= check_box 'activity', 'collectdata2_text_response'  %><br />
+  <label for="activity_collectdata2_drawing_response">  Drawing response:</label><%= check_box 'activity', 'collectdata2_drawing_response'  %>
+  <hr />
+
+  <p>
+    <label for="activity_collectdata3"><span class="SectionTitle">Collect Data (third section)</span></label><br/>
+    <%= text_area 'activity', 'collectdata3', "cols" => 96, :rows => 12  %><br />
+  </p>
+  <%= observe_field :activity_collectdata3, 
+    :frequency => 10,
+    :update => 'activity_collectdata3_status',
+    :complete => "Element.show('activity_collectdata3_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_collectdata3_status" class="fieldPreview"><%= web_content(@activity.collectdata3) %></div>
+
+  <p>
+    <label for="activity_collectdata3_probe_active"><span class="SectionTitle">Probe: </span></label>
+    <%= check_box 'activity', 'collectdata3_probe_active'  %>
+    <%= select 'activity', 'collectdata3_probetype_id',  ProbeType.find(:all).map { |p| [p.name, p.id] } %>
+    &nbsp;&nbsp;&nbsp;multiple datasets: <%= check_box 'activity', 'collectdata3_probe_multi'  %>
+
+    <div id='collectdata3_calibrations'>
+      <%= render :partial => 'probe_type_calibrations', :locals => { 
+        :probe_type => @activity.third_probe_type, 
+        :calibration_active => 'collectdata3_calibration_active',
+        :calibration_id => 'collectdata3_calibration_id' } %>
+    </div>
+  </p>
+  <p>
+    <label for="activity_collectdata3_model_active"><span class="SectionTitle">Model: </span></label>
+    <%= check_box 'activity', 'collectdata3_model_active'  %>
+    <%= select 'activity', 'collectdata3_model_id',  Model.find(:all).map {|m| [m.name, m.id] }  %>
+  </p>
+  <label for="activity_collectdata3_text_response">Open text response:</label><%= check_box 'activity', 'collectdata3_text_response'  %><br />
+  <label for="activity_collectdata3_drawing_response">  Drawing response:</label><%= check_box 'activity', 'collectdata3_drawing_response'  %>
+  <hr />
+
+  <p>
+    <label for="activity_analysis"><span class="SectionTitle">Analysis</span><br />
+    <%= text_area 'activity', 'analysis', "cols" => 96, :rows => 12  %><br />
+    <label for="activity_analysis_text_response">Open text response:</label><%= check_box 'activity', 'analysis_text_response'  %><br />
+    <label for="activity_analysis_drawing_response">  Drawing response:</label><%= check_box 'activity', 'analysis_drawing_response' %>
+  </p>
+  <%= observe_field :activity_analysis, 
+    :frequency => 10,
+    :update => 'activity_analysis_status',
+    :complete => "Element.show('activity_analysis_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_analysis_status" class="fieldPreview"><%= web_content(@activity.analysis) %></div>
+  <hr />
+
+  <p>
+    <label for="activity_conclusion"><span class="SectionTitle">Conclusion</span><br />
+    <%= text_area 'activity', 'conclusion', "cols" => 96, :rows => 12  %><br />
+    <label for="activity_conclusion_text_response">Open text response:</label><%= check_box 'activity', 'conclusion_text_response'  %><br />
+    <label for="activity_conclusion_drawing_response">  Drawing response:</label><%= check_box 'activity', 'conclusion_drawing_response' %>
+  </p>
+  <%= observe_field :activity_conclusion, 
+    :frequency => 10,
+    :update => 'activity_conclusion_status',
+    :complete => "Element.show('activity_conclusion_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_conclusion_status" class="fieldPreview"><%= web_content(@activity.conclusion) %></div>
+  <hr />
+
+  <p>
+    <label for="activity_further"><span class="SectionTitle">Further Investigation</span></label><br/>
+    <%= text_area 'activity', 'further', "cols" => 96, :rows => 12  %><br />
+  </p>
+  <%= observe_field :activity_further, 
+    :frequency => 10,
+    :update => 'activity_further_status',
+    :complete => "Element.show('activity_further_status')", 
+    :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+    :url => {:action => 'check_xhtml'} %>
+  <b>Preview:</b>
+  <div id="activity_further_status" class="fieldPreview"><%= web_content(@activity.further) %></div>
+  <p>
+    <label for="activity_further_probe_active"><span class="SectionTitle">Probe: </span></label>
+    <%= check_box 'activity', 'further_probe_active'  %>
+    <%= select 'activity', 'further_probetype_id',  ProbeType.find(:all).map { |p| [p.name, p.id] } %>
+    &nbsp;&nbsp;&nbsp;multiple datasets: <%= check_box 'activity', 'further_probe_multi'  %>
+
+    <div id='furtherprobe_calibrations'>
+      <%= render :partial => 'probe_type_calibrations', :locals => { 
+        :probe_type => @activity.fourth_probe_type, 
+        :calibration_active => 'furtherprobe_calibration_active',
+        :calibration_id => 'furtherprobe_calibration_id' } %>
+    </div>
+  </p>
+  <p>
+    <label for="activity_further_model_active"><span class="SectionTitle">Model: </span></label>
+    <%= check_box 'activity', 'further_model_active'  %>
+    <%= select 'activity', 'further_model_id',  Model.find(:all).map {|m| [m.name, m.id] }  %>
+  </p>
+  <label for="activity_further_text_response">Open text response: </label><%= check_box 'activity', 'further_text_response'  %><br />
+  <label for="activity_further_drawing_response">  Drawing response:</label><%= check_box 'activity', 'further_drawing_response'  %>
+
+</div>

@@ -1,0 +1,10 @@
+--- 
+:application_name: PAEMST Activity Authoring
+:page_title_prefix: PAEMST
+:logo: paemst_logo.gif
+:home_link: http://paemst.portal.concord.org/
+:stylesheet: paemst
+:external_otrunk_activities_title: External OTrunk Activities
+:show_external_otrunk_activities: false
+:hide_activities: false
+:hide_models: false

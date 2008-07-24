@@ -1,0 +1,28 @@
+<%= error_messages_for :physical_unit %>
+<p>
+  <span class="SectionTitle">Name:</span><br />
+  <%= form.text_field :name, :size => 72 %>
+</p>
+<p>
+  <span class="SectionTitle">Quantity measured:</span><br />
+  <%= form.text_field :quantity, :size => 72 %>
+</p>
+<p>
+  <span class="SectionTitle">Description:</span><br />
+  <%= form.text_area :description, :cols => 96, :rows => 4  %>
+</p>
+<p>
+  <span class="SectionTitle">Unit symbol: </span>
+  <%= form.text_field :unit_symbol, :size => 72 %>
+</p>
+<p>
+  <span class="SectionTitle">Unit symbol text: </span>
+  <%= form.text_field :unit_symbol_text, :size => 72 %>
+</p>
+<p>
+  <span class="SectionTitle">Is this an SI unit? </span><%= form.check_box :si %>
+</p>
+<p>
+  <span class="SectionTitle">Is it one of the seven base units from which the other units are derived?
+  </span><%= form.check_box :base_unit %>&nbsp;&nbsp;&nbsp;
+</p>

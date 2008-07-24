@@ -1,0 +1,22 @@
+<p><span class="SectionTitle">Username: </span><%= @user.login %></p>
+<p><span class="SectionTitle">Email: </span><%= @user.email %></p>
+<p><span class="SectionTitle">Name: </span><%= @user.name %></p>
+<p><span class="SectionTitle">Default vendor interface </span><%= @user.vendor_interface.name %></p>
+
+<% if @user.activities.length > 0 %>
+  <p>
+    Show Activities:
+    <select onchange="window.location = this.value">
+      <%= options_for_select @user.activities.collect {|a| ["#{a.id}: #{truncate(a.name, 40)}", url_for(:controller => '/activities', :action => 'show', :id => a.id)] }.unshift(['Select activity:', url_for(:controller => '/users', :action => "index", :page => session[:page] || 1 )]) %>
+    </select>
+  </p>
+<% end %>
+
+<% if @user.models.length > 0 %>
+  <p>
+    Show Models:
+    <select onchange="window.location = this.value">
+      <%= options_for_select @user.models.collect {|a| ["#{a.id}: #{truncate(a.name, 40)}", url_for(:controller => '/models', :action => 'show', :id => a.id)] }.unshift(['Select activity:', url_for(:controller => '/users', :action => "index", :page => session[:page] || 1 )]) %>
+    </select>
+  </p>
+<% end %>

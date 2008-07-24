@@ -1,0 +1,11 @@
+<h1>New probe_type</h1>
+
+<%= error_messages_for :probe_type %>
+
+<% form_for(:probe_type, :url => probe_types_path) do |f| %>
+  <p>
+    <%= submit_tag "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', probe_types_path %>

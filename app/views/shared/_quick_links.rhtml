@@ -1,0 +1,11 @@
+<div class="pageHeaderQuickLinks">
+  <span style="font-weight: normal; font-style: italic; font-size: 90%">
+    search in: <%= english_list(@searchable_attributes) %><br />
+    leave search field blank to find everything</span><br />
+  <% form_tag url_for(:action => "index", :page => session[:page] || 1 ), :method => 'get' do %>
+    <input type="submit" value="Search" />
+    <% content_tag :label do %>
+      <%= text_field_tag :search, params[:search], :size => 35 %>
+    <% end %>
+  <% end %>
+</div>

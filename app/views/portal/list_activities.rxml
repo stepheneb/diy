@@ -1,0 +1,6 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
+xml.activities do
+  @activities.each do |v|
+      xml << render(:partial => 'activity', :locals => {:activity => v, :timestamp => nil}) 
+  end
+end

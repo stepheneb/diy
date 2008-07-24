@@ -1,0 +1,9 @@
+<%= error_messages_for 'vendor_interface' %>
+
+<!--[form:vendor_interface]-->
+
+<p><label for="vendor_interface_id">Probeware interface:</label><br/>
+<%= select 'vendor_interface', 'id',  VendorInterface.find(:all).map { |v| [v.name, v.id] }  %></p>
+
+<!--[eoform:vendor_interface]-->
+

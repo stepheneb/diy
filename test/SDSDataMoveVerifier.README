@@ -1,0 +1,9 @@
+This is a simple java application to verify that the bundles moved when running 'rake diy:migrate_sds_data' was correctly moved to the new SDS. 
+
+To compile it:
+  1) Run 'javac SDSDataMoveVerifier.java'
+
+To use it:
+ 1) First run the rake task 'rake diy:migrate_sds_data'. The rake task generates the file tmp/bundle_transfer.csv, which is a comma separated list of old-bundle-url/new-bundle-url pairs.
+ 2) Run the program with the file location as the argument (e.g. java SDSDataMoveVerifier /Users/aunger/diy/tmp/bundle_transfer.csv).
+    Status will be printed on stdout, and any mismatched bundles will be noted via stderr.

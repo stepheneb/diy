@@ -1,0 +1,6 @@
+<% if Activity.count > 1  %>
+  <label>Show: </label>
+  <select onchange="window.location = this.value">
+    <%= options_for_select  @all_viewable_activities.collect {|a| ["#{a.id}: #{truncate(a.name, 40)}", url_for(:controller => '/activities', :action => 'show', :id => a.id)] }.unshift(['Select activity:', url_for(:controller => '/activities', :action => "index", :page => session[:page] || 1 )]) %>
+  </select>
+<% end %>

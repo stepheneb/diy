@@ -1,0 +1,67 @@
+.otrunkShowActivity {
+}
+
+.otrunkActivity {
+  font-family: optima, verdana, arial, helvetica, sans-serif;
+  background-color: rgb(255, 248, 233); 
+  color: #333333; 
+  margin: 0px;
+  padding: 20px;
+  border-width: 1px; 
+  border-color: silver; 
+  border-style: solid; 
+}
+
+.otrunkActivity h1 {
+  letter-spacing: 2px; 
+  font-family: Optima;
+  font-weight: 800%;
+}
+
+.otrunkActivity h2 {
+  font-family: Optima;
+}
+
+.otrunkActivitySection  {
+  margin: 10px 0px 5px 0px; 
+  padding: 8px 8px 8px 8px; 
+  background-color: rgb(255, 252, 248); 
+  font-family: Optima ExtraBlack; 
+  border-width: 1px; 
+  border-color: silver; 
+  border-style: solid; 
+  list-style-type: square;"
+}
+
+.otrunkActivityContent  {
+  margin: 0px 0px 0px 0px; 
+  padding: 0px 10px 4px 10px; 
+  font-family: Optima;
+}
+
+.otrunkActivityObject  {
+  
+  margin: 10px 0px 10px 0px; padding: 8px 20px 15px 20px
+  
+  margin: 10px 20px 10px 10px; 
+  padding: 10px 20px 10px 20px;  
+  background-color: rgb(255, 252, 248); 
+  border-width: 1px; 
+  border-color: silver; 
+  border-style: solid;
+}
+
+.otrunkActivityTextBox  {
+  margin: 10px; 
+  padding: 10px 60px 10px 15px;  
+  background-color: rgb(255, 252, 248); 
+}
+
+.otrunkActivityOpenTextResponse  {
+  margin: 0px; 
+  padding: 0px 4px 0px 4px;  
+  background-color: rgb(255, 255, 255); 
+  border-width: 1px; 
+  border-color: silver; 
+  border-style: solid;
+}

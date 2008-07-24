@@ -1,0 +1,19 @@
+<%= error_messages_for :data_filter %>
+<p>
+  <span class="SectionTitle">Name</span><br />
+  <%= form.text_field :name, :size => 72 %>
+</p>
+<p>
+  <span class="SectionTitle">Description</span><br />
+  <%= form.text_area :description, :cols => 96, :rows => 4  %>
+</p>
+<p>
+  <span class="SectionTitle">Otrunk object class</span><br />
+  <%= form.text_field :otrunk_object_class, :size => 72 %>
+</p>
+<p>
+  <span class="SectionTitle">k0: </span><%= form.check_box :k0_active %>&nbsp;&nbsp;&nbsp;
+  <span class="SectionTitle">k1: </span><%= form.check_box :k1_active %>&nbsp;&nbsp;&nbsp;
+  <span class="SectionTitle">k2: </span><%= form.check_box :k2_active %>&nbsp;&nbsp;&nbsp;
+  <span class="SectionTitle">k3: </span><%= form.check_box :k3_active %>&nbsp;&nbsp;&nbsp;
+</p>

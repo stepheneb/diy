@@ -1,0 +1,103 @@
+<div class="pageHeader">
+  <% if location == 'bottom' %>
+    <div class='clearBoth'>&nbsp;</div>
+    <hr />
+  <% end %>
+  <% creating = (function == 'Create') %>
+  <div class="pageHeaderLeft">  
+    <% if function == 'Index' %>
+      <span class="pageTitle"><%= @class_name_titleized.pluralize %></span>
+      <% restriction = 'admin || manager || teacher || student || member' %>
+      <% if @restricted_copy_and_create %>
+      	<% restriction = 'admin || manager' %>
+      <% end %>
+      <% restrict_to restriction do %>
+        <br />(<%= link_to "Create new #{@class_name_titleized}", :action => 'new' %>)
+      <% end %><br />
+      <%= will_paginate @paginated_objects %>
+      <% if @paginated_objects %>
+        <p><%= page_entries_info @paginated_objects %></p>
+      <% end %>
+      
+    <% else %> 
+      <span class="pageTitle"><%= function %> <%= @class_name_titleized %>:
+        <% unless creating %>
+          <%= authorable_object.id %>
+        <% end %>
+      </span><br />
+      <span class="pageObjectName">
+        <% unless creating && controller.action_name != 'copy' %>
+          <%= authorable_object.name %>
+        <% end %>
+      </span><br />
+      <p>
+      <% unless creating %>
+        <% if function == 'Show' %>
+          <% changeable = authorable_object.changeable?(current_user) %>
+          <% if changeable %>
+              <%= link_to 'Edit', eval("edit_#{@class_name}_path(authorable_object)"), :title => "Make changes in #{authorable_object.name}." %> | 
+              <% restrict_to 'admin || manager' do %> 
+                <%= link_to 'Delete', eval("#{@class_name}_path(authorable_object)"), :confirm => "Are you sure you want to delete the #{@class_name_titleized}: #{authorable_object.name}?", :method => :delete, :title => "Delete the #{@class_name_titleized}: #{authorable_object.name}" %> |
+              <% end %>
+          <% end %>        
+        <% else %>
+            <%= link_to 'Show', eval("#{@class_name}_path(authorable_object)"), :title => "Show the #{@class_name_titleized}: #{authorable_object.name}" %> |
+            <% restrict_to 'admin || manager' do %> 
+              <%= link_to 'Delete', eval("#{@class_name}_path(authorable_object)"), :confirm => "Are you sure you want to delete the #{@class_name_titleized}: #{authorable_object.name}?", :method => :delete, :title => "Delete the #{@class_name_titleized}: #{authorable_object.name}" %> |
+            <% end %>
+        <% end %>
+        <% if runnable %>
+          <%= link_to 'Run', sail_jnlp_run_url(:id => authorable_object.id, :vid => current_user.vendor_interface.id, :uid => current_user.id, :savedata => true, :authoring => nil, :nobundles => (if authorable_object.nobundles then "nobundles" else "" end)),
+          :title => "Start #{authorable_object.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> |
+          <%= link_to 'Test', sail_jnlp_authoring_url(:id => authorable_object.id, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => "nobundles"), :title => "Test the activity: #{authorable_object.name}. No learner data will be saved."  %> |
+        <% end %>
+        <% restriction = 'admin || manager || teacher || member' %>
+	    <% if @restricted_copy_and_create %>
+	      <% restriction = 'admin || manager' %>
+	    <% end %>
+        <% restrict_to restriction do %> 
+          <%= link_to 'Copy', eval("copy_#{@class_name}_path(authorable_object)"),
+              :title => "Make a copy of: '#{authorable_object.name}' and start editing it." %> | 
+        <% end %>
+        <% restrict_to 'admin' do %> 
+          <% if runnable %>
+            <%= link_to 'Otml', otml_run_url(:id => authorable_object.id, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => (if authorable_object.nobundles then "nobundles" else "" end)), 
+                :title => "Display the otml for this #{authorable_object_class} (FireFox works best)." %> |
+          <% end %>
+        <% end %>
+      <% end %>
+      <% tooltip = "List all the public #{@class_name_titleized.pluralize}" %>
+      <% tooltip << (current_user.email != 'anonymous' ? " as well any you have authored and not listed as 'Public'." : '.') %>
+      <%= link_to 'List', {:action => 'index', :page => session[:page] || 1 }, :title => tooltip  %>
+    </p>
+    <% end %>
+  </div>
+  <% if function == 'Index' %>
+    <%= render(:partial => 'shared/quick_links', :locals => { 
+      :all_viewable_objects => all_viewable_objects, 
+      :all_editable_objects => all_editable_objects }) %>
+  <% end %>
+  <div class='clearBoth'>&nbsp;</div>
+  <% unless creating || function == 'Index' || function == 'Show' %>
+    <% if authorable_object.user != current_user %>
+      <div class="flashbox">
+        <div class="flash">
+        <%= current_user.name %>: you are able to edit this DIY model: <b><%= authorable_object.name %></b> created by the user: <b><%= authorable_object.user.name %></b> because you have the role: <b><%= current_user.roles.find(:first).title.capitalize %></b>. Use that power wisely.
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+  <hr />
+  <% if location == 'top' %>
+    <% content_for(:admin_sidebar) do %> 
+      <% restrict_to 'admin || manager' do %>
+        <% if runnable %>
+          <p>Runnable:<br />
+            Offering: <small><%= link_to "#{authorable_object.sds_offering_id}", SdsConnect::Connect.offering_url(authorable_object.sds_offering_id) %></small><br /> 
+            Workgroup: <small><%= link_to "#{@learner.sds_workgroup_id}", SdsConnect::Connect.workgroup_url(@learner.sds_workgroup_id) %></small>        
+          </p> 
+        <% end %> 
+      <% end %>       
+    <% end %> 
+  <% end %>
+</div>

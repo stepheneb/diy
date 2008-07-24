@@ -1,0 +1,7 @@
+<% if probe_type && calibrations = probe_type.calibrations %>
+  <% if calibrations.length > 0 %>
+    <span class="SectionTitle">Alternative calibration: </span>
+    <%= check_box 'activity', calibration_active  %>
+    <%= select 'activity', calibration_id,  calibrations.find(:all).map { |c| [c.name, c.id] }  %>
+  <% end %>
+<% end %>

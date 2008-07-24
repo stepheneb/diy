@@ -1,0 +1,52 @@
+<% differences = @activity.html_difference(@other_activity) -%>
+<p>
+	<table>
+		<tr>
+			<td rowspan='4'>Key</td>
+			<td><span class="match">No changes</span></td>
+		</tr>
+		<tr><td><span class="only_a">Only in <%= @activity.id %></td></tr>
+		<tr><td><span class="only_b">Only in <%= @other_activity.id %></span></td></tr>
+		<tr><td><span class="changed">Changed in both</span></td></tr>
+	</table>
+</p>
+<p>
+	<table style="table-layout: fixed">
+		<tr>
+			<td>  </td>
+			<td>Current Activity (<%= @activity.id %>)</td>
+			<td>Parent (<%= @other_activity.id %>)</td>
+		</tr>
+		<% differences.keys.sort.each do |k| -%>
+		<tr valign='top'>
+			<td style='width: 250px'><%= k %></td>
+			<td style='width: 500px'>
+				<% if k =~ /^(.*)_id/ -%>
+				  <% o = get_object_for_attribute(@activity, k) -%>
+				  <% if (differences[k][0] =~ /class="match"/) -%>
+				    <span class="match">
+				  <% else -%>
+				    <span class="only_a">
+				  <% end -%>
+				  <%= render :partial => "compare/#{o.class.to_s.downcase}", :locals=> { :activity => o } %>
+				  </span><br/>
+				<% end -%>
+				<%= differences[k][0].gsub("\n","<br/>") %>
+			</td>
+			<td style='width: 500px'>
+				<% if k =~ /^(.*)_id/ -%>
+				  <% o = get_object_for_attribute(@other_activity, k) -%>
+				  <% if (differences[k][1] =~ /class="match"/) -%>
+				    <span class="match">
+				  <% else -%>
+				    <span class="only_b">
+				  <% end -%>
+				  <%= render :partial => "compare/#{o.class.to_s.downcase}", :locals=> { :activity => o } %>
+				  </span><br/>
+				<% end -%>
+				<%= differences[k][1].gsub("\n","<br/>") %>
+			</td>
+		</tr>
+		<% end -%>
+	</table>
+</p>

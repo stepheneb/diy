@@ -1,0 +1,49 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => nil,
+  :function => 'Index',
+  :authorable_object_class => ExternalOtrunkActivity, 
+  :authorable_object_pages => @external_otrunk_activity_pages,
+  :all_viewable_objects => @all_viewable_external_otrunk_activities, 
+  :all_editable_objects => @all_editable_external_otrunk_activities }) %> 
+
+<div class="activityList">
+<table cellpadding="5" cellspacing="0">
+    <% for external_otrunk_activity in @external_otrunk_activities %>
+    <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+      <td width="20px" >
+        <%= link_to 'Run', sail_jnlp_run_url(:id => external_otrunk_activity, :vid => current_user.vendor_interface.id, :uid => current_user.id, :savedata => true, :authoring => nil, :nobundles => (if external_otrunk_activity.nobundles then "nobundles" else "" end)), :title => "Start: #{external_otrunk_activity.name}  as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %><br />
+        <%= link_to 'Show', external_otrunk_activity_path(external_otrunk_activity), :title => "Show the #{@class_name_titleized} specification" %><br />        
+        <% restrict_to 'admin || manager' do %>
+          <%= link_to 'Copy', {:action => 'copy', :id => external_otrunk_activity, :page => params[:page] },
+          :title => "Make a copy of the #{@class_name_titleized}: '#{external_otrunk_activity.name}' and start editing it." %><br />
+          <% if external_otrunk_activity.changeable?(current_user) %>
+            <%= link_to 'Edit', edit_external_otrunk_activity_path(external_otrunk_activity), :title => "Make changes in #{external_otrunk_activity.name}." %><br />
+            <%= link_to 'Delete', external_otrunk_activity_path(external_otrunk_activity), :confirm => "Are you sure you want to delete: #{external_otrunk_activity.name}?", :method => :delete %>
+          <% end -%>
+        <% end %>
+
+      </td>
+      <td width="100%">
+        <span class="listTitle"><%= external_otrunk_activity.id %>: <%= h(external_otrunk_activity.name) %></span><br />
+        <%= h(truncate(external_otrunk_activity.description, 160)) %><br />
+        <span class="modelAttribute">
+          DIY Author: <strong><%= external_otrunk_activity.user.name %></strong>;  
+          Public: <strong><%= boolean_to_yes_no(external_otrunk_activity.public) %></strong>
+		  <% if external_otrunk_activity.parent %>
+	    ; Copied from: <strong><%= external_otrunk_activity.parent_id %> (<%= link_to "compare", :action => "compare", :id => external_otrunk_activity.id, :other => external_otrunk_activity.parent_id %>)</strong>
+	      <% end %>
+        </span><br />
+		<% @learners = external_otrunk_activity.learners.select {|l| l.learner_sessions.count > 0 } %>
+    <% restrict_to 'admin || manager || teacher' do %>
+    	<%= link_to "#{pluralize(@learners.length, 'person has', 'people have')} used this #{@class_name_titleized}", usage_external_otrunk_activity_path(external_otrunk_activity),
+    		:title => "A list of everybody who has run the #{@class_name_titleized}: '#{external_otrunk_activity.name}'. You can view each persons work." %><br />
+    <% end %>
+    <% restrict_to 'guest' do %>
+    	<span class='activityListUseage'><%= "#{pluralize(@learners.length, 'person has', 'people have')} tried this #{@class_name_titleized}." %></span><br />
+    <% end %>
+      </td>
+    </tr>
+    <% end %>
+</table>
+</div>

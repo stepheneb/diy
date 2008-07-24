@@ -1,0 +1,42 @@
+<% parts = activity.interactive_components %>
+<tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+  <td width="20px" >
+    <%= link_to 'Run', sail_jnlp_run_url(:id => activity, :vid => current_user.vendor_interface.id, :uid => current_user.id, :savedata => true, :authoring => nil, :nobundles => (if activity.nobundles then "nobundles" else "" end)),
+    :title => 'Start the activity as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive.'  %> <br />
+    <%= link_to 'Show', {:action => 'show', :id => activity}, :title => 'Show the activity in your web browser' %><br />
+    <% restrict_to 'admin || manager || teacher || member' do %>
+    <%= link_to 'Copy', {:action => 'copy', :id => activity, :page => params[:page] },
+    :title => "Make a copy of the activity: '#{activity.name}' and start editing it. You will be listed as the author of the copy. Please give credit to the original author." %><br />
+    <% if activity.changeable?(current_user) %>
+    <%= link_to 'Edit', {:action => 'edit', :id => activity, :page => params[:page] },
+    :title => "Make changes in #{activity.name}. As soon as you save your changes you can try it out." %><br />
+    <% restrict_to 'admin || manager' do %> 
+    <%= link_to 'Delete', activity, :confirm => "Are you sure you want to delete Activity: #{activity.id} #{activity.name}?", 
+    :method => :delete, :title => "Delete Activity: #{activity.id} #{activity.name}" %>              
+    <% end %>
+    <% end %>
+    <% end %> 
+  </td>
+  <td width="100%">
+    <span class="listTitle"><%= activity.id %>: <%= h(activity.name) %></span><br />
+    <%= h(truncate(activity.description, 160)) %><br />
+    <span class="modelAttribute">
+      <strong>Author</strong>: <%= activity.user.first_name %> <%= activity.user.last_name %>, 
+      <strong>Probes</strong>: <%= parts[:probes].blank? ? 'none' : parts[:probes].join(', ') -%>, 
+      <strong>Models</strong>: <%= parts[:models].blank? ? 'none' : parts[:models].join(', ') -%>, 
+      <strong>Display Status</strong>: <%= activity.public ? "Public" : "Private" %>
+	  <% if activity.parent %>
+	  , <strong>Copied from</strong>: <%= activity.parent_id %> (<%= link_to "compare", :action => "compare", :id => activity.id, :other => activity.parent_id %>)
+	  <% end %>
+    </span><br />
+    <% @learners = activity.learners.select {|l| l.learner_sessions.count > 0 } %>
+    <% restrict_to 'admin || manager || teacher || member || student' do %>
+    <%= link_to "#{pluralize(@learners.length, 'person has', 'people have')} used this Activity", usage_activity_path(activity), :class => 'activityListUseage',
+    :title => "A list of everybody who has run the activity: '#{activity.name}'. You can view each persons work." %><br />
+    <% end %>
+    <% restrict_to 'guest' do %>
+    <span class='activityListUseage'><%= "#{pluralize(@learners.length, 'person has', 'people have')} tried this Activity." %></span><br />
+    <% end %>
+  </td>
+</tr>
+

@@ -1,0 +1,15 @@
+<%= error_messages_for :external_otrunk_activity %>
+<%= form.hidden_field :parent_id %>
+<%= form.hidden_field :parent_version %>
+<p><span class="SectionTitle">Name: </span><%= form.text_field :name, :size => 72 %></p>
+<p><span class="SectionTitle">Public: </span><%= form.check_box :public %></p>
+<p><span class="SectionTitle">Description: </span><br /><%= form.text_area :description, :cols => 96, :rows => 4 %></p>
+<p><span class="SectionTitle">External otml url: <%= form.text_field :external_otml_url, :size => 72 %></span><br />
+<span class="modelAttribute">Enter a url if you want to load the otml from an external web resource instead of entering it into the otml field below. The otml referenced by this url will be loaded <b>only</b> if the otml field below is blank <b>or</b> the 'Always get the otml update' checkbox is turned on.</span></p>
+<p><span class="SectionTitle">Always get the otml update from external url: </span><%= form.check_box :external_otml_always_update %><br />
+<span class="modelAttribute">Turn this on to always use the most recent otml referenced in the url above.</span></p>
+<p><span class="SectionTitle">Custom reporting view mode: </span><%= form.text_field :custom_reporting_mode %><br />
+<span class="modelAttribute">If this activity requires a special view mode for reporting, enter the view mode identifier above.</span></p>
+<p><span class="SectionTitle">Don't load prior session data: </span><%= form.check_box :nobundles  %><br />
+<span class="modelAttribute">With this option selected, when the activity is run, it will start from a clean slate. Data will still be saved to the server for later review.</span></p>
+<p><span class="SectionTitle">OTML: </span><br /><%= form.text_area :otml, :cols => 96, :rows => 32  %></p>

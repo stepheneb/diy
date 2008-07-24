@@ -1,0 +1,15 @@
+<h1>Editing report</h1>
+
+<div class="pageEdit">
+<% form_for(:report, :url => report_path, :html => { :method => :put }) do |f| %>
+  <%= render :partial => 'form', :object => f %>
+  <div class="bottom">
+    <div class='editbox'>
+      <%= submit_tag "Save" %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+<% end %>
+</div>

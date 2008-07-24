@@ -1,0 +1,31 @@
+<%= error_messages_for :model %>
+<%= form.hidden_field :parent_id %>
+<%= form.hidden_field :parent_version %>
+<p><span class="SectionTitle">Name: </span><%= form.text_field :name, :size => 72 %></p>
+<p>
+  <span class="SectionTitle">Model type: </span>
+  <% if @model.model_type.authorable %>
+    <%= form.select(:model_type_id, ModelType.find_all_by_authorable(true).map {|m| [m.name, m.id]}) %>
+    <span class="modelAttribute">Only authorable model types are listed.</span></p>
+    <p>
+      <span class="SectionTitle">Url: <%= form.text_field :url, :size => 72 %></span><br />
+      <span class="modelAttribute">Enter a web url on where the authored model can be loaded from.</span>
+    </p>
+  <% else %>
+    <% @model.model_type.name %>
+  <% end %>
+<p>
+  <span class="SectionTitle">Public </span><%= form.check_box :public %> 
+  <span class="SectionTitle">  Textile </span><%= form.check_box :textile %>
+  <span class="SectionTitle">  Enable Snapshots </span><%= form.check_box :snapshot_active %>
+  <span class="SectionTitle">  Don't load prior session data: </span><%= form.check_box :nobundles %>
+</p>
+<% if @model.model_type.sizeable == true -%>
+<p>
+  <span class="SectionTitle">Width </span><%= form.text_field :width, :size => 5  %>
+  <span class="SectionTitle">  Height </span><%= form.text_field :height, :size => 5  %>
+</p>
+<% end -%>
+<p><span class="SectionTitle">Description</span><br /><%= form.text_area :description, :cols => 96, :rows => 4 %></p>
+<p><span class="SectionTitle">Instructions</span><br /><%= form.text_area :instructions, :cols => 96, :rows => 4  %></p>
+<p><span class="SectionTitle">Credits</span><br /><%= form.text_area :credits, :cols => 96, :rows => 4  %></p>

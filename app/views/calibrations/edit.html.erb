@@ -1,0 +1,21 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Edit',
+  :authorable_object => @calibration,
+  :all_viewable_objects => @all_viewable_calibrations, 
+  :all_editable_objects => @all_editable_calibrations }) %>
+
+<div class="pageEdit">
+<% form_for(:calibration, :url => calibration_path, :html => { :method => :put }) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+      <%= submit_tag "Save" %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+  <%= render :partial => 'form', :object => f %>
+<% end %>
+</div>

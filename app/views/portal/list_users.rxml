@@ -1,0 +1,6 @@
+xml.instruct! :xml, :version=>"1.0", :encoding=>"UTF-8"
+xml.users do
+  @users.each do |id, u|
+    xml << render(:partial => 'user', :locals => {:user => u[0], :timestamp => u[1] })
+  end
+end

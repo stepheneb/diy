@@ -1,0 +1,26 @@
+<h1>Listing levels</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Created on</th>
+    <th>Updated on</th>
+  </tr>
+  
+<% for level in @levels %>
+  <tr>
+    <td><%=h level.name %></td>
+    <td><%=h level.description %></td>
+    <td><%=h level.created_on %></td>
+    <td><%=h level.updated_on %></td>
+    <td><%= link_to 'Show', level %></td>
+    <td><%= link_to 'Edit', edit_level_path(level) %></td>
+    <td><%= link_to 'Destroy', level, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New level', new_level_path %>

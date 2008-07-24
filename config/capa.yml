@@ -1,0 +1,11 @@
+--- 
+:application_name: CAPA (copy)
+:page_title_prefix: CAPA (copy)
+:logo: capa_logo.png
+:home_link: http://capa.concord.org/
+:stylesheet: capa
+:external_otrunk_activities_title: Assessment
+:show_external_otrunk_activities: true
+:hide_activities: true
+:hide_models: true
+:disable_anonymous_seeing: true
