@@ -1,3 +1,5 @@
 == SAIL/OTrunk DIY
 
 The DIY is a Rails applicaion for authoring and running SAIL/OTrunk activities.
+
+The Trac instance for he DIY is located here: http://trac.cosmos.concord.org/diy/
