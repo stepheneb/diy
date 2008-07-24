@@ -178,7 +178,7 @@ class User < ActiveRecord::Base
       else
         nil
       end
-    rescue Mysql::Error
+    rescue StandardError
       nil
     end
   end

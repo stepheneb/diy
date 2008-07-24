@@ -5,7 +5,7 @@ class SunflowerModel < ActiveRecord::Base
       begin
         find(:first)
         true
-      rescue Mysql::Error, SystemCallError,  ActiveRecord::AdapterNotSpecified, ActiveRecord::ActiveRecordError => e
+      rescue StandardError, SystemCallError,  ActiveRecord::AdapterNotSpecified, ActiveRecord::ActiveRecordError => e
         false
       end
     rescue NameError => e
