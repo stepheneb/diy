@@ -94,6 +94,7 @@
           <% end %>
         </p>
         <p>Subdomains: <br /><small><%= request.subdomains.join(', ') %></small></p>
+        <p>RAILS_ROOT: <br /><small><%= RAILS_ROOT %></small></p>
         <p>Repository:
           <% if svn_props = YAML::load(`svn info #{RAILS_ROOT}`) %>
             <br /><small>URL: <%= svn_props['URL'] %></small>
