@@ -96,10 +96,12 @@
         <p>Subdomains: <br /><small><%= request.subdomains.join(', ') %></small></p>
         <p>RAILS_ROOT: <br /><small><%= RAILS_ROOT %></small></p>
         <p>Repository:
-          <% if svn_props = YAML::load(`svn info #{RAILS_ROOT}`) %>
+          <% if svn_props = YAML::load(`svn info #{RAILS_ROOT}`) || svn_props = YAML::load(`/opt/local/bin/svn info #{RAILS_ROOT}`) %>
             <br /><small>URL: <%= svn_props['URL'] %></small>
             <br /><small>Rev: <%= svn_props['Last Changed Rev'] %></small>
             <br /><small>Last change: <%= gmt_time_from_svn_time(svn_props['Last Changed Date']) %></small>
+          <% else %>
+            <br /><small>props: <%= svn_props %></small>
           <% end %>
         </p>        
       <% end %> 
