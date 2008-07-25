@@ -1,0 +1,12 @@
+--- 
+:application_name: RI-ITEST DIY
+:page_title_prefix: RI-ITEST DIY
+:logo: diy_logo.gif
+:home_link: http://www.concord.org/
+:stylesheet: diy
+:external_otrunk_activities_title: Activities
+:show_external_otrunk_activities: true
+:cache_external_otrunk_activities: false
+:hide_activities: true
+:hide_models: true
+:disable_anonymous_running: false
