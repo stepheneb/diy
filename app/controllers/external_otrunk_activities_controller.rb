@@ -48,7 +48,15 @@ class ExternalOtrunkActivitiesController < ApplicationController
     
   # GET /learners/1/ot_learner_data.xml
   def ot_learner_data
-    @learners = @external_otrunk_activity.learners
+    @learners = @external_otrunk_activity.learners      
+    if not params[:users].blank?
+      users_array = params[:users].split ',' 
+      @learners = @learners.find(:all, :conditions => { :user_id => users_array})
+      
+      # inorder to support running reports for users that haven't run this activity
+      # passed in users that don't have learners should either get learnes created or
+      # or temporary learners should be created.  
+    end
     render(:template => "shared/ot_learner_data.builder", :layout => false)
   end
 
