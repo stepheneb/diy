@@ -156,6 +156,10 @@ class ModelsController < ApplicationController
     render :layout => false
   end
 
+  def usage
+    @learners = @model.learners.select {|l| l.learner_sessions.length > 0 }
+  end
+
   def sail_jnlp
     if params[:run_activity]
       @user = current_user

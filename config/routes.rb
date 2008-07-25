@@ -97,6 +97,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resources :models, :member => { :copy => :get }
+  map.resources :models, :member => { :usage => :get }
   map.resources :models do |models|
     models.resources :units, :name_prefix => "model_"
     models.resources :learners, :name_prefix => "model_", :member => { :sessions => :get, :ot_learner_data => :get  }
