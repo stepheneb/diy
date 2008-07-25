@@ -79,22 +79,28 @@
       </p>
       <% restrict_to 'admin || manager' do %>
         <hr />
-        <p>DIY System Data:</p>
-        <p>
-          SDS:<small> <%= link_to "#{SdsConnect::Connect.host_url}", SdsConnect::Connect.host_url %></small><br />
-          Jnlp:<small> <%= link_to "#{SdsConnect::Connect.jnlp_id}", SdsConnect::Connect.jnlp_url %></small<br /> 
-          Curnit:<small> <%= link_to "#{SdsConnect::Connect.curnit_id}", SdsConnect::Connect.curnit_url %></small<br /> 
+        <p>DIY System Data:
+          <br /><small>SDS: <%= link_to "#{SdsConnect::Connect.host_url}", SdsConnect::Connect.host_url %></small>
+          <br /><small>Jnlp: <%= link_to "#{SdsConnect::Connect.jnlp_id}", SdsConnect::Connect.jnlp_url %></small>
+          <br /><small>Curnit: <%= link_to "#{SdsConnect::Connect.curnit_id}", SdsConnect::Connect.curnit_url %></small>
         </p>
         <%= yield :admin_sidebar %>
         <p>Database:
           <% db_info = ActiveRecord::Base.configurations %>
-          <br />type: <small><%= db_info[RAILS_ENV]['adapter'] %></small>
-          <br />name: <small><%= db_info[RAILS_ENV]['database'] %></small>
+          <br /><small>type: <%= db_info[RAILS_ENV]['adapter'] %></small>
+          <br /><small>name: <%= db_info[RAILS_ENV]['database'] %></small>
           <% if host = db_info[RAILS_ENV]['host'] %>
-            <br />host: <small><%= host %></small>
+            <br /><small>host: <%= host %></small>
           <% end %>
         </p>
         <p>Subdomains: <br /><small><%= request.subdomains.join(', ') %></small></p>
+        <p>Repository:
+          <% if svn_props = YAML::load(`svn info #{RAILS_ROOT}`) %>
+            <br /><small>URL: <%= svn_props['URL'] %></small>
+            <br /><small>Rev: <%= svn_props['Last Changed Rev'] %></small>
+            <br /><small>Last change: <%= gmt_time_from_svn_time(svn_props['Last Changed Date']) %></small>
+          <% end %>
+        </p>        
       <% end %> 
     </div>
     <div id="main">
