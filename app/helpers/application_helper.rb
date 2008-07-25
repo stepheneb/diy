@@ -4,7 +4,17 @@ module ApplicationHelper
   def boolean_to_yes_no(b)
     b ? 'yes' : 'no'
   end
-  
+
+  # st = YAML::load(`svn info #{RAILS_ROOT}`)["Last Changed Date"]
+  #   => "2008-07-25 10:04:45 -0400 (Fri, 25 Jul 2008)"
+  # gmt_time_from_svn_time(st)
+  #   => "Fri, 25 Jul 2008 14:04:45 GMT"
+  #
+  def gmt_time_from_svn_time(svn_time)
+    iso8601_time = "#{svn_time[/(.*) -/, 1].gsub(/ /, 'T')}"
+    Time.xmlschema(iso8601_time).gmtime.strftime("%a, %d %b %Y %H:%M:%S GMT")
+  end
+
   def fix_web_start_warning
     %{<p><b>Mac OS X Note: </b>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version of our <a href="http://confluence.concord.org/display/CCTR/WebStart+OSX+Java+1.5+Fix" title="Java 1.5.0_06, 1.5.0_07, and 1.5.0_13 on MacOS X 10.4 and 10.5 have a bug in their implementation of Java Web Start that can cause the downloading of a Java resource to fail. You may notice this bug when the progress bar in the Java Web Start status window freezes while downloading a Java jar resource.">Fix MacOS Java 1.5 Web Start Scripts</a> once on each computer you run the Concord SAIL-OTrunk activities on. If you update Java on your Macintosh you will need to fix this problem again. The problem appears on Mac OS X computers when starting a Java Web Start program you have run before -- if a jar file needs to be updated the download process will freeze without completing.</p>}
   end
