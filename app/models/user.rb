@@ -42,11 +42,13 @@ class User < ActiveRecord::Base
   before_validation :strip_spaces
   
   # strip leading and trailing spaces from names, login and email
-  def strip_spaces
-    self.first_name.strip!
-    self.last_name.strip!
-    self.login.strip!
-    self.email.strip!
+  def strip_spaces  
+    # these are conditionalized because it is called before the validation
+    # so the validation will make sure they are setup correctly
+    if self.first_name? then self.first_name.strip! end  
+    if self.last_name? then self.last_name.strip! end  
+    if self.login? then self.login.strip! end  
+    if self.email? then self.email.strip! end  
   end
 
   validates_presence_of     :login, :email
