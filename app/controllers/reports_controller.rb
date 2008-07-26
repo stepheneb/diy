@@ -139,8 +139,13 @@ class ReportsController < ApplicationController
       report_url_var = otml_report_url :users => params[:users]
     end
  
+    # authoring is enabled so the current user is not added to the list of users
+    # that the OTrunk activity sees.  this is not clean because we aren't
+    # really doing authoring just reporting.  However the way Sail/OTrunk currently 
+    # works this is the only way to do it.  
     redirect_to reportable.sds_url(current_user, self, {
-      :otml_url => report_url_var, :nobundles => false, :savedata => false})
+      :otml_url => report_url_var, :nobundles => false, :savedata => false,
+      :authoring => true})
 
   end
   
