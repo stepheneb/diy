@@ -130,13 +130,18 @@ class ReportsController < ApplicationController
   
   def sail_jnlp
     @report = Report.find(params[:id])
-    runnable = params[:runnable]
-    runnable_id = params[:rid]
-    if runnable && runnable_id
-      runnable_object = eval("#{runnable.camelize.singularize}.find(#{runnable_id})")
-      raise unless @report.reportable == runnable_object
+    reportable = @report.reportable
+    
+    # render :text => "#{@report.short_name}: #{@report.reportable.id}, #{@report.otrunk_report_template.id}"
+    if params[:users].blank?
+      report_url_var = otml_report_url      
+    else
+      report_url_var = otml_report_url :users => params[:users]
     end
-    render :text => "#{@report.short_name}: #{@report.reportable.id}, #{@report.otrunk_report_template.id}" 
+ 
+    redirect_to reportable.sds_url(current_user, self, {
+      :otml_url => report_url_var, :nobundles => false, :savedata => false})
+
   end
   
   def report_template_otml
