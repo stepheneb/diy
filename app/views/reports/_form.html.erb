@@ -1,5 +1,11 @@
 <%= error_messages_for :report %>
 
+<p><span class="SectionTitle">Name: </span><%= form.text_field :name, :size => 72 %></p>
+  
+<p><span class="SectionTitle">Description </span><%= form.text_area :description, :cols => 72, :rows => 2 %></p>
+
+<p><span class="SectionTitle">Public: </span><%= form.check_box :public %></p>
+
 <p>
   <span class="SectionTitle">Select the activity: </span>
   <%= form.select(:reportable_id, ExternalOtrunkActivity.find(:all).collect {|i| ["#{i.id}: #{i.name}", i.id ]}) %>
