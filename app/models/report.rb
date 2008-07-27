@@ -16,6 +16,7 @@ class Report < ActiveRecord::Base
   include OtrunkSystem
   include SdsRunnable
 
+  validates_presence_of :name
   validates_uniqueness_of :name
 
   before_create :generate_uuid

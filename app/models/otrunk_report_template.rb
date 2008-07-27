@@ -18,7 +18,9 @@ class OtrunkReportTemplate < ActiveRecord::Base
   acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}otrunk_report_templates_versions" 
 
   has_many :reports
-  belongs_to :user  
+  belongs_to :user
+  
+  validates_presence_of :name
   validates_uniqueness_of :name
 
   before_create :generate_uuid

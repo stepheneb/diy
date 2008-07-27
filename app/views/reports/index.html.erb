@@ -1,6 +1,7 @@
 <%= render(:partial => 'shared/header', :locals => {
   :location => 'top',
   :runnable => false,
+  :runnable_as_report => true,
   :function => 'Index',
   :authorable_object_class => Report, 
   :authorable_object_pages => @report_pages,
@@ -14,12 +15,14 @@
         <td width="20px" >
           <%= link_to 'Show', report_path(report), :title => 'Show the model type specification' %><br />
           <% restrict_to 'admin || manager' do %>
-            <%= link_to 'Run', sail_jnlp_report_path(report),
+            <%= link_to 'Run Report', sail_jnlp_report_path(report),
             :title => "Start the report: #{report.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> <br />
             
             <%= link_to 'Edit', edit_report_path(report), :title => "Make changes in #{report.name}." %><br />
             <%= link_to 'Copy', {:action => 'copy', :id => report, :page => params[:page] },
-              :title => "Make a copy of the report: '#{report.name}' and start editing it." %><br />              
+              :title => "Make a copy of the report: '#{report.name}' and start editing it." %><br />
+            <%= link_to 'Delete', report_path(report), :confirm => "Are you sure you want to delete: #{report.name}?", :method => :delete %>
+
           <% end %>              
         </td>
         <td width="100%">
