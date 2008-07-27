@@ -84,9 +84,28 @@ class ReportsController < ApplicationController
   def create
     # debugger
     # reportable = params[:report][:reportable].split(',').collect {|s| s.strip}
-    eot_id = params[:report][:reportable_id]
-    ort_id = params[:report][:otrunk_report_template_id]
-    @report = Report.new(:reportable_type => "ExternalOtrunkActivity", :reportable_id => eot_id, :otrunk_report_template_id => ort_id)
+    #
+    # at this point params might be:
+    #
+    # {"commit"=>"Create", "action"=>"create", "controller"=>"reports", 
+    #  "report"=>{"name"=>"third report", "public"=>"0", "reportable_id"=>"1", "description"=>"another description", "otrunk_report_template_id"=>"1"}}
+    #
+    # we can just create a new @report instance like this:
+    #
+    @report = Report.new(params[:report])
+    # 
+    # This way all the parameters are set that are present in the
+    # hash value for "report" in params.
+    #
+    # but do need to handle hard-coding the reportable_type because
+    # it isn't handled more generally yet by the view or the DIY
+    #
+    @report.reportable_type = "ExternalOtrunkActivity"
+    #
+    # eot_id = params[:report][:reportable_id]
+    # ort_id = params[:report][:otrunk_report_template_id]
+    # @report = Report.new(:reportable_type => "ExternalOtrunkActivity", :reportable_id => eot_id, :otrunk_report_template_id => ort_id)
+    #
     @report.user = current_user
     respond_to do |format|
       if @report.save
