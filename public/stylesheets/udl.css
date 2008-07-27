@@ -2,8 +2,6 @@ body {
 	font-family: "Trebuchet MS", verdana, arial, helvetica, sans-serif;
 	background-color: #ffffff; 
 	color: #000000; 
-	margin: 0px;
-	padding: 0px;
 	font-size: 93%;
 		background-image: url(../images/soft-tree.jpg);
 		background-repeat: no-repeat;
@@ -11,20 +9,21 @@ body {
 }
 
 #banner {
-	padding: 10px 0px;
+	padding: 10px 10px;
 	color: #CE0502;
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	height: 50px;
-	width: 100%;
+	width: 99%;
 }
 
 #banner h1 {
 	font-size: 2em;
 	text-align: right;
-	margin: 0 0 0 200px;
-	padding: 0;
+	margin-top: 0px;
+	margin-left: 200px;
+	padding: 0px 10px 0px 0px;
 	border-bottom: 1px solid #000000;
 }
 
@@ -143,7 +142,7 @@ a {
 .pageHeaderLeft {
 	/*float: left; */
 	margin: 0px 0px 0px 0px;
-	padding: 6px 0px 6px 0px;
+	padding: 10px 0px 10px 0px;
 }
 
 .pageHeaderLeft p {
@@ -153,8 +152,9 @@ a {
 .pageHeaderQuickLinks {
 	/*float: right;*/
   text-align: right;
-	margin: 8px 0px 8px 0px;
-	padding: 4px 0px 4px 0px;
+	margin: -50px 5px 0px 0px;
+	padding: 4px 10px 4px 0px;
+	
 }
 
 .pageHeader select {
@@ -291,7 +291,7 @@ form {
   /*float: left;
   position: relative;
   clear: right;*/
-	width: 80%;
+	width: 95%;
 }
 
 .activityList table {
@@ -299,7 +299,7 @@ form {
 }
 
 .activityList table {
-	width: 80%;
+	width: 95%;
 }
 
 .activityList select {
