@@ -9,10 +9,13 @@
   :all_editable_objects => @all_editable_reports }) %> 
 
 <div class="activityList">
-<table cellpadding="5" cellspacing="0">
+<table cellpadding="5" cellspacing="0" width="100%">
+  <colgroup width="120px" />
+  <colgroup  />
+  
     <% for report in @reports %>
       <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
-        <td width="20px" >
+        <td>
           <%= link_to 'Show', report_path(report), :title => 'Show the model type specification' %><br />
           <% restrict_to 'admin || manager' do %>
             <%= link_to 'Run Report', sail_jnlp_report_path(report),
@@ -25,7 +28,7 @@
 
           <% end %>              
         </td>
-        <td width="100%">
+        <td>
           <span class="listTitle"><%= report.id %>: <%= h(report.name) %></span><br />
           <%= h(truncate(report.description, 160)) %><br />
           <span class="listTitle">
