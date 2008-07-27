@@ -15,12 +15,14 @@
           <%= link_to 'Show', report_path(report), :title => 'Show the model type specification' %><br />
           <% restrict_to 'admin || manager' do %>
               <%= link_to 'Edit', edit_report_path(report), :title => "Make changes in #{report.name}." %><br />
+              <%= link_to 'Copy', {:action => 'copy', :id => report, :page => params[:page] },
+                :title => "Make a copy of the report: '#{report.name}' and start editing it." %><br />              
           <% end %>              
         </td>
         <td width="100%">
           <span class="listTitle"><%= report.id %>: <%= h(report.name) %></span><br />
           <%= h(truncate(report.description, 160)) %><br />
-          <span class="modelAttribute">
+          <span class="listTitle">
             DIY Author: <strong><%= (report.user ? report.user.name : "") %></strong>, 
           </span>
         </td>

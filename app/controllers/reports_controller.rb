@@ -66,6 +66,8 @@ class ReportsController < ApplicationController
   def new
     @report = Report.new
     @ort = OtrunkReportTemplate.find(:all).map {|ort| [ort.name, ort.id]}
+    @report.public = true
+    @report.user = current_user
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @report }
@@ -85,13 +87,14 @@ class ReportsController < ApplicationController
     eot_id = params[:report][:reportable_id]
     ort_id = params[:report][:otrunk_report_template_id]
     @report = Report.new(:reportable_type => "ExternalOtrunkActivity", :reportable_id => eot_id, :otrunk_report_template_id => ort_id)
-
+    @report.user = current_user
     respond_to do |format|
       if @report.save
-        flash[:notice] = 'Report was successfully created.'
-        format.html { redirect_to(@report) }
+        flash[:notice] = 'Report was successfully created.'    
+        format.html { redirect_to reports_url }
         format.xml  { render :xml => @report, :status => :created, :location => @report }
       else
+        flash[:notice] = 'Errors creating Report.'
         format.html { render :action => "new" }
         format.xml  { render :xml => @report.errors, :status => :unprocessable_entity }
       end
@@ -127,6 +130,16 @@ class ReportsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def copy
+    @report = Report.find(params[:id]).clone
+    @report.user = current_user
+    @report.public = false
+    @report.name << " (copy)"
+    @report.uuid = nil
+    render :action => 'new'
+  end
+  
   
   def sail_jnlp
     @report = Report.find(params[:id])

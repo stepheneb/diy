@@ -1,5 +1,15 @@
-<p><b><%= @report.reportable_type %>:</b> <%= @report.reportable_id %>: <%= @report.reportable.name %></p>  
-<p><b>OTrunk Report Template:</b> <%= @report.otrunk_report_template.id %>: <%= @report.otrunk_report_template.name %> </p>
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => nil,
+  :function => 'Show',
+  :authorable_object => @report,
+  :authorable_object_class => Report, 
+  :all_viewable_objects => @all_viewable_reports, 
+  :all_editable_objects => @all_editable_reports }) %>
 
-<%= link_to 'Edit', edit_report_path(@report) %> |
-<%= link_to 'Back', reports_path %>
+<p><span class="SectionTitle">Name: </span><%= @report.name%></p>
+<p><span class="SectionTitle">DIY Author: </span><%= @report.user.name%></p>
+<p><span class="SectionTitle">Public: </span><strong><%= boolean_to_yes_no(@report.public) %></strong></p>
+<p><span class="SectionTitle">Description: </span><br /><%= @report.description %></p>
+<p><span class="SectionTitle"><%= @report.reportable_type %>:</span> <%= @report.reportable_id %>: <%= @report.reportable.name %></p>  
+<p><span class="SectionTitle">OTrunk Report Template:</span> <%= @report.otrunk_report_template.id %>: <%= @report.otrunk_report_template.name %> </p>

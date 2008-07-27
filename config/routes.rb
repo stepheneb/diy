@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   
-  map.resources :reports, :member => { :sail_jnlp => :get, :otml => :get }
+  map.resources :reports, :member => { :copy => :get, :sail_jnlp => :get, :otml => :get }
 
   map.resources :otrunk_report_templates, :member => { :copy => :get, :usage => :get, :otml => :get }
   
