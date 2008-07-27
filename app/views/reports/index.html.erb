@@ -14,9 +14,12 @@
         <td width="20px" >
           <%= link_to 'Show', report_path(report), :title => 'Show the model type specification' %><br />
           <% restrict_to 'admin || manager' do %>
-              <%= link_to 'Edit', edit_report_path(report), :title => "Make changes in #{report.name}." %><br />
-              <%= link_to 'Copy', {:action => 'copy', :id => report, :page => params[:page] },
-                :title => "Make a copy of the report: '#{report.name}' and start editing it." %><br />              
+            <%= link_to 'Run', sail_jnlp_report_path(report),
+            :title => "Start the report: #{report.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> <br />
+            
+            <%= link_to 'Edit', edit_report_path(report), :title => "Make changes in #{report.name}." %><br />
+            <%= link_to 'Copy', {:action => 'copy', :id => report, :page => params[:page] },
+              :title => "Make a copy of the report: '#{report.name}' and start editing it." %><br />              
           <% end %>              
         </td>
         <td width="100%">
