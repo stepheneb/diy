@@ -78,7 +78,7 @@ ActionController::Routing::Routes.draw do |map|
     otml.otml_view ':controller/:id/otml/:vid/:uid/view', :savedata => nil, :authoring => nil
     otml.otml_preview ':controller/:id/otml/:vid/:uid/preview', :savedata => nil, :authoring => nil, :nobundles => "nobundles"
     otml.otml_authoring ':controller/:id/otml/:vid/:uid/authoring', :savedata => nil, :authoring => true, :nobundles => "nobundles"
-    otml.otml_run ':controller/:id/otml/:vid/:uid', :savedata => true, :authoring => nil, :nobundles => ''
+    otml.otml_run ':controller/:id/otml/:vid/:uid/:nobundles', :savedata => true, :authoring => nil, :nobundles => ''
     otml.otml_learner_run ':controller/:id/otml/:vid/:uid/:lid', :savedata => true, :authoring => nil, :nobundles => ''
     otml.otml_external_otrunk_activity_report 'external_otrunk_activities/:id/otml', :controller => 'external_otrunk_activities', :reporting => true
   end
