@@ -1,6 +1,8 @@
 class VendorInterface < ActiveRecord::Base
   set_table_name "#{RAILS_DATABASE_PREFIX}vendor_interfaces"
   include Changeable
+  
+  acts_as_replicatable
 
   has_many :users
   belongs_to :author, :class_name => 'User'

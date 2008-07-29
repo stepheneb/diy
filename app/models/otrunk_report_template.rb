@@ -4,8 +4,11 @@ require 'uri'
 
 class OtrunkReportTemplate < ActiveRecord::Base
   set_table_name "#{RAILS_DATABASE_PREFIX}otrunk_report_templates"
-  include OtrunkSystem
   include Changeable
+  
+  acts_as_replicatable
+  
+  include OtrunkSystem
   self.extend SearchableModel
   
   @@searchable_attributes = %w{name description}
@@ -22,8 +25,6 @@ class OtrunkReportTemplate < ActiveRecord::Base
   
   validates_presence_of :name
   validates_uniqueness_of :name
-
-  before_create :generate_uuid
 
   before_save :generate_short_name
   before_save :check_for_external_otml

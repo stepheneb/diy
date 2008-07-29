@@ -1,10 +1,14 @@
 class Report < ActiveRecord::Base
   set_table_name "#{RAILS_DATABASE_PREFIX}reports"
+  include Changeable
+  
+  acts_as_replicatable
+  
+  self.extend SearchableModel
+
   belongs_to :user
   belongs_to :reportable, :polymorphic => true  
   belongs_to :otrunk_report_template
-  include Changeable
-  self.extend SearchableModel
   
   @@searchable_attributes = %w{name description}
   class <<self
@@ -18,8 +22,6 @@ class Report < ActiveRecord::Base
 
   validates_presence_of :name
   validates_uniqueness_of :name
-
-  before_create :generate_uuid
 
   def short_name
     self.otrunk_report_template.short_name + '_for_' + self.reportable.short_name

@@ -1,6 +1,9 @@
 class Model < ActiveRecord::Base
   set_table_name "#{RAILS_DATABASE_PREFIX}models"
   include Changeable
+  
+  acts_as_replicatable
+  
   include OtrunkSystem
   include SdsRunnable
   self.extend SearchableModel
@@ -29,7 +32,6 @@ class Model < ActiveRecord::Base
 
   validates_uniqueness_of :name
 
-  before_create :generate_uuid
   before_create :fix_nobundles
 
   before_save :check_sds_offering

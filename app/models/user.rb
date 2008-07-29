@@ -3,6 +3,9 @@ require 'md5'
 class User < ActiveRecord::Base
   set_table_name "#{RAILS_DATABASE_PREFIX}users"
   include Changeable
+  
+  acts_as_replicatable
+  
   self.extend SearchableModel
 
   @@searchable_attributes = %w{login email first_name last_name}
