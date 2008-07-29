@@ -53,22 +53,32 @@ module SdsRunnable
     
     jnlp_filename = "#{RAILS_DATABASE_PREFIX}#{self.short_name}_#{user.vendor_interface.short_name}.jnlp"
     jnlp_url = jnlp_url << "&jnlp_filename=#{URI.escape(jnlp_filename, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
+
+    if options[:system_properties].blank?
+      jnlp_props = []
+    else
+      jnlp_props = options[:system_properties].clone
+    end
     
     if options[:authoring]
-      props = "otrunk.view.author=true"
+      jnlp_props << "otrunk.view.author=true"
       if self.kind_of? ExternalOtrunkActivity
-        props << "&otrunk.rest_enabled=true"
+        jnlp_props << "otrunk.rest_enabled=true"
       end
-      props << "&otrunk.view.hide_tree=true"
-      props << "&otrunk.view.frame_title=#{APP_PROPERTIES[:application_name]}"
-      jnlp_url << "&jnlp_properties=#{URI.escape(props, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
+      jnlp_props << "otrunk.view.hide_tree=true"
+      jnlp_props << "otrunk.view.frame_title=#{APP_PROPERTIES[:application_name]}"
     elsif options[:reporting]
-      jnlp_properties = URI.escape("otrunk.view.mode=#{options[:reporting]}&otrunk.view.frame_title=#{APP_PROPERTIES[:application_name]}", /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
-      jnlp_url << "&jnlp_properties=#{jnlp_properties}"
+      jnlp_props << "otrunk.view.mode=#{options[:reporting]}"
+      jnlp_props << "otrunk.view.frame_title=#{APP_PROPERTIES[:application_name]}"
     else
       title = "#{APP_PROPERTIES[:page_title_prefix]} - #{self.id}: #{self.name}"
-      jnlp_properties = URI.escape("otrunk.view.frame_title=#{title.gsub(/=/,'-')}", /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
-      jnlp_url << "&jnlp_properties=#{jnlp_properties}"
+      jnlp_props << "otrunk.view.frame_title=#{title.gsub(/=/,'-')}"
+    end
+
+    unless jnlp_props.blank?
+      jnlp_props_string = jnlp_props.join("&")
+      escape_pattern = /[#{URI::REGEXP::PATTERN::RESERVED}\s]/
+      jnlp_url << "&jnlp_properties=#{URI.escape(jnlp_props_string, escape_pattern)}"      
     end
     
     return jnlp_url
