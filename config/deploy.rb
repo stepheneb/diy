@@ -2,6 +2,9 @@
 # where are they documented?
 require 'mongrel_cluster/recipes'
 
+set :mydebug, false
+set :subroot_pass, nil
+
 set :application, "diy"
 set :repository,  "https://svn.concord.org/svn/diy/trunk"
 
@@ -216,3 +219,105 @@ task :write_environment, :roles => :app do
   contents.gsub!(/'diy'/, "'#{application}'")
   put contents, "#{shared_path}/config/environment.rb"
 end
+
+task :move_database, :roles => :db do
+  set_db_vars
+  get_original_db
+  create_local_dbs
+  write_database_conf
+  import_original_db
+  deploy:restart
+end
+
+task :set_db_vars, :roles => :app do
+  set :temp_file, "/tmp/#{version}-#{application}.sql"
+  database_yml = ""
+  run "cat #{shared_path}/config/database.yml" do |channel, stream, data|
+    database_yml = data
+  end
+  set :db_config, YAML::load(ERB.new(database_yml).result)
+  set :remote, db_config['production']
+  
+  contents = ""
+  run "cat #{shared_path}/config/environment.rb" do |channel, stream, data|
+    contents = data
+  end
+  if (contents =~ /RAILS_DATABASE_PREFIX\s*=\s*'([^']+_)'/)
+    set :remote_table_prefix, Regexp.last_match(1)
+  else
+    raise "unable to figure out the database prefix"
+  end
+  
+  set :local_username, "#{application}"
+  set :local_password, "#{application}"
+  set :local_database_prefix, "#{version}_#{application}"
+  
+  if mydebug
+    puts "temp file: #{temp_file}"
+    puts "db_config: #{YAML::dump(db_config)}"
+    puts "table prefix: #{remote_table_prefix}"
+    puts "local username: #{local_username}"
+    puts "local_password: #{local_password}"
+    puts "local prefix: #{local_database_prefix}"
+  end
+end
+
+
+task :get_original_db, :roles => :db do
+  # get the original db
+  print "Getting the stable database..."
+  cmd_body = "-u #{remote['username']} "
+  cmd_body << (remote['password'] ? "--password='#{remote['password']}' " : "")
+  cmd_body << "-h #{remote['host']} #{remote['database']}"
+  tables = []
+  run "mysqlshow #{cmd_body} '#{remote_table_prefix}%'" do |channel, stream, data|
+    tables = data.scan(/#{remote_table_prefix}\S+/)[1..-1].join(' ')
+  end
+  run "mysqldump #{cmd_body} #{tables} > #{temp_file}"
+  print " done.\n"
+end
+
+task :create_local_dbs, :roles => :db do
+  if subroot_pass == nil
+    set(:subroot_pass) do
+      Capistrano::CLI.password_prompt( "Enter the subroot mysql password: ")
+    end
+  end
+  for i in ["prod", "test", "dev"] do
+    cmd_str = "create database #{local_database_prefix}_#{i}; grant all on #{local_database_prefix}_#{i}.* to #{local_username}@'%' identified by '#{local_password}';"
+    run "echo \"#{cmd_str}\" | mysql -u subroot -p#{subroot_pass}"
+  end
+end
+
+task :write_database_conf, :roles => :app do
+  require 'rubygems'
+  require 'pp'
+  
+  real = {"prod" => "production", "test" => "test", "dev" => "development"}
+  
+  db_config.delete("development_otto")
+  db_config.delete("development_local")
+  db_config["production"] = {}
+  db_config["test"] = {}
+  db_config["development"] = {}
+  
+  # pp db_config
+  for i in ["prod", "test", "dev"] do
+    db_config[real[i]]['adapter'] = "mysql"
+    db_config[real[i]]['database'] = "#{local_database_prefix}_#{i}"
+    db_config[real[i]]['username'] = local_username
+    db_config[real[i]]['password'] = local_password
+    db_config[real[i]]['host'] = "localhost"
+  end
+
+  put YAML::dump(db_config), "#{shared_path}/config/database.yml", :mode => 0664
+end
+
+task :import_original_db, :roles => :db do
+  # import the stable db
+    print "Importing the stable database..."
+    command = "mysql -u #{local_username} --password='#{local_password}' -h localhost #{local_database_prefix}_prod < #{temp_file}"
+    run "#{command}"
+    print " done.\n"
+end
+
