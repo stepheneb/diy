@@ -190,51 +190,58 @@ class ReportsController < ApplicationController
   end
   
   def otml
-    @report = Report.find(params[:id])
-    otml_report_template = Hpricot.XML(report_template_otml)
-    if @report.otrunk_report_template.external_otml_always_update
-      codebase = File.dirname(@report.otrunk_report_template.external_otml_url)
-    else
-      codebase = File.dirname(@report.otrunk_report_template.cached_otml_url)
-    end
-    activity = otml_report_template.search("//*[@local_id='external_activity_url']")
-    external_user_list = otml_report_template.search("//*[@local_id='external_user_list_url']")
-    activity.first[:href] = otml_external_otrunk_activity_report_url(@report.reportable)
-    
-    if params[:users].blank? 
-      learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable)
-    else 
-      learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable, :users => params[:users])      
-    end
-    
-    external_user_list.first[:href] = learner_list_url
-    otml_activity = Hpricot.XML(@report.reportable.otml)
-    otml_activity_uuid = otml_activity.search("/otrunk[@id]").first[:id]
-    
-    script_object = otml_report_template.search("//*[@local_id='script_object']")
-    if not script_object.blank?
-      script_object.first[:id] = otml_activity_uuid + "!/activity_script"      
-    end
-    
-    # why is this messing with the codebase?
-    unless codebase.empty?
-      otml_report_template.search("/otrunk").set(:codebase,  codebase)
-    end
-    
-    rubric_include_element = nil
-    rubric_include_element = otml_activity.search("//*[@local_id='external_rubric_url']")
-    if not rubric_include_element.blank?
-      rubric_uri = URI.parse(rubric_include_element.first[:href])
-      unless rubric_uri.host
-        rubric_uri = URI.join(codebase + '/', rubric_uri.path)
+    begin
+      @report = Report.find(params[:id])
+      otml_report_template = Hpricot.XML(report_template_otml)
+      if @report.otrunk_report_template.external_otml_always_update
+        codebase = File.dirname(@report.otrunk_report_template.external_otml_url)
+      else
+        codebase = File.dirname(@report.otrunk_report_template.cached_otml_url)
       end
-      rubric_url = rubric_uri.to_s
-      logger.info("rubric_url: #{rubric_url}")
-      rubric_otml = Hpricot.XML(open(rubric_url))
-      rubric_uuid = rubric_otml.search("/otrunk[@id]").first[:id]
-      rubric_id_mapping = otml_report_template.search("//*[@local_id='rubric']")
-      rubric_id_mapping.first[:id] = rubric_uuid
+      
+      activity = otml_report_template.search("//*[@local_id='external_activity_url']")
+      activity.first[:href] = otml_external_otrunk_activity_report_url(@report.reportable) unless activity.blank?
+      
+      if params[:users].blank? 
+        learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable)
+      else 
+        learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable, :users => params[:users])      
+      end
+      
+      external_user_list = otml_report_template.search("//*[@local_id='external_user_list_url']")
+      if external_user_list.blank?
+        raise "Need to have a user_list object with a local_id='external_user_list_url'"
+      end
+      external_user_list.first[:href] = learner_list_url
+      
+      otml_activity = Hpricot.XML(@report.reportable.otml)
+      otml_activity_uuid = otml_activity.search("/otrunk[@id]").first[:id]
+      
+      script_object = otml_report_template.search("//*[@local_id='script_object']")
+      script_object.first[:id] = otml_activity_uuid + "!/activity_script" unless script_object.blank?
+      
+      # why is this messing with the codebase?
+      unless codebase.empty?
+        otml_report_template.search("/otrunk").set(:codebase,  codebase)
+      end
+      
+      rubric_include_element = otml_activity.search("//*[@local_id='external_rubric_url']")
+      unless rubric_include_element.blank?
+        rubric_uri = URI.parse(rubric_include_element.first[:href])
+        unless rubric_uri.host
+          rubric_uri = URI.join(codebase + '/', rubric_uri.path)
+        end
+        rubric_url = rubric_uri.to_s
+        logger.info("rubric_url: #{rubric_url}")
+        rubric_otml = Hpricot.XML(open(rubric_url))
+        rubric_uuid = rubric_otml.search("/otrunk[@id]").first[:id]
+        rubric_id_mapping = otml_report_template.search("//*[@local_id='rubric']")
+        rubric_id_mapping.first[:id] = rubric_uuid
+      end
+      
+      render :xml => otml_report_template
+    rescue
+      render :xml => $!, :layout => "otml_message"
     end
-    render :xml => otml_report_template
-  end
+  end  
 end
