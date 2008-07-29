@@ -1,13 +1,20 @@
 # rake file
 
 namespace :diy do
-  desc "Print out all the currently defined routes, with names."
-  task :routes => :environment do
-    name_col_width = ActionController::Routing::Routes.named_routes.routes.keys.sort {|a,b| a.to_s.size <=> b.to_s.size}.last.to_s.size
-    ActionController::Routing::Routes.routes.each do |route|
-      name = ActionController::Routing::Routes.named_routes.routes.index(route).to_s
-      name = name.ljust(name_col_width + 1)
-      puts "#{name}#{route}"
+
+  def find_models
+    Dir.chdir(File.join(RAILS_ROOT, 'app', 'models')) do
+      model_names = Dir.glob('*.rb').collect { |rb| rb[/(.*).rb/, 1].camelize } - %w{SunflowerModel SunflowerMystriUser}
+      model_names.collect  { |m| m.constantize }
+    end
+  end
+  
+  desc "save every local model generating uuids if they don't already exist"
+  task :save_all_models  => :environment do
+    models = find_models
+    models.each do |model|
+      puts "#{model.name}: #{model.count}"
+      model.find(:all).each {|m| m.save }
     end
   end
 
