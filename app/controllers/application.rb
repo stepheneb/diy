@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 
   session :off, :if => proc { |request| (request.env['CONTENT_TYPE'] == "application/xml") || (request.env['HTTP_ACCEPT'] == "application/xml")}
 
-  session :session_key => "_#{APP_PROPERTIES[:application_name]}_#{ Base64.encode64(Digest::MD5.digest(request.host))}_session_id".gsub(/\W/, '_')
+  session :session_key => "_#{APP_PROPERTIES[:application_name]}_#{ Base64.encode64(Digest::MD5.digest(Socket.gethostname))}_session_id".gsub(/\W/, '_')
   
   include AuthenticatedSystem
   # If you want "remember me" functionality, add this before_filter to Application Controller
