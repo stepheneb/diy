@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<otrunk id="33754150-b594-11d9-9669-0800200c9a66" >
+  <imports>
+    <import class="org.concord.otrunk.OTSystem"/>
+    <import class="org.concord.otrunk.view.OTViewEntry"/>
+    <import class="org.concord.otrunk.view.OTViewBundle"/>
+    <import class="org.concord.otrunk.view.document.OTCompoundDoc"/>
+  </imports>
+  <objects>
+    <OTSystem>
+      <bundles>
+        <OTViewBundle>
+          <viewEntries>
+            <OTViewEntry
+              objectClass="org.concord.otrunk.view.document.OTDocument" 
+              viewClass="org.concord.otrunk.view.document.OTDocumentView"/>
+          </viewEntries>
+        </OTViewBundle>
+      </bundles>
+      <root>
+        <OTCompoundDoc name="Basic Document">
+          <bodyText>
+            <%= yield %>
+          </bodyText>
+        </OTCompoundDoc>      
+      </root>
+    </OTSystem>
+  </objects>
+</otrunk>
