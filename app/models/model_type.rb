@@ -1,6 +1,9 @@
 class ModelType < ActiveRecord::Base
   set_table_name "#{RAILS_DATABASE_PREFIX}model_types"
   include Changeable
+  
+  acts_as_replicatable
+  
   self.extend SearchableModel
   
   @@searchable_attributes = %w{name description}
@@ -10,6 +13,7 @@ class ModelType < ActiveRecord::Base
     end
   end
   
+
   has_many :models
   belongs_to :user
 end

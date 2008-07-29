@@ -1,5 +1,8 @@
 class Learner < ActiveRecord::Base
   set_table_name "#{RAILS_DATABASE_PREFIX}learners"
+  
+  acts_as_replicatable
+  
   belongs_to :user
   belongs_to :runnable, :polymorphic => true  
 

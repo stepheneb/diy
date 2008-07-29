@@ -5,4 +5,6 @@ class UnitActivity < ActiveRecord::Base
   belongs_to :unit
   acts_as_list :scope => :unit 
 
+  acts_as_replicatable
+
 end

@@ -1,6 +1,9 @@
 class Activity < ActiveRecord::Base
   set_table_name "#{RAILS_DATABASE_PREFIX}activities"
   include Changeable
+  
+  acts_as_replicatable
+  
   include OtrunkSystem
   include SdsRunnable
   
@@ -46,7 +49,6 @@ class Activity < ActiveRecord::Base
   validates_presence_of :name, :introduction
   validates_uniqueness_of :name
 
-  before_create :generate_uuid
   before_create :generate_digest
   before_create :fix_nobundles
 
