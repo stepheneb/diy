@@ -44,7 +44,8 @@ task :copy_configs, :roles => :app do
 end
 
 task :chown_folders, :roles => :app do
-  run "sudo chown -R mongrel.users #{release_path}"
+  run "sudo chown -R mongrel.users #{deploy_to}"
+  run "sudo chmod -R g+w #{deploy_to}"
 end
 
 task :production do
@@ -252,9 +253,11 @@ task :set_db_vars, :roles => :app do
     raise "unable to figure out the database prefix"
   end
   
-  set :local_username, "#{application}"
-  set :local_password, "#{application}"
-  set :local_database_prefix, "#{version}_#{application}"
+  clean_app_name = application.gsub('-', '_')
+  
+  set :local_username, "#{clean_app_name}"
+  set :local_password, "#{clean_app_name}"
+  set :local_database_prefix, "#{version}_#{clean_app_name}"
   
   if mydebug
     puts "temp file: #{temp_file}"
@@ -314,7 +317,7 @@ task :write_database_conf, :roles => :app do
     db_config[real[i]]['host'] = "localhost"
   end
 
-  put YAML::dump(db_config), "#{shared_path}/config/database.yml", :mode => 0664
+  put YAML::dump(db_config), "#{shared_path}/config/database.yml"
 end
 
 task :import_original_db, :roles => :db do
