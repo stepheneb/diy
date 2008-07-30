@@ -39,6 +39,8 @@ task :copy_configs, :roles => :app do
   run "cp #{shared_path}/config/database.yml #{release_path}/config/database.yml"
   run "cp #{shared_path}/config/environment.rb #{release_path}/config/environment.rb"
   run "cp #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
+  run "cp #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
+  run "cp #{shared_path}/config/exception_notifier_recipients.yml #{release_path}/config/exception_notifier_recipients.yml"
 end
 
 task :chown_folders, :roles => :app do
@@ -76,6 +78,8 @@ task :set_vars do
   depend :remote, :file, "#{shared_path}/config/database.yml"
   depend :remote, :file, "#{shared_path}/config/environment.rb"
   depend :remote, :file, "#{shared_path}/config/sds.yml"
+  depend :remote, :file, "#{shared_path}/config/mailer.yml"
+  depend :remote, :file, "#{shared_path}/config/exception_notifier_recipients.yml"
 end
 
 task :chown_to_current_user, :roles => :app do
