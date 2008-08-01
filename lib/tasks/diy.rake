@@ -222,7 +222,7 @@ Save and mount your results and try it out with a different atmosphere!
   task :delete_copy_and_convert_db => :environment do
     # pull in config
     # copy from production db to development db
-    db_config =  YAML::load(ERB.new(IO.read("#{RAILS_ROOT}/config/database.yml")).result)
+    db_config = ActiveRecord::Base.configurations
     remote = db_config['remote']
     local = db_config['production']
     temp_file = "#{RAILS_ROOT}/tmp/production.sql"
@@ -232,16 +232,19 @@ Save and mount your results and try it out with a different atmosphere!
     old_version = con.execute("select version from #{RAILS_DATABASE_PREFIX}schema_info").fetch_hash['version']
 
     # get the stable db
-    print "Getting the stable database..."
+    print "Getting the remote database..."
     cmd_body = "-u #{remote['username']} " << (remote['password'] ? "--password='#{remote['password']}' " : "") << "-h #{remote['host']} #{remote['database']}"
     tables = `mysqlshow #{cmd_body} '#{remote['table_prefix']}%'`.scan(/#{remote['table_prefix']}\S+/)[1..-1].join(' ')
     `mysqldump #{cmd_body} #{tables} > #{temp_file}`
     print " done.\n"
 
-
-    puts "\nYour current database tables are about to be deleted and replaced"
-    puts "with the production database. Any data that only exists in your"
-    print "current db will be lost. Are you sure you want to proceed? [Y/n] "
+    puts "\nYour current database tables:\n"
+    puts "  #{local.inspect}\n"
+    puts "are about to be deleted and replaced"
+    puts "with the production database:\n"
+    puts "  #{remote.inspect}\n"
+    puts " Any data that only exists in your current db will be lost."
+    print "Are you sure you want to proceed? [Y/n] "
     response = STDIN.gets
     response = response.chomp
     puts ""
@@ -321,7 +324,12 @@ Save and mount your results and try it out with a different atmosphere!
   
   desc "Migrate the DIY data stored in an SDS from one SDS to another."
   task :migrate_sds_data => :environment do
-  	  puts "This is intended to move data from one SDS to another. You should have already updated your sds.yml file to point to the *new* SDS."
+  puts "This is intended to move data from one SDS to another. You should have already updated your sds.yml file to point to the *new* SDS."
+  puts "Often you will want to have copied the DIY instance data just before running migrate_sds_data: rake diy:delete_copy_and_convert_db"
+  puts "Moving data from:\n"
+  puts "  #{OLD_SDS_HOST}\n"
+  puts "to\n"
+  puts "  #{SdsConnect::Connect.config['host']}\n"
   print "Would you like to proceed? [y/N] "
   response = STDIN.gets
   response = response.chomp 
