@@ -224,7 +224,9 @@ Save and mount your results and try it out with a different atmosphere!
     # copy from production db to development db
     db_config = ActiveRecord::Base.configurations
     remote = db_config['remote']
+    remote_str = '  ' + remote.to_a.collect {|i| i.join(': ')}.join("\n  ")
     local = db_config['production']
+    local_str = '  ' + local.to_a.collect {|i| i.join(': ')}.join("\n  ")
     temp_file = "#{RAILS_ROOT}/tmp/production.sql"
 
     # get a connection to the current db
@@ -239,10 +241,10 @@ Save and mount your results and try it out with a different atmosphere!
     print " done.\n"
 
     puts "\nYour current database tables:\n"
-    puts "  #{local.inspect}\n"
+    puts local_str
     puts "are about to be deleted and replaced"
     puts "with the production database:\n"
-    puts "  #{remote.inspect}\n"
+    puts remote_str
     puts " Any data that only exists in your current db will be lost."
     print "Are you sure you want to proceed? [Y/n] "
     response = STDIN.gets
