@@ -64,7 +64,7 @@ require 'redcloth'
 require 'uuidtools'
 
 require 'sds_connect'
-SdsConnect::Connect.setup
+# SdsConnect::Connect.setup
 
 require 'diff/lcs'
 require 'diff/lcs/string'
