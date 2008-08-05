@@ -19,7 +19,9 @@ module SdsConnect
     #    "username"=>"user", "password"=>"password"}
     # If you change these values after they have been set
     # you will probably invalidate any local copies of sds recource ids.
-    def self.setup(config = YAML::load(ERB.new(IO.read("#{RAILS_ROOT}/config/sds.yml")).result)[RAILS_ENV])
+    def self.setup(config = nil)
+      return if @@config && @@config['version']
+      config = YAML::load(ERB.new(IO.read("#{RAILS_ROOT}/config/sds.yml")).result)[RAILS_ENV] unless config
       @@config = config
       @@config = @@config.merge(properties)
       if @@config['version'].to_f >= 1.1
