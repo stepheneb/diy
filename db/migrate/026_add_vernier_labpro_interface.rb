@@ -1,9 +1,9 @@
 class AddVernierLabproInterface < ActiveRecord::Migration
-  def self.up    
-    VendorInterface.create(:name => "Vernier LabPro", :short_name => "vernier_labpro", :communication_protocol => 'usb', :description => "Vernier's LabPro interface works with many Vernier sensors.", :image => "SensorImages/VernierGoLink_sm.png")
+  def self.up
+    say "replaced by rake task: 'rake diy:create_default_vendor_interfaces"
   end
 
   def self.down
-    VendorInterface.find_all.each {|vi| vi.destroy}
+    VendorInterface.find_by_name("Vernier LabPro").destroy
   end
 end

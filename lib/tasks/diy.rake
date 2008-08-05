@@ -18,6 +18,36 @@ namespace :diy do
     end
   end
 
+  desc "create default vendor interfaces"
+  task :create_default_vendor_interfaces => :environment do
+    VendorInterface.create(:name => "Fourier Ecolog", :short_name => "fourier_ecolog", :communication_protocol => 'usb', :description => "The Fourier EcoLog has several built-in sensors, can read external Fourier sensors, and communicates via usb.", :image => "SensorImages/EcoLogXL_sm.png")
+    VendorInterface.create(:name => "Data Harvest Easysense Q", :short_name => "dataharvest_easysense_q", :communication_protocol => 'usb', :description => "The Data Harvest EasySense Q works with all the Data Harvest sensors and communicates via usb.", :image => "SensorImages/EasysenseQ_sm.png")
+    VendorInterface.create(:name => "Pasco Science Workshop 500", :short_name => "pasco_sw500", :communication_protocol => 'serial', :description => "The Pasco Science Workshop 500 has four input ports for connecting older Pasco sensors and communicates to your computer via a serial port.", :image => "SensorImages/Pasco500_sm.png")
+    VendorInterface.create(:name => "Pasco Airlink SI", :short_name => "pasco_airlink", :communication_protocol => 'bluetooth', :description => "The Pasco AirLink Si uses PASPORT sensors and communicates to your computer via Bluetooth wireless networking.", :image => "SensorImages/pasportairlinksi_sm.png")
+    VendorInterface.create(:name => "Texas Instruments CBL2", :short_name => "ti_cbl2", :communication_protocol => 'usb', :description => "The Texas Instruments CBL2 works with TI sensors and communicates via usb.", :image => "SensorImages/ti_cbl2.jpg")
+    VendorInterface.create(:name => "Vernier Go! Link", :short_name => "vernier_goio", :communication_protocol => 'usb', :description => "Vernier's usb Go!Link interface works with many Vernier sensors. The Go! Temp and Go!Motion sensors have a Go!Link interfaces integrated into the sensor.", :image => "SensorImages/VernierGoLink_sm.png")
+    VendorInterface.create(:name => "Simulated Data", :short_name => "pseudo_interface", :communication_protocol => 'simulated', :description => "Use the Simulated Data interface when you have no probeware to attach to your computer but you stillwant to test your activity.", :image => "SensorImages/psuedo_interface.jpg")
+    VendorInterface.create(:name => "Vernier LabPro", :short_name => "vernier_labpro", :communication_protocol => 'usb', :description => "Vernier's LabPro interface works with many Vernier sensors.", :image => "SensorImages/VernierGoLink_sm.png")
+  end
+  
+  desc "create default probe types"
+  task :create_default_probes_types => :environment do
+    ProbeType.create(:name => "Temperature", :ptype => 0, :step_size => 0.1, :display_precision => -1, :port => 0, :unit => "degC", :min => 0, :max => 40, :period => 0.1)
+    ProbeType.create(:name => "Light", :ptype => 2, :step_size => 0.1, :display_precision => 0, :port => 0, :unit => "lux", :min => 0, :max => 4000, :period => 0.1)
+    ProbeType.create(:name => "Pressure", :ptype => 3, :step_size => 0.1, :display_precision => -1, :port => 0, :unit => "kPa", :min => 96, :max => 104, :period => 0.1)
+    ProbeType.create(:name => "Voltage", :ptype => 4, :step_size => 0.1, :display_precision => -2, :port => 0, :unit => "V", :min => -10, :max => 10, :period => 0.1)
+    ProbeType.create(:name => "Force (5N)", :ptype => 5, :step_size => 0.01, :display_precision => -2, :port => 0, :unit => "N", :min => -4, :max => 4, :period => 0.01)
+    ProbeType.create(:name => "Force (50N)", :ptype => 5, :step_size => 0.1, :display_precision => -1, :port => 0, :unit => "N", :min => -40, :max => 40, :period => 0.01)
+    ProbeType.create(:name => "Motion", :ptype => 13, :step_size => 0.1, :display_precision => -2, :port => 0, :unit => "m", :min => -4, :max => 4, :period => 0.1)
+    ProbeType.create(:name => "Relative Humidity", :ptype => 7, :step_size => 0.1, :display_precision => -1, :port => 0, :unit => "percentage", :min => 10, :max => 90, :period => 0.1)
+    ProbeType.create(:name => "CO2 Gas", :ptype => 18, :step_size => 20, :display_precision => 2, :port => 0, :unit => "ppm", :min => 0, :max => 500, :period => 1)
+    ProbeType.create(:name => "Oxygen Gas", :ptype => 19, :step_size => 0.1, :display_precision => -1, :port => 0, :unit => "ppt", :min => 0, :max => 300, :period => 0.1)
+    ProbeType.create(:name => "pH", :ptype => 20, :step_size => 0.1, :display_precision => -1, :port => 0, :unit => "pH", :min => 0, :max => 14, :period => 0.1)
+    ProbeType.create(:name => "Salinity", :ptype => 21, :step_size => 0.1, :display_precision => -1, :port => 0, :unit => "ppt", :min => 0, :max => 50, :period => 0.1)
+    ProbeType.create(:name => "Raw Data", :ptype => 22, :step_size => 1, :display_precision => 0, :port => 0, :unit => "raw", :min => -10000, :max => 10000, :period => 0.1)
+    ProbeType.create(:name => "Raw Voltage", :ptype => 23, :step_size => 0.01, :display_precision => -2, :port => 0, :unit => "V", :min => -1, :max => 10, :period => 0.1)
+  end
+
   desc "Print plugins managed by Piston."           
   task :pistoned do
     Dir['vendor/plugins/*'].each do |file|                                                                                               
@@ -234,7 +264,7 @@ Save and mount your results and try it out with a different atmosphere!
     old_version = con.execute("select version from #{RAILS_DATABASE_PREFIX}schema_info").fetch_hash['version']
 
     # get the stable db
-    print "Getting the remote database..."
+    print "\nGetting the remote database..."
     cmd_body = "-u #{remote['username']} " << (remote['password'] ? "--password='#{remote['password']}' " : "") << "-h #{remote['host']} #{remote['database']}"
     tables = `mysqlshow #{cmd_body} '#{remote['table_prefix']}%'`.scan(/#{remote['table_prefix']}\S+/)[1..-1].join(' ')
     `mysqldump #{cmd_body} #{tables} > #{temp_file}`
@@ -242,10 +272,10 @@ Save and mount your results and try it out with a different atmosphere!
 
     puts "\nYour current database tables:\n\n"
     puts local_str
-    puts "are about to be deleted and replaced with the production database:\n\n"
+    puts "\nare about to be deleted and replaced with data from the remote database:\n\n"
     puts remote_str
     puts "\nAny data that only exists in your current db will be lost."
-    print "Are you sure you want to proceed? [Y/n] "
+    print "\nAre you sure you want to proceed? [Y/n] "
     response = STDIN.gets
     response = response.chomp
     puts ""
