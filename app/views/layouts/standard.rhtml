@@ -79,37 +79,10 @@
       </p>
       <% restrict_to 'admin || manager' do %>
         <hr />
-        <p>DIY System Data:
-          <br /><small>SDS: <%= link_to "#{SdsConnect::Connect.host_url}", SdsConnect::Connect.host_url %></small>
-          <br /><small>Jnlp: <%= link_to "#{SdsConnect::Connect.jnlp_id}", SdsConnect::Connect.jnlp_url %></small>
-          <br /><small>Curnit: <%= link_to "#{SdsConnect::Connect.curnit_id}", SdsConnect::Connect.curnit_url %></small>
-        </p>
-        <%= yield :admin_sidebar %>
-        <p>Database:
-          <% db_info = ActiveRecord::Base.configurations %>
-          <br /><small>type: <%= db_info[RAILS_ENV]['adapter'] %></small>
-          <br /><small>name: <%= db_info[RAILS_ENV]['database'] %></small>
-          <% if host = db_info[RAILS_ENV]['host'] %>
-            <br /><small>host: <%= host %></small>
-          <% end %>
-        </p>
-        <p>Subdomains: <br /><small><%= request.subdomains.join(', ') %></small></p>
-        <p>RAILS_ROOT: <br /><small><%= RAILS_ROOT %></small></p>
-        <p>Repository:
-          <% if svn_props = YAML::load(`svn info #{RAILS_ROOT}`) || svn_props = YAML::load(`/opt/local/bin/svn info #{RAILS_ROOT}`) %>
-            <br /><small>URL: <%= svn_props['URL'] %></small>
-            <br /><small>Rev: <%= svn_props['Last Changed Rev'] %></small>
-            <br /><small>Last change: <%= gmt_time_from_svn_time(svn_props['Last Changed Date']) %></small>
-          <% else %>
-            <br /><small>props: <%= svn_props %></small>
-          <% end %>
-        </p>        
+        <%= render(:partial => 'shared/diy_admin_info') %>
       <% end %> 
     </div>
     <div id="main">
-      <% if flash[:notice] -%> 
-        <div id="notice"><%= flash[:notice] %></div> 
-      <% end -%>
       <%= yield %>
       <div class='pageNotes'>
         <%= yield :footer %>

@@ -110,8 +110,6 @@ class ActivitiesController < ApplicationController
     if activity_draft && activity_draft[:activity][:id] == params[:id]
       @activity.attributes = activity_draft[:activity]
       flash[:notice] = "Activity restored from a draft saved #{help.distance_of_time_in_words(activity_draft[:time], Time.now)} ago. Use either <b>Save</b> button to save your changes permanently." 
-    else
-      flash[:notice] = ""
     end
     session[:activity_draft] = nil
   end
