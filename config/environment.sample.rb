@@ -16,7 +16,7 @@ if RUBY_PLATFORM =~ /java/
 end
 
 # This key is prefixed onto all the database tablenames.
-RAILS_DATABASE_PREFIX = 'diy_'
+RAILS_DATABASE_PREFIX = ''
 
 # This key is used to select the look and feel of the application
 RAILS_APPLICATION_KEY = 'diy'
@@ -97,4 +97,8 @@ end
 # right path. This hack isn't needed when serving from mongrel.
 # See: http://inodes.org/blog/2007/04/04/mongrel-rails-and-the-theory-of-relativity/
 # ENV['RAILS_RELATIVE_URL_ROOT'] = ActionController::AbstractRequest.relative_url_root
+
+# If you want to transfer data from another DIY and also want to transfer associated
+# learner data stored in an SDS uncomment the following Constant and set the value appropriately
+# OLD_SDS_HOST = "http://saildataservice.concord.org/7"
 
