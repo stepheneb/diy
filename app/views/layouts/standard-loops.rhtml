@@ -1,168 +1,124 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-  <title><%= APP_PROPERTIES[:page_title_prefix] %>: <%= controller.controller_name.humanize %>: <%= controller.action_name %></title>
-  <%= stylesheet_link_tag APP_PROPERTIES[:stylesheet] %>
-  <%= javascript_include_tag :defaults unless current_user.disable_javascript %>
-  <%= yield :head %>
-</head>
-<body>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title><%= APP_PROPERTIES[:page_title_prefix] %>: <%= controller.controller_name.humanize %>: <%= controller.action_name %></title>
+    <%= stylesheet_link_tag APP_PROPERTIES[:stylesheet] %>
+    <%= javascript_include_tag :defaults unless current_user.disable_javascript %>
+    <%= yield :head %>
+  </head>
+  <body>
 
 
-<div id="container">
+  <div id="container">
 
-	<div id="logo">
-		<img src="http://loops.concord.org/images/loops-logo-tagline.gif" alt="LOOPS">
-	</div>
-	
-	<div id="navigation">
-	
-	<ul>
-		<li><span><a href="http://loops.concord.org/">Home</strong></a></li>
-		<li><span><a href="http://loops.concord.org/about/" title="Details about the CAPA project">About</a></span></li>
-		<li><span><a href="http://loops.portal.concord.org/" title="The Portal is where you can set up students, classes and activities">Portal</a></span></li>
-		<li><span><strong>DIY</strong></span></li>
-	</ul>
-	
-	</div>
+    <div id="logo">
+      <img src="http://loops.concord.org/images/loops-logo-tagline.gif" alt="LOOPS">
+    </div>
+  
+    <div id="navigation">  
+      <ul>
+        <li><span><a href="http://loops.concord.org/">Home</strong></a></li>
+        <li><span><a href="http://loops.concord.org/about/" title="Details about the CAPA project">About</a></span></li>
+        <li><span><a href="http://loops.portal.concord.org/" title="The Portal is where you can set up students, classes and activities">Portal</a></span></li>
+        <li><span><strong>DIY</strong></span></li>
+      </ul>
+    </div>
 
-	<div id="content">
-	
-		<div id="content-content">
-		
+    <div id="content">
+      <div id="content-content">
+        <table border="0" width="100%">
+        <tr>
+        <td valign="top" id="sidebar">
 
+            <p>Welcome <%= current_user.roles.first.title.capitalize %>: <br />
+              <%= current_user.name %><br />
+              <%= if current_user.email != 'anonymous' then
+                link_to "&#187; Logout", logout_path
+              else
+                link_to "&#187; Login/Register", login_path
+              end %>
+            </p>
 
-	<table border="0" width="100%">
-	<tr>
-	<td valign="top" id="sidebar">
+            <p>
+              <%= link_to "&#187; Home", :controller => "home" %><br />
+              <% unless APP_PROPERTIES[:hide_activities] %>
+                <%= link_to "&#187; Activities", activities_path %><br />
+              <% end %>
+              <% unless APP_PROPERTIES[:hide_models] %>
+                <%= link_to "&#187; Models", {:action=>"index", :controller=>"models"} %><br />
+              <% end %>
+              <% unless APP_PROPERTIES[:hide_activities] %>
+                <% restrict_to 'admin || manager' do %>
+                  <%= link_to "&#187; Calibrations", calibrations_path %><br />
+                  <%= link_to "&#187; Physical Units", physical_units_path %><br />
+                <% end %>
+                <% restrict_to 'admin' do %>
+                  <%= link_to "&#187; Model Types", model_types_path %><br />
+                  <%= link_to "&#187; Data Filters", data_filters_path %><br />
+                <% end %>
+              <% end %>
+              <% if APP_PROPERTIES[:show_external_otrunk_activities] %>
+                <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title].pluralize, external_otrunk_activities_path) %><br />
+                <% restrict_to 'admin' do %>
+                  <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title] + " Report Templates", otrunk_report_templates_path) %><br />
+                  <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title] + " Reports", reports_path) %><br />
+                <% end %>
+                <% restrict_to 'admin || manager' do %>
+                <% end %>
+              <% else %>
+                <% restrict_to 'admin' do %>
+                  <%= link_to("&#187; External OTrunk Activities", external_otrunk_activities_path) %><br />
+                  <%= link_to("&#187; OTrunk Report Templates", otrunk_report_templates_path) %><br />
+                  <%= link_to("&#187; Reports", reports_path) %><br />
+                <% end %>
+                <% restrict_to 'admin || manager' do %>
+                <% end %>
+              <% end %>
+              <% restrict_to 'admin || manager' do %>
+                <%= link_to "&#187; Users", users_path %><br/>
+                <%= link_to "&#187; Statistics", statistics_path %>
+              <% end %>
+            </p>
 
-      <p>Welcome <%= current_user.roles.first.title.capitalize %>: <br />
-        <%= current_user.name %><br />
-        <%= if current_user.email != 'anonymous' then
-          link_to "&#187; Logout", logout_path
-        else
-          link_to "&#187; Login/Register", login_path
-        end %>
-      </p>
+            <p>Probeware Interface:<br />
+              <%= link_to "&#187; " + current_user.vendor_interface.name, interface_user_path(current_user) %>
+            </p>
 
-      <p>
-        <%= link_to "&#187; Home", :controller => "home" %><br />
-        <% unless APP_PROPERTIES[:hide_activities] %>
-          <%= link_to "&#187; Activities", activities_path %><br />
-        <% end %>
-        <% unless APP_PROPERTIES[:hide_models] %>
-          <%= link_to "&#187; Models", {:action=>"index", :controller=>"models"} %><br />
-        <% end %>
-        <% unless APP_PROPERTIES[:hide_activities] %>
-          <% restrict_to 'admin || manager' do %>
-            <%= link_to "&#187; Calibrations", calibrations_path %><br />
-            <%= link_to "&#187; Physical Units", physical_units_path %><br />
-          <% end %>
-          <% restrict_to 'admin' do %>
-            <%= link_to "&#187; Model Types", model_types_path %><br />
-            <%= link_to "&#187; Data Filters", data_filters_path %><br />
-          <% end %>
-        <% end %>
-        <% if APP_PROPERTIES[:show_external_otrunk_activities] %>
-          <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title].pluralize, external_otrunk_activities_path) %><br />
-          <% restrict_to 'admin' do %>
-            <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title] + " Report Templates", otrunk_report_templates_path) %><br />
-            <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title] + " Reports", reports_path) %><br />
-          <% end %>
-          <% restrict_to 'admin || manager' do %>
-          <% end %>
-        <% else %>
-          <% restrict_to 'admin' do %>
-            <%= link_to("&#187; External OTrunk Activities", external_otrunk_activities_path) %><br />
-            <%= link_to("&#187; OTrunk Report Templates", otrunk_report_templates_path) %><br />
-            <%= link_to("&#187; Reports", reports_path) %><br />
-          <% end %>
-          <% restrict_to 'admin || manager' do %>
-          <% end %>
-        <% end %>
-        <% restrict_to 'admin || manager' do %>
-          <%= link_to "&#187; Users", users_path %><br/>
-          <%= link_to "&#187; Statistics", statistics_path %>
-        <% end %>
-      </p>
+            <p>Probeware Drivers:<br />
+              <a href="http://webapps.teemss2.concord.org/content/download_choice.html">&#187; Driver Installation</a>
+            </p>
 
-      <p>Probeware Interface:<br />
-        <%= link_to "&#187; " + current_user.vendor_interface.name, interface_user_path(current_user) %>
-      </p>
+            <p>Questions/Feedback: <br />
+              <%= mail_to("stephen@concord.org", "&#187; Send us an email", 
+              :subject => "diy question", 
+              :encode => "javascript") %>
+            </p>
+            <% restrict_to 'admin || manager' do %>
+              <hr />
+              <%= render(:partial => 'shared/diy_admin_info') %>
+            <% end %> 
 
-      <p>Probeware Drivers:<br />
-        <a href="http://webapps.teemss2.concord.org/content/download_choice.html">&#187; Driver Installation</a>
-      </p>
+        </td>
+        <td valign="top">
 
-      <p>Questions/Feedback: <br />
-        <%= mail_to("stephen@concord.org", "&#187; Send us an email", 
-        :subject => "diy question", 
-        :encode => "javascript") %>
-      </p>
-      <% restrict_to 'admin || manager' do %>
-        <hr />
-        <p>DIY System Data:</p>
-        <p>
-          SDS:<small> <%= link_to "#{SdsConnect::Connect.host_url}", SdsConnect::Connect.host_url %></small><br />
-          Jnlp:<small> <%= link_to "#{SdsConnect::Connect.jnlp_id}", SdsConnect::Connect.jnlp_url %></small<br /> 
-          Curnit:<small> <%= link_to "#{SdsConnect::Connect.curnit_id}", SdsConnect::Connect.curnit_url %></small<br /> 
-        </p>
-        <%= yield :admin_sidebar %>
-        <p>Database:
-          <% db_info = ActiveRecord::Base.configurations %>
-          <br />type: <small><%= db_info[RAILS_ENV]['adapter'] %></small>
-          <br />name: <small><%= db_info[RAILS_ENV]['database'] %></small>
-          <% if host = db_info[RAILS_ENV]['host'] %>
-            <br />host: <small><%= host %></small>
-          <% end %>
-        </p>
-        <p>Subdomains: <br /><small><%= request.subdomains.join(', ') %></small></p>
-        <p>RAILS_ROOT: <br /><small><%= RAILS_ROOT %></small></p>
-        <p>Repository:
-          <% if svn_props = YAML::load(`svn info #{RAILS_ROOT}`) || svn_props = YAML::load(`/opt/local/bin/svn info #{RAILS_ROOT}`) %>
-            <br /><small>URL: <%= svn_props['URL'] %></small>
-            <br /><small>Rev: <%= svn_props['Last Changed Rev'] %></small>
-            <br /><small>Last change: <%= gmt_time_from_svn_time(svn_props['Last Changed Date']) %></small>
-          <% else %>
-            <br /><small>props: <%= svn_props %></small>
-          <% end %>
-        </p>
-      <% end %> 
+            <%= yield %>
 
-	</td>
-	<td valign="top">
+            <div class='pageNotes'>
+              <%= yield :footer %>
+              <%= fix_web_start_warning %>
+            </div>        
 
+        </td>
+        </tr>
+        </table>
 
-      <% if flash[:notice] -%> 
-        <div id="notice"><%= flash[:notice] %></div> 
-      <% end -%>
-      <%= yield %>
-      <div class='pageNotes'>
-        <%= yield :footer %>
-        <%= fix_web_start_warning %>
-      </div>        
-
-
-	</td>
-	</tr>
-	</table>
-
-
-			<div class="clear-floats"></div>
-			
-		</div>
-	
-	<div id="copyright">
-		
-		<p><img src="http://loops.concord.org/images/cc_logo_gray_text.gif" alt="CC Logo"></p>
-	
-		<p>© 2008 The Concord Consortium, Inc.  All Rights Reserved.</p>
-			
-	</div>
-
-</div>
-
-
-</body>
+        <div class="clear-floats"></div>
+      </div>
+      <div id="copyright">
+        <p><img src="http://loops.concord.org/images/cc_logo_gray_text.gif" alt="CC Logo"></p>
+        <p>© 2008 The Concord Consortium, Inc.  All Rights Reserved.</p>
+      </div>
+    </div>
+  </body>
 </html>
