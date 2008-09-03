@@ -1,3 +1,46 @@
+# For restarting apps, there are 2 ways to do it:
+# 
+# if you have the diy or sds code checked out, and have sudo privileges on seymour:
+#   cd to your checked out code
+#   run 'cap production deploy:restart'
+#   type in the name of the instance you want to restart (if it's a diy)
+#   type in your password when prompted
+# 
+# eg
+# aunger:~ aunger$ cd ~/Documents/workspaces/rails-workspace/diy
+# aunger:~/Documents/workspaces/rails-workspace/diy aunger$ cap production deploy:restart
+#   * executing `production'
+#   * executing `ask_instance'
+#   * executing `set_vars'
+# Enter the instance name (eg itsi, udl, capa): udl
+#   * executing `deploy:restart'
+#   * executing `mongrel:cluster:restart'
+#   * executing "sudo -p 'sudo password: ' mongrel_rails cluster::restart -C /etc/mongrel_cluster/production-udl.yml"
+#     servers: ["seymour.concord.org"]
+#     [seymour.concord.org] executing command
+# Password:
+# *** [err :: seymour.concord.org]
+#  ** [out :: seymour.concord.org] stopping port 4200
+#  ** [out :: seymour.concord.org] stopping port 4201
+#  ** [out :: seymour.concord.org] stopping port 4202
+#  ** [out :: seymour.concord.org] stopping port 4203
+#  ** [out :: seymour.concord.org] stopping port 4204
+#  ** [out :: seymour.concord.org] stopping port 4205
+#  ** [out :: seymour.concord.org] starting port 4200
+#  ** [out :: seymour.concord.org] starting port 4201
+#  ** [out :: seymour.concord.org] starting port 4202
+#  ** [out :: seymour.concord.org] starting port 4203
+#  ** [out :: seymour.concord.org] starting port 4204
+#  ** [out :: seymour.concord.org] starting port 4205
+#     command finished
+# aunger:~/Documents/workspaces/rails-workspace/diy aunger$
+# 
+# If you don't have the code checked out, you can:
+#   ssh to seymour
+#   run 'sudo mongrel_rails cluster::restart -C /etc/mongrel_cluster/production-udl.yml'
+# 
+# Be sure to replace the yml filename with the appropriate names -- [production|staging]-[instanceName].yml
+
 # maybe use these recipes because we are using mongrel_cluster on the server
 # where are they documented?
 require 'mongrel_cluster/recipes'
