@@ -264,15 +264,19 @@ Save and mount your results and try it out with a different atmosphere!
     old_version = con.execute("select version from #{RAILS_DATABASE_PREFIX}schema_info").fetch_hash['version']
 
     # get the stable db
-    print "\nGetting the remote database..."
+    print "\nGetting the remote database ... "
     cmd_body = "-u #{remote['username']} " << (remote['password'] ? "--password='#{remote['password']}' " : "") << "-h #{remote['host']} #{remote['database']}"
-    tables = `mysqlshow #{cmd_body} '#{remote['table_prefix']}%'`.scan(/#{remote['table_prefix']}\S+/)[1..-1].join(' ')
-    `mysqldump #{cmd_body} #{tables} > #{temp_file}`
-    print " done.\n"
+    cmd = "mysqlshow #{cmd_body} '#{remote['table_prefix']}%'"
+    # puts "\ncmd:\n#{cmd}"
+    tables = `#{cmd}`.scan(/#{remote['table_prefix']}\S+/)[1..-1].join(' ')
+    cmd = "mysqldump #{cmd_body} #{tables} > #{temp_file}"
+    # puts "\ncmd:\n#{cmd}"
+    `#{cmd}`
+    puts "done\n"
 
     puts "\nYour current database tables:\n\n"
     puts local_str
-    puts "\nare about to be deleted and replaced with data from the remote database:\n\n"
+    puts "\nare about to be deleted and replaced with data from this remote database:\n\n"
     puts remote_str
     puts "\nAny data that only exists in your current db will be lost."
     print "\nAre you sure you want to proceed? [Y/n] "
@@ -291,14 +295,14 @@ Save and mount your results and try it out with a different atmosphere!
     end
 
     # clear out the current db
-    print "Deleting tables in the current database..."
+    print "Deleting tables in the current database "
     con.tables.each do |t|
       if t.match "^#{RAILS_DATABASE_PREFIX}"
         con.drop_table(t)
         print "."
       end
     end
-    print " done.\n"
+    puts " done.\n\n"
 
     # The table prefixes may not match...
     # we need to convert the db dump to the current prefix
@@ -314,44 +318,31 @@ Save and mount your results and try it out with a different atmosphere!
     }
 
     # import the stable db
-    print "Importing the stable database..."
+    print "Importing the stable database ... "
     command = "mysql -u #{local['username']} " << (local['password'] ? "--password='#{local['password']}' " : "") << "-h #{local['host']} #{local['database']} < #{temp_file}.new"
     `#{command}`
-    print " done.\n"
+    puts "done.\n\n"
 
     con = User.connection
-    print " 1.\n"    
     new_version = con.execute("select version from #{RAILS_DATABASE_PREFIX}schema_info").fetch_hash['version']
-    print " 2.\n"
-    puts "\n"
     puts "Previous database version: #{old_version}"
     puts "Production database version: #{new_version}"
     if old_version > new_version
-      puts "*** The production database was older than your existing database. You should probably run 'rake db:migrate' to update your new database."
+      puts "*** The production database was older than your existing database. You should probably run:\n\n"
+      puts "***    rake db:migrate\n\n"
+      puts "*** to update your new database."
     elsif old_version < new_version
-      puts "*** The production database was newer than your existing database. You might want to run 'svn up' to be sure you're running the latest code."
-    else
-      puts ""
+      puts "*** The production database was newer than your existing database. You might want to run:\n\n"
+      puts "***    svn up\n\n"
+      puts "*** to be sure you're running the latest code."
     end
-    puts "\n*** Don't forget to run rake diy:delete_local_sds_attributes\n\n"
-  end
-
-  desc "Delete current database, copy from stable, convert tables ..."
-  task :import_tmp_production_sql_new => :environment do
-    # pull in config
-    # copy from production db to development db
-    db_config =  YAML::load(ERB.new(IO.read("#{RAILS_ROOT}/config/database.yml")).result)
-    remote = db_config['production']
-    local = db_config['development']
-    temp_file = "#{RAILS_ROOT}/tmp/production.sql"
-
-    # import the stable db
-    print "Importing the stable database..."
-    command = "mysql -u #{local['username']} " << (local['password'] ? "--password='#{local['password']}' " : "") << "-h #{local['host']} #{local['database']} < #{temp_file}.new"
-    puts command
-    `#{command}`
-    print " done.\n" 
-    puts "Often you will want to follow the successful completion of this task by running: 'rake diy:migrate_sds_data'"
+    puts 
+    puts "Often you will want to follow the successful completion of this task by running either:\n\n"
+    puts "   rake diy:migrate_sds_data\n\n"
+    puts "To copy learner data from another SDS to the new SDS for this DIY instance. Or ...\n\n"
+    puts "   rake diy:delete_local_sds_attributes\n\n"
+    puts "Which will erase and re-generate the SDS attributes for the local DIY"
+    puts
   end
   
   desc "Migrate the DIY data stored in an SDS from one SDS to another."
