@@ -76,10 +76,10 @@ Rails::Initializer.run do |config|
   # Before we add the gems unpacked into vendor/gems first see if there 
   # is a newer version of RedCloth installed and get it on the load path first.    
   begin
-    gem 'RedCloth', '> 4.0.3' 
+    gem 'RedCloth', '> 3.0.4' 
     require 'redcloth'
   rescue Gem::LoadError 
-    # If this fails we'll use the RedCloth v4.0.3 in vendor/gems
+    # If this fails we'll use the RedCloth v3.0.4 in vendor/gems
   end
 
   # This adds any Gems that may have been unpacked into vendor/gems to the load path
