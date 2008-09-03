@@ -117,7 +117,7 @@ task :set_vars do
   # via the :deploy_to variable:
   set :deploy_to, "/web/#{version}/#{application}"
   
-  set :mongrel_conf, "/etc/mongrel_cluster/#{version}-#{application}.yml"
+  set :mongrel_conf, "/etc/mongrel_cluster/#{version}-#{application}.conf"
   
   depend :remote, :file, "#{shared_path}/config/database.yml"
   depend :remote, :file, "#{shared_path}/config/environment.rb"
@@ -160,8 +160,8 @@ pid_file: tmp/pids/mongrel.pid
 servers: 10
 !
 
-  put file, "#{shared_path}/config/mongrel_cluster.yml"
-  run "sudo cp #{shared_path}/config/mongrel_cluster.yml /etc/mongrel_cluster/#{version}-#{application}.yml"
+  put file, "#{shared_path}/config/mongrel_cluster.conf"
+  run "sudo cp #{shared_path}/config/mongrel_cluster.conf /etc/mongrel_cluster/#{version}-#{application}.conf"
 end
 
 task :write_apache_conf, :roles => :app do
