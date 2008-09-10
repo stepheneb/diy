@@ -159,29 +159,21 @@ class ExternalOtrunkActivitiesController < ApplicationController
     if @external_otrunk_activity.external_otml_always_update
       @external_otrunk_activity.save
     end
-    # does the otml file set an explicit codebase?
-    codebase = @external_otrunk_activity.otml[/<otrunk.*?codebase=["'](.*?)["'']>/, 1]
-    # if so just use thatuse that ... otherwise
-    if codebase
+
+    # figure out if the codebase should be set, if nil is returned 
+    # then it doesn't need to be set
+    codebase = @external_otrunk_activity.otml_codebase
+    if codebase.nil?
       otml = @external_otrunk_activity.otml
     else
       # OK, create a Hpricot DOM of the otml so we can correctly add the codebase attribute
       # this is an expensive operation ...
       otml_xml_doc = Hpricot.XML(@external_otrunk_activity.otml)
-      if @external_otrunk_activity.external_otml_always_update
-        # set the codebase to the dir on the external web server that delivered the otml
-        codebase = File.dirname(@external_otrunk_activity.external_otml_url)
-      else
-        # this won't be a reasonable codebase unless we first run a script
-        # which creates a local cache directory and copies all the resources there.
-        codebase = File.dirname(@external_otrunk_activity.cached_otml_url)
-      end
-      # in both of these cases we need to add the codebase attribute to the 
-      # otml content.
+
       otml_xml_doc.search("/otrunk").set(:codebase,  codebase)
       otml = otml_xml_doc.to_s
     end
-    # the codebase is set so any relative urls in the original external otrunk activity will still work
+
     render :xml => otml
   end
 

@@ -36,6 +36,32 @@ module OtrunkSystem
     end
   end
 
+  # Figure out the codebase of the otml file
+  # nil is returned if a codebase is not necessary
+  # this method assumes the save method has been called so the otml is updated
+  def otml_codebase
+    # does the otml file set an explicit codebase?
+    existing_codebase = otml[/<otrunk.*?codebase=["'](.*?)["'']>/, 1]
+    if existing_codebase
+      return nil
+    end
+
+    if external_otml_always_update
+      # set the codebase to the dir on the external web server that delivered the otml
+      File.dirname(external_otml_url)
+    elsif (APP_PROPERTIES[:cache_external_otrunk_activities] == true) && (self.kind_of? ExternalOtrunkActivity)
+      # this won't be a reasonable codebase unless we first run a script
+      # which creates a local cache directory and copies all the resources there.
+      # in that case the :cache_external_otrunk_activities property should be true
+      # currently this approach is only used for ExternalOtrunkActivityS 
+      File.dirname(cached_otml_url)
+    else
+      # if always update is false and there is no cache of resrouces then return nil
+      #  indicating a codebase doesn't need to be set
+      nil
+    end
+  end
+
   # If external_otml_url is not nil and either
   # * the otml attribute is empty or
   #   the external_otml_always_update is set
