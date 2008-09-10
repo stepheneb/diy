@@ -207,7 +207,13 @@ class ReportsController < ApplicationController
       end
       
       activity = otml_report_template.search("//*[@local_id='external_activity_url']")
-      activity.first[:href] = otml_external_otrunk_activity_report_url(@report.reportable) unless activity.blank?
+      unless activity.blank?
+        if ((@report.reportable.kind_of? ExternalOtrunkActivity) && ! @report.reportable.external_otml_url.blank?)
+          activity.first[:href] = @report.reportable.external_otml_url
+        else 
+	  activity.first[:href] = otml_external_otrunk_activity_report_url(@report.reportable)
+        end
+      end
       
       if params[:users].blank? 
         learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable)
@@ -227,7 +233,7 @@ class ReportsController < ApplicationController
       script_object = otml_report_template.search("//*[@local_id='script_object']")
       script_object.first[:id] = otml_activity_uuid + "!/activity_script" unless script_object.blank?
       
-      # why is this messing with the codebase?
+      # the codebase is set so any relative urls in the original report_template_will still work
       unless codebase.empty?
         otml_report_template.search("/otrunk").set(:codebase,  codebase)
       end

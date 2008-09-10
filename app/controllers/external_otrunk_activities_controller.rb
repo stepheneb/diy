@@ -1,3 +1,5 @@
+require 'hpricot'
+
 class ExternalOtrunkActivitiesController < ApplicationController
   # GET /external_otrunk_activities
   # GET /external_otrunk_activities.xml
@@ -153,7 +155,19 @@ class ExternalOtrunkActivitiesController < ApplicationController
 
   def otml
     @external_otrunk_activity.save
-    render :xml => @external_otrunk_activity.otml
+    otml_external_activity = Hpricot.XML(@external_otrunk_activity.otml)
+    if @external_otrunk_activity.external_otml_always_update
+        codebase = File.dirname(@external_otrunk_activity.external_otml_url)
+    else
+        codebase = File.dirname(@external_otrunk_activity.cached_otml_url)
+    end
+
+    # the codebase is set so any relative urls in the original external otrunk activity will still work
+    unless codebase.empty?
+      otml_external_activity.search("/otrunk").set(:codebase,  codebase)
+    end
+
+    render :xml => otml_external_activity
   end
 
   def sail_jnlp
