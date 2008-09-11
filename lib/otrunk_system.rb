@@ -35,31 +35,48 @@ module OtrunkSystem
       read_attribute(:external_otml_url)
     end
   end
-
-  # Figure out the codebase of the otml file
-  # nil is returned if a codebase is not necessary
-  # this method assumes the save method has been called so the otml is updated
-  def otml_codebase
-    # does the otml file set an explicit codebase?
-    existing_codebase = otml[/<otrunk.*?codebase=["'](.*?)["'']>/, 1]
-    if existing_codebase
-      return nil
+  
+  def otml=(otml)
+    self[:otml] = otml
+  end
+  
+  def otml
+    check_for_external_otml if should_update_from_external_url?
+    generated_otml = self[:otml]
+    unless existing_codebase?
+      generated_codebase = generate_otml_codebase
+      if generated_codebase
+        otml_xml_doc = Hpricot.XML(generated_otml)
+        otml_xml_doc.search("/otrunk").set(:codebase,  generated_codebase)
+        generated_otml = otml_xml_doc.to_s
+      end
     end
+    generated_otml
+  end
+  
 
-    if external_otml_always_update
-      # set the codebase to the dir on the external web server that delivered the otml
-      File.dirname(external_otml_url)
-    elsif (APP_PROPERTIES[:cache_external_otrunk_activities] == true) && (self.kind_of? ExternalOtrunkActivity)
-      # this won't be a reasonable codebase unless we first run a script
-      # which creates a local cache directory and copies all the resources there.
-      # in that case the :cache_external_otrunk_activities property should be true
-      # currently this approach is only used for ExternalOtrunkActivityS 
-      File.dirname(cached_otml_url)
-    else
-      # if always update is false and there is no cache of resrouces then return nil
-      #  indicating a codebase doesn't need to be set
+  # Figure out the codebase of the otml file 
+  # nil is returned if a codebase is not necessary 
+  # this method assumes the save method has been called so the otml is updated 
+  def generate_otml_codebase 
+    if external_otml_always_update 
+      # set the codebase to the dir on the external web server that delivered the otml 
+      File.dirname(external_otml_url) 
+    elsif (APP_PROPERTIES[:cache_external_otrunk_activities] == true) && (self.kind_of? ExternalOtrunkActivity) 
+      # this won't be a reasonable codebase unless we first run a script 
+      # which creates a local cache directory and copies all the resources there. 
+      # in that case the :cache_external_otrunk_activities property should be true 
+      # currently this approach is only used for ExternalOtrunkActivityS  
+      File.dirname(cached_otml_url) 
+    else 
+      # if always update is false and there is no cache of resources then return nil 
+      #  indicating a codebase doesn't need to be set 
       nil
     end
+  end
+
+  def existing_codebase?
+    existing_codebase = self[:otml][/<otrunk.*?codebase=["'](.*?)["'']>/, 1] 
   end
 
   # If external_otml_url is not nil and either
@@ -68,23 +85,25 @@ module OtrunkSystem
   # then cache a local copy of the otml
   # referenced by the utl.
   def check_for_external_otml
-    unless self.external_otml_url.blank?
-      if self.otml.blank? || self.external_otml_always_update
-        begin
-          open(self.external_otml_url, :ssl_verify => false) do |f|
-            self.otml = f.read
-            self.external_otml_last_modified = f.last_modified
-            self.external_otml_filename = File.basename(self.external_otml_url)
-            true
-          end
+    if should_update_from_external_url?
+      begin
+        open(self.external_otml_url, :ssl_verify => false) do |f|
+          self[:otml] = f.read
+          self.external_otml_last_modified = f.last_modified
+          self.external_otml_filename = File.basename(self.external_otml_url)
+        end
         rescue SocketError # getaddrinfo?
         rescue OpenURI::HTTPError
-        end
-      else
-        nil
       end
-    else
-      nil
+    end
+    true
+  end
+  
+  def should_update_from_external_url?
+    case
+    when self.external_otml_url.blank? : nil
+    when self[:otml] && ! self.external_otml_always_update : nil
+    else true
     end
   end
 
