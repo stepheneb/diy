@@ -154,27 +154,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
   end
 
   def otml
-    # first: if we are always delivering the latest otml from an
-    # external source get an updated version by sending the save message
-    if @external_otrunk_activity.external_otml_always_update
-      @external_otrunk_activity.save
-    end
-
-    # figure out if the codebase should be set, if nil is returned 
-    # then it doesn't need to be set
-    codebase = @external_otrunk_activity.otml_codebase
-    if codebase.nil?
-      otml = @external_otrunk_activity.otml
-    else
-      # OK, create a Hpricot DOM of the otml so we can correctly add the codebase attribute
-      # this is an expensive operation ...
-      otml_xml_doc = Hpricot.XML(@external_otrunk_activity.otml)
-
-      otml_xml_doc.search("/otrunk").set(:codebase,  codebase)
-      otml = otml_xml_doc.to_s
-    end
-
-    render :xml => otml
+    render :xml => @external_otrunk_activity.otml
   end
 
   def sail_jnlp
