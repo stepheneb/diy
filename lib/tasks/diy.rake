@@ -58,7 +58,7 @@ namespace :diy do
   end 
   
   desc "Setup default data in brand new database"
-  task :setup_new_database => [:environment, :create_default_users_groups_roles, 
+  task :setup_new_database => [:environment, :create_default_probes_types, :create_default_vendor_interfaces, :create_default_users_groups_roles, 
     :create_default_model_types_and_models, :create_activity_mixing_water, :create_activity_greenhouse_effect] do
   end
 
