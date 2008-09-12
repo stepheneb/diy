@@ -26,7 +26,7 @@ module SdsRunnable
     options.merge({:savedata => false, :nobundles => false, :author => false, :reporting => false}) {|k,o,n| o}
     learner = self.find_or_create_learner(user)
     learner.create_session unless ! options[:savedata]
-    sds_url = "#{SdsConnect::Connect.config['host']}/offering/#{self.sds_offering_id}/jnlp/#{learner.sds_workgroup_id}"
+    sds_url = "#{SdsConnect::Connect.config['host']}/offering/#{options[:custom_offering_id] ? options[:custom_offering_id] : self.sds_offering_id}/jnlp/#{options[:custom_workgroup_id] ? options[:custom_workgroup_id] : learner.sds_workgroup_id}"
     sds_url << '/view' unless options[:savedata]
     sds_url << '/nobundles' if options[:nobundles]
     
