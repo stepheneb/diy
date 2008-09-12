@@ -184,7 +184,7 @@ class ReportsController < ApplicationController
     # works this is the only way to do it.  
     redirect_to reportable.sds_url(current_user, self, {
       :otml_url => report_url_var, :nobundles => false, :savedata => false,
-      :authoring => true, :system_properties => system_properties})
+      :authoring => true, :system_properties => system_properties, :custom_offering_id => @report.custom_offering_id, :custom_workgroup_id => @report.custom_workgroup_id})
 
   end
   
@@ -229,7 +229,7 @@ class ReportsController < ApplicationController
       script_object.first[:id] = otml_activity_uuid + "!/activity_script" unless script_object.blank?
       
       # the codebase is set so any relative urls in the original report_template_will still work
-      codebase = @report.otrunk_report_template.otml_codebase
+      codebase = @report.otrunk_report_template.generate_otml_codebase
       unless codebase.nil?
         otml_report_template.search("/otrunk").set(:codebase,  codebase)
       end
