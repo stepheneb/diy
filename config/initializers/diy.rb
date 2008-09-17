@@ -13,6 +13,8 @@ end
 
 CGI::Session::ActiveRecordStore::Session.table_name = "#{RAILS_DATABASE_PREFIX}sessions"
 
+OVERLAY_SERVER_ROOT = "http://rails.dev.concord.org/webdav/#{RAILS_APPLICATION_KEY}"
+
 module ActiveRecord
   class Migrator
     def Migrator.schema_info_table_name
@@ -64,7 +66,7 @@ require 'redcloth'
 require 'uuidtools'
 
 require 'sds_connect'
-# SdsConnect::Connect.setup
+SdsConnect::Connect.setup
 
 require 'diff/lcs'
 require 'diff/lcs/string'
