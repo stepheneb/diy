@@ -66,6 +66,9 @@ class ActivitiesController < ApplicationController
   # GET /learners/1/ot_learner_data.xml
   def ot_learner_data
     @learners = @activity.learners
+    # setup overlay folder. These overlay files hold per-user customizations to the activity.
+    @useOverlays = setup_overlay_folder(@activity.id)
+      
     render(:template => "shared/ot_learner_data.builder", :layout => false)
   end
   

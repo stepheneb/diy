@@ -57,7 +57,10 @@ class ExternalOtrunkActivitiesController < ApplicationController
       
       # inorder to support running reports for users that haven't run this activity
       # passed in users that don't have learners should either get learnes created or
-      # or temporary learners should be created.  
+      # or temporary learners should be created.
+      
+      # setup overlay folder. These overlay files hold per-user customizations to the activity.
+      @useOverlays = setup_overlay_folder(@external_otrunk_activity.id)
     end
     render(:template => "shared/ot_learner_data.builder", :layout => false)
   end

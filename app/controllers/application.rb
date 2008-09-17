@@ -115,6 +115,32 @@ class ApplicationController < ActionController::Base
 
     UrlEncodedPairParser.new(pairs).result
   end
+  
+      
+  def mkcol(uri)
+    require 'net/http' 
+    Net::HTTP.start(uri.host) do |http| 
+      response = http.mkcol(uri.path)
+      logger.info "response code: #{response.code}"
+      if response.code.to_i < 200 || response.code.to_i >= 400
+        raise "Error creating parent folder for overlay files"
+      end
+    end
+  end
+  
+  def setup_overlay_folder(runnable_id)
+    # make sure the webdav subfolder(s) exist first
+    useOverlays = OVERLAY_SERVER_ROOT && true
+    if useOverlays
+      begin
+        mkcol URI.parse("#{OVERLAY_SERVER_ROOT}/#{runnable_id}")
+      rescue Exception => e
+        useOverlays = false
+        logger.warn "error in overlays: #{e}\n#{e.backtrace.join("\n")}"
+      end
+    end
+    return useOverlays
+  end
 
   class UrlEncodedPairParser < StringScanner #:nodoc:
     attr_reader :top, :parent, :result
@@ -207,7 +233,6 @@ class ApplicationController < ActionController::Base
       raise TypeError, "Conflicting types for parameter containers. Expected an instance of #{klass} but found an instance of #{value.class}. This can be caused by colliding Array and Hash parameters like qs[]=value&qs[key]=value."
     end
   end
-
 
   # see: http://snippets.dzone.com/posts/show/1799
   def help
