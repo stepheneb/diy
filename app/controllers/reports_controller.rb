@@ -233,7 +233,15 @@ class ReportsController < ApplicationController
       unless codebase.nil?
         otml_report_template.search("/otrunk").set(:codebase,  codebase)
       end
-            
+      
+      # setup the group-wide overlay if a group_id has been set in
+      if params[:group_id]
+        group_id = params[:group_id]
+        @groupOverlayURL = "#{OVERLAY_SERVER_ROOT}/#{@report.reportable.id}/#{group_id}.otml" if group_id
+        
+        # FIXME insert the overlay URL into the template
+        otml_report_template.search("//OTMultiUserRoot").first.set(:groupOverlayURL,  @groupOverlayURL)
+      end
       render :xml => otml_report_template
     rescue
       render :xml => $!, :layout => "otml_message"
