@@ -16,7 +16,7 @@ class ActivitiesController < ApplicationController
   before_filter :setup_vars
   before_filter :setup_object, :except => [:index]
   before_filter :find_collections, :except => [:destroy, :otml, :sail_jnlp ]
-  before_filter :get_learner, :only => [:show, :edit]
+  before_filter :get_learner, :only => [:show, :edit, :update]
 
   # caches_page :index
   
