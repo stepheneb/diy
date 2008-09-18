@@ -100,7 +100,13 @@
         <% if runnable %>
           <p>Runnable:<br />
             Offering: <small><%= link_to "#{authorable_object.sds_offering_id}", SdsConnect::Connect.offering_url(authorable_object.sds_offering_id) %></small><br /> 
-            Workgroup: <small><%= link_to "#{@learner.sds_workgroup_id}", SdsConnect::Connect.workgroup_url(@learner.sds_workgroup_id) %></small>        
+            Workgroup: <small>
+              <% if @learner %>
+                <%= link_to "#{@learner.sds_workgroup_id}", SdsConnect::Connect.workgroup_url(@learner.sds_workgroup_id) %>
+              <% else %>
+                unknown
+              <% end %>
+              </small>        
           </p> 
         <% end %> 
       <% end %>       
