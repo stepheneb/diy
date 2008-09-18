@@ -70,7 +70,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
     @paginated_objects = @external_otrunk_activities
     respond_to do |format|
       format.html # index.rhtml
-      format.xml  { render :xml => ExternalOtrunkActivity.find(:all).to_xml }
+      format.xml  { render :xml => ExternalOtrunkActivity.find(:all).to_xml(:except => ['otml']) }
     end
   end
 
