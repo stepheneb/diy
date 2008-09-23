@@ -89,6 +89,9 @@ Rails::Initializer.run do |config|
   end
 end
 
+# if you want to set your cookie domain to something other than the request host, uncomment the line below
+# ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS[:session_domain] =  '.concord.org'  
+
 # uncomment this line if this application is served from a directory with other rails applications
 # ActionController::AbstractRequest.relative_url_root = '/' + RAILS_DATABASE_PREFIX.chomp('_')
 
