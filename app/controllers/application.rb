@@ -151,7 +151,7 @@ class ApplicationController < ActionController::Base
       if res.code.to_i < 200 || res.code.to_i >= 400
         # create it
         uuid = UUID.timestamp_create().to_s
-        otml = "<otrunk id='#{uuid}'><imports><import class='org.concord.otrunk.OTOverlay' /></imports><objects><OTOverlay /></objects></otrunk>"
+        otml = "<otrunk id='#{uuid}'><imports><import class='org.concord.otrunk.overlay.OTOverlay' /></imports><objects><OTOverlay /></objects></otrunk>"
         require 'net/http'
         Net::HTTP.start(uri.host) do |http| 
           response = http.put(uri.path, otml)
