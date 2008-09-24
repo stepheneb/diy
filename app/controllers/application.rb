@@ -141,7 +141,43 @@ class ApplicationController < ActionController::Base
     end
     return useOverlays
   end
+  
+  def setup_default_overlay(runnable_id, overlay_id)
+    # make sure the webdav subfolder(s) exist first
+    if setup_overlay_folder(runnable_id)
+      # if the file doesn't exist...
+      uri = URI.parse("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml")
+      res = Net::HTTP.get_response(uri)
+      if res.code.to_i < 200 || res.code.to_i >= 400
+        # create it
+        uuid = UUID.timestamp_create().to_s
+        otml = "<otrunk id='#{uuid}'><imports><import class='org.concord.otrunk.OTOverlay' /></imports><objects><OTOverlay /></objects></otrunk>"
+        require 'net/http'
+        Net::HTTP.start(uri.host) do |http| 
+          response = http.put(uri.path, otml)
+          logger.info "response code: #{response.code}"
+          if response.code.to_i < 200 || response.code.to_i >= 400
+            raise "Error creating default overlay file"
+          end
+        end
+      end
+    end
+  end
 
+  def getOtrunkID(node, root, num = -1)
+    if node.has_attribute? "refid"
+      node.get_attribute("refid")
+    elsif node.has_attribute? "id"
+      node.get_attribute("id")
+    elsif node.has_attribute? "local_id"
+      "#{root.get_attribute("id")}/#{node.get_attribute("local_id")}"
+    else
+      node_id = (num == -1 ? ("/" + node.name) : "[#{num}]")
+      # cycle through the parents
+      "#{getOtrunkID(node.parent, root)}#{node_id}"
+    end
+  end
+  
   class UrlEncodedPairParser < StringScanner #:nodoc:
     attr_reader :top, :parent, :result
 

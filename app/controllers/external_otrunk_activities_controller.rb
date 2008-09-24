@@ -160,6 +160,51 @@ class ExternalOtrunkActivitiesController < ApplicationController
     render :xml => @external_otrunk_activity.otml
   end
 
+  def overlay_otml
+    @user = User.find(params[:uid])
+    activity = @external_otrunk_activity
+    learner = activity.find_or_create_learner(@user)
+    group_id = params[:group_id]
+    savedata = params[:savedata]
+    authoring = params[:authoring]
+    reporting = params[:reporting]
+    nobundles = ((params[:nobundles] && ! params[:nobundles].empty?) ? true : false)
+    
+    @activity_otml_url = activity.otml_url(@user, self, {:nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring})
+    if group_id
+      if setup_default_overlay(learner.runnable.id, group_id)
+        @group_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{group_id}.otml"
+      end
+    end
+    setup_default_overlay(learner.runnable.id, learner.id)
+    @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
+    
+    require 'hpricot'
+      # get the bundles and imports from the included activity
+    otmlDoc = Hpricot.XML(activity.otml)
+    imports_elem = otmlDoc.search("/otrunk/imports")
+    imports = imports_elem.first.children.select {|c| c.elem? }
+    @imports = []
+    @imports << "org.concord.otrunk.OTIncludeRootObject"
+    imports.each do |i|
+      @imports << i.get_attribute("class")
+    end
+    bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles")
+    bundles = bundles_elem.first.children.select {|c| c.elem? }
+    @references = []
+    bundles.each_with_index do |b, i|
+      # get the object reference for this element
+      @references << getOtrunkID(b, otmlDoc.root, i)
+    end
+      # insert them into the overlay_otml
+    # OR
+      # get an external template
+      # if it exists, render it
+    
+    # otherwise render the default template
+    render(:template => 'shared/overlay_otml.builder', :layout => false)
+  end
+
   def sail_jnlp
     if params[:run_activity]
       @user = current_user
@@ -173,8 +218,8 @@ class ExternalOtrunkActivitiesController < ApplicationController
     # params[:nobundles] == '' => false
     # params[:nobundles] == anything else => true
     nobundles = ((params[:nobundles] && ! params[:nobundles].empty?) ? true : false)
-    
-    redirect_to @external_otrunk_activity.sds_url(@user, self, {:nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring})
+    useOverlay = OVERLAY_SERVER_ROOT && true
+    redirect_to @external_otrunk_activity.sds_url(@user, self, {:use_overlay => useOverlay, :nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring, :group_id => params[:group_id]})
   end
   
   def html_export_jnlp

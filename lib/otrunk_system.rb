@@ -12,6 +12,25 @@ module OtrunkSystem
   def generate_short_name
     self.short_name = self.name.strip.downcase.gsub(/\W+/, '_').gsub(/^_+|_+$/, '')
   end
+  
+  def otml_url(user, controller, options = {} )
+    options.merge({:savedata => false, :nobundles => false, :author => false, :reporting => false}) {|k,o,n| o}
+    learner = self.find_or_create_learner(user)
+    if self.kind_of? ExternalOtrunkActivity
+      unless (APP_PROPERTIES[:cache_external_otrunk_activities] == true)
+        if (self.external_otml_url && ! self.external_otml_url.empty?)
+          my_otml_url = self.external_otml_url
+        else
+          my_otml_url = controller.url_for(:only_path => false, :action => "otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata])
+        end
+      else
+        my_otml_url = self.cached_otml_url
+      end
+    else
+      my_otml_url = controller.url_for(:only_path => false, :action => "otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata])
+    end
+    my_otml_url
+  end
 
   def external_otml_url
     if Thread.current[:request] && read_attribute(:external_otml_url) && ! read_attribute(:external_otml_url).blank?

@@ -13,7 +13,10 @@ end
 
 CGI::Session::ActiveRecordStore::Session.table_name = "#{RAILS_DATABASE_PREFIX}sessions"
 
+# If you want to use overlays, define OVERLAY_SERVER_ROOT
 OVERLAY_SERVER_ROOT = "http://rails.dev.concord.org/webdav/#{RAILS_APPLICATION_KEY}"
+# otherwise, make OVERLAY_SERVER_ROOT = false
+# OVERLAY_SERVER_ROOT = false
 
 module ActiveRecord
   class Migrator

@@ -9,9 +9,9 @@ RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
+require 'rubygems'
 
 if RUBY_PLATFORM =~ /java/
-   require 'rubygems'
    RAILS_CONNECTION_ADAPTERS = %w(jdbc)
 end
 
