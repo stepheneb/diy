@@ -21,7 +21,11 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
         xml.OTIncludeRootObject("href" => @learner_overlay_url)
       }
       xml.root {
-        xml.OTIncludeRootObject("href" => @activity_otml_url)
+        if @rootObjectID
+          xml.object("refid" => @rootObjectID)
+        else
+          xml.OTIncludeRootObject("href" => @activity_otml_url)
+        end
       }
     }
   }

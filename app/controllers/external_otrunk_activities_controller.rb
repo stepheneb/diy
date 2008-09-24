@@ -196,10 +196,18 @@ class ExternalOtrunkActivitiesController < ApplicationController
       # get the object reference for this element
       @references << getOtrunkID(b, otmlDoc.root, i)
     end
-      # insert them into the overlay_otml
-    # OR
-      # get an external template
-      # if it exists, render it
+    
+    # get root object
+    @rootObjectID = nil
+    otsystem_elem = otmlDoc.search("/otrunk/objects/OTSystem")
+    if otsystem_elem
+      otsystem = otsystem_elem.first.children.select {|c| c.elem? && c.name == "root"}
+      rootObj = otsystem[0].children.select {|c| c.elem? }[0]
+      @rootObjectID = getOtrunkID(rootObj, otmlDoc.root, nil)
+    else
+      objects_elem = otmlDoc.search("/otrunk/objects")
+      @rootObjectID = getOtrunkID(objects_elem.first.children.select {|c| c.elem? }[0], otmlDoc.root, 0)
+    end
     
     # otherwise render the default template
     render(:template => 'shared/overlay_otml.builder', :layout => false)

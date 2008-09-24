@@ -170,9 +170,17 @@ class ApplicationController < ActionController::Base
     elsif node.has_attribute? "id"
       node.get_attribute("id")
     elsif node.has_attribute? "local_id"
-      "#{root.get_attribute("id")}/#{node.get_attribute("local_id")}"
+      "#{root.get_attribute("id")}!/#{node.get_attribute("local_id")}"
     else
-      node_id = (num == -1 ? ("/" + node.name) : "[#{num}]")
+      node_id = ""
+      case num
+        when -1
+          node_id = "/" + node.name
+        when nil
+          node_id = ""
+        else
+          node_id = "[#{num}]"
+      end
       # cycle through the parents
       "#{getOtrunkID(node.parent, root)}#{node_id}"
     end
