@@ -168,7 +168,7 @@ class ApplicationController < ActionController::Base
     if node.has_attribute? "refid"
       node.get_attribute("refid")
     elsif node.has_attribute? "id"
-      node.get_attribute("id")
+      node.get_attribute("id") + "!"
     elsif node.has_attribute? "local_id"
       "#{root.get_attribute("id")}!/#{node.get_attribute("local_id")}"
     else
@@ -176,13 +176,21 @@ class ApplicationController < ActionController::Base
       case num
         when -1
           node_id = "/" + node.name
+          # parent is an object
+          num = node.parent.parent.children.select {|c| c.elem? }.index(node.parent)
         when nil
           node_id = ""
+          # parent is an attribute name
+          num = -1
         else
           node_id = "[#{num}]"
+          # parent is an attribute name
+          num = -1
       end
       # cycle through the parents
-      "#{getOtrunkID(node.parent, root)}#{node_id}"
+      pid = getOtrunkID(node.parent, root, num)
+      pid += "!" if (pid == root.get_attribute("id"))
+      "#{pid}#{node_id}"
     end
   end
   
