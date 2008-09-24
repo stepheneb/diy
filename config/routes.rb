@@ -82,6 +82,15 @@ ActionController::Routing::Routes.draw do |map|
     otml.otml_learner_run ':controller/:id/otml/:vid/:uid/:lid', :savedata => true, :authoring => nil, :nobundles => ''
     otml.otml_external_otrunk_activity_report 'external_otrunk_activities/:id/otml', :controller => 'external_otrunk_activities', :reporting => true
   end
+  
+  map.with_options :action => 'overlay_otml' do |otml|
+    otml.overlay_otml_view ':controller/:id/overlay_otml/:vid/:uid/view', :savedata => nil, :authoring => nil
+    otml.overlay_otml_preview ':controller/:id/overlay_otml/:vid/:uid/preview', :savedata => nil, :authoring => nil, :nobundles => "nobundles"
+    otml.overlay_otml_authoring ':controller/:id/overlay_otml/:vid/:uid/authoring', :savedata => nil, :authoring => true, :nobundles => "nobundles"
+    otml.overlay_otml_run ':controller/:id/overlay_otml/:vid/:uid/:nobundles', :savedata => true, :authoring => nil, :nobundles => ''
+    otml.overlay_otml_learner_run ':controller/:id/overlay_otml/:vid/:uid/:lid', :savedata => true, :authoring => nil, :nobundles => ''
+    otml.overlay_otml_external_otrunk_activity_report 'external_otrunk_activities/:id/overlay_otml', :controller => 'external_otrunk_activities', :reporting => true
+  end
 
   map.activities 'activities/check_xhtml', :controller => 'activities', :action => 'check_xhtml'
 

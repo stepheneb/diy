@@ -238,8 +238,10 @@ class ReportsController < ApplicationController
       if params[:group_id]
         group_id = params[:group_id]
         @groupOverlayURL = "#{OVERLAY_SERVER_ROOT}/#{@report.reportable.id}/#{group_id}.otml" if group_id
+        # make sure the group overlay exists
+        setup_default_overlay(@report.reportable.id, group_id)
         
-        # FIXME insert the overlay URL into the template
+        # insert the overlay URL into the template
         otml_report_template.search("//OTMultiUserRoot").first.set(:groupOverlayURL,  @groupOverlayURL)
       end
       render :xml => otml_report_template

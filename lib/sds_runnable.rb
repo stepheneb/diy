@@ -23,7 +23,7 @@ module SdsRunnable
   
   def sds_url(user, controller, options = {})
     # merge these values into the options hash if they don't exist
-    options.merge({:savedata => false, :nobundles => false, :author => false, :reporting => false}) {|k,o,n| o}
+    options.merge({:savedata => false, :nobundles => false, :author => false, :reporting => false, :group_id => nil}) {|k,o,n| o}
     learner = self.find_or_create_learner(user)
     learner.create_session unless ! options[:savedata]
     sds_url = "#{SdsConnect::Connect.config['host']}/offering/#{options[:custom_offering_id] ? options[:custom_offering_id] : self.sds_offering_id}/jnlp/#{options[:custom_workgroup_id] ? options[:custom_workgroup_id] : learner.sds_workgroup_id}"
@@ -31,25 +31,14 @@ module SdsRunnable
     sds_url << '/nobundles' if options[:nobundles]
     
     if options[:otml_url]
-      otml_url = options[:otml_url]
-    else  
-      otml_url = ""
-      if self.kind_of? ExternalOtrunkActivity
-        unless (APP_PROPERTIES[:cache_external_otrunk_activities] == true)
-          if (self.external_otml_url && ! self.external_otml_url.empty?)
-            otml_url = self.external_otml_url
-          else
-            otml_url = controller.url_for(:only_path => false, :action => "otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata])
-          end
-        else
-          otml_url = self.cached_otml_url
-        end
-      else
-        otml_url = controller.url_for(:only_path => false, :action => "otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata])
-      end
+      my_otml_url = options[:otml_url]
+    elsif options[:use_overlay]
+      my_otml_url = controller.url_for(:only_path => false, :action => "overlay_otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata], :group_id => options[:group_id])
+    else
+      my_otml_url = self.otml_url(user, controller, options)
     end
     
-    jnlp_url = "#{sds_url}?sailotrunk.otmlurl=#{URI.escape(otml_url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
+    jnlp_url = "#{sds_url}?sailotrunk.otmlurl=#{URI.escape(my_otml_url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
     
     jnlp_filename = "#{RAILS_DATABASE_PREFIX}#{self.short_name}_#{user.vendor_interface.short_name}.jnlp"
     jnlp_url = jnlp_url << "&jnlp_filename=#{URI.escape(jnlp_filename, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
@@ -93,22 +82,9 @@ module SdsRunnable
     # sds_url << '/view' unless options[:savedata]
     # sds_url << '/nobundles' if options[:nobundles]
     
-    otml_url = ""
-    if self.kind_of? ExternalOtrunkActivity
-      unless (APP_PROPERTIES[:cache_external_otrunk_activities] == true)
-        if (self.external_otml_url && ! self.external_otml_url.empty?)
-          otml_url = self.external_otml_url
-        else
-          otml_url = controller.url_for(:only_path => false, :action => "otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata])
-        end
-      else
-        otml_url = self.cached_otml_url
-      end
-    else
-      otml_url = controller.url_for(:only_path => false, :action => "otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata])
-    end
+    my_otml_url = self.otml_url(user, controller, options)
     
-    jnlp_url = "#{sds_url}?sailotrunk.otmlurl=#{URI.escape(otml_url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
+    jnlp_url = "#{sds_url}?sailotrunk.otmlurl=#{URI.escape(my_otml_url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
     
     jnlp_filename = "#{RAILS_DATABASE_PREFIX}#{self.short_name}_#{user.vendor_interface.short_name}.jnlp"
     jnlp_url = jnlp_url << "&jnlp_filename=#{URI.escape(jnlp_filename, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
