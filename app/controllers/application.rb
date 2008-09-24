@@ -168,7 +168,7 @@ class ApplicationController < ActionController::Base
     if node.has_attribute? "refid"
       node.get_attribute("refid")
     elsif node.has_attribute? "id"
-      node.get_attribute("id") + "!"
+      node.get_attribute("id")
     elsif node.has_attribute? "local_id"
       "#{root.get_attribute("id")}!/#{node.get_attribute("local_id")}"
     else
