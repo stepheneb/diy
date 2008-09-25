@@ -10,17 +10,20 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
         xml.OTInclude("href" => @activity_otml_url)
       }
       xml.bundles {
-        @references.each do |r|
+        @bundles.each do |r|
           xml.object("refid" => r)
         end
       }
-      if @group_overlay_url || @learner_overlay_url
+      if @group_overlay_url || @learner_overlay_url || @overlays.size > 0
         xml.overlays {
+          if @learner_overlay_url
+            xml.OTIncludeRootObject("href" => @learner_overlay_url)
+          end
           if @group_overlay_url
             xml.OTIncludeRootObject("href" => @group_overlay_url)
           end
-          if @learner_overlay_url
-            xml.OTIncludeRootObject("href" => @learner_overlay_url)
+          @overlays.each do |o|
+            xml.object("refid" => o)
           end
         }
       end

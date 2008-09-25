@@ -204,25 +204,29 @@ class ApplicationController < ActionController::Base
   
   def setup_overlay_requirements(activity)
     require 'hpricot'
-      # get the bundles and imports from the included activity
+      # setup the imports
     otmlDoc = Hpricot.XML(activity.otml)
     @imports = []
     @imports << "org.concord.otrunk.OTIncludeRootObject"
     @imports << "org.concord.otrunk.OTSystem"
     @imports << "org.concord.otrunk.OTInclude"
     
-#    imports_elem = otmlDoc.search("/otrunk/imports")
-#    imports = imports_elem.first.children.select {|c| c.elem? }
-#    imports.each do |i|
-#      @imports << i.get_attribute("class")
-#    end
-    
+    # get the bundles from the original activity otml
+    @bundles = []
     bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles")
     bundles = bundles_elem.first.children.select {|c| c.elem? }
-    @references = []
     bundles.each_with_index do |b, i|
       # get the object reference for this element
-      @references << getOtrunkID(b, otmlDoc.root, i)
+      @bundles << getOtrunkID(b, otmlDoc.root, i)
+    end
+    
+    # get the overlays from the original activity otml
+    @overlays = []
+    overlays_elem = otmlDoc.search("/otrunk/objects/OTSystem/overlays")
+    overlays = overlays_elem.first.children.select {|c| c.elem? }
+    overlays.each_with_index do |o, i|
+      # get the object reference for this element
+      @overlays << getOtrunkID(o, otmlDoc.root, i)
     end
     
     # get root object
