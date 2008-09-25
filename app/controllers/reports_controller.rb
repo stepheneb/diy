@@ -250,7 +250,7 @@ class ReportsController < ApplicationController
         setup_default_overlay(@report.reportable.id, group_id)
         
         # insert the overlay URL into the template
-        otml_report_template.search("//OTMultiUserRoot").first.set(:groupOverlayURL,  @groupOverlayURL)
+        otml_report_template.search("//OTMultiUserRoot").first[:groupOverlayURL] = @groupOverlayURL
       end
       render :xml => otml_report_template
     rescue
