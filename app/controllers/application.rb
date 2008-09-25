@@ -157,10 +157,13 @@ class ApplicationController < ActionController::Base
           response = http.put(uri.path, otml)
           logger.info "response code: #{response.code}"
           if response.code.to_i < 200 || response.code.to_i >= 400
-            raise "Error creating default overlay file"
+            return false
           end
         end
       end
+      return true
+    else
+      return false
     end
   end
 
@@ -173,24 +176,65 @@ class ApplicationController < ActionController::Base
       "#{root.get_attribute("id")}!/#{node.get_attribute("local_id")}"
     else
       node_id = ""
-      case num
-        when -1
-          node_id = "/" + node.name
-          # parent is an object
-          num = node.parent.parent.children.select {|c| c.elem? }.index(node.parent)
-        when nil
+      if num == -1
+        node_id = "/" + node.name
+        # parent is an object
+        num = node.parent.parent.children.select {|c| c.elem? }.index(node.parent)
+      elsif num == nil
           node_id = ""
           # parent is an attribute name
           num = -1
-        else
-          node_id = "[#{num}]"
-          # parent is an attribute name
-          num = -1
+      else
+        node_id = "[#{num}]"
+        # parent is an attribute name
+        num = -1
       end
       # cycle through the parents
       pid = getOtrunkID(node.parent, root, num)
-      pid += "!" if (pid == root.get_attribute("id"))
+      
+      # this is to get rid of the first level of attributes
+      # e.g. instead of uuid/objects[0]/root it should be uuid//root
+      # instead of uuid/objects[0]/bundles[1] it should be uuid//bundles[1]
+      node_id =  "/" if (pid == root.get_attribute("id"))
+      node_id = "" if (pid == root.get_attribute("id") + "/") && node_id =~ /\[[0-9]+\]/
+      
       "#{pid}#{node_id}"
+    end
+  end
+  
+  def setup_overlay_requirements(activity)
+    require 'hpricot'
+      # get the bundles and imports from the included activity
+    otmlDoc = Hpricot.XML(activity.otml)
+    @imports = []
+    @imports << "org.concord.otrunk.OTIncludeRootObject"
+    @imports << "org.concord.otrunk.OTSystem"
+    @imports << "org.concord.otrunk.OTInclude"
+    
+#    imports_elem = otmlDoc.search("/otrunk/imports")
+#    imports = imports_elem.first.children.select {|c| c.elem? }
+#    imports.each do |i|
+#      @imports << i.get_attribute("class")
+#    end
+    
+    bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles")
+    bundles = bundles_elem.first.children.select {|c| c.elem? }
+    @references = []
+    bundles.each_with_index do |b, i|
+      # get the object reference for this element
+      @references << getOtrunkID(b, otmlDoc.root, i)
+    end
+    
+    # get root object
+    @rootObjectID = nil
+    otsystem_elem = otmlDoc.search("/otrunk/objects/OTSystem")
+    if otsystem_elem
+      otsystem = otsystem_elem.first.children.select {|c| c.elem? && c.name == "root"}
+      rootObj = otsystem[0].children.select {|c| c.elem? }[0]
+      @rootObjectID = getOtrunkID(rootObj, otmlDoc.root, nil)
+    else
+      objects_elem = otmlDoc.search("/otrunk/objects")
+      @rootObjectID = getOtrunkID(objects_elem.first.children.select {|c| c.elem? }[0], otmlDoc.root, 0)
     end
   end
   
