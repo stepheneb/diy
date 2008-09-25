@@ -165,10 +165,18 @@ class ReportsController < ApplicationController
     reportable = @report.reportable
     
     # render :text => "#{@report.short_name}: #{@report.reportable.id}, #{@report.otrunk_report_template.id}"
-    if params[:users].blank?
-      report_url_var = otml_report_url      
+    if USE_OVERLAYS && OVERLAY_SERVER_ROOT && params[:group_id]
+      if params[:users].blank?
+        report_url_var = otml_report_url :group_id => params[:group_id]
+      else
+        report_url_var = otml_report_url :users => params[:users], :group_id => params[:group_id]
+      end
     else
-      report_url_var = otml_report_url :users => params[:users]
+      if params[:users].blank?
+        report_url_var = otml_report_url      
+      else
+        report_url_var = otml_report_url :users => params[:users]
+      end
     end
 
    system_properties = []
@@ -177,7 +185,7 @@ class ReportsController < ApplicationController
        system_properties << (match[1] + "=" + params[key]) 
      end
    end
-       
+
     # authoring is enabled so the current user is not added to the list of users
     # that the OTrunk activity sees.  this is not clean because we aren't
     # really doing authoring just reporting.  However the way Sail/OTrunk currently 
