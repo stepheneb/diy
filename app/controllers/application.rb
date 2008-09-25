@@ -130,7 +130,7 @@ class ApplicationController < ActionController::Base
   
   def setup_overlay_folder(runnable_id)
     # make sure the webdav subfolder(s) exist first
-    useOverlays = OVERLAY_SERVER_ROOT && true
+    useOverlays = USE_OVERLAYS && OVERLAY_SERVER_ROOT
     if useOverlays
       begin
         mkcol URI.parse("#{OVERLAY_SERVER_ROOT}/#{runnable_id}")
