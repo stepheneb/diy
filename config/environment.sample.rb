@@ -105,3 +105,6 @@ end
 # learner data stored in an SDS uncomment the following Constant and set the value appropriately
 # OLD_SDS_HOST = "http://saildataservice.concord.org/7"
 
+# set to true if you want to use per-student and per-group overlays (customizations) with your activities
+USE_OVERLAYS = false
+

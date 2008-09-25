@@ -289,28 +289,7 @@ class ActivitiesController < ApplicationController
     setup_default_overlay(learner.runnable.id, learner.id)
     @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
     
-    require 'hpricot'
-      # get the bundles and imports from the included activity
-      # FIXME Activities don't have their otml pre-generated. This won't work until we can get it.
-    otmlDoc = Hpricot.XML(activity.otml)
-    imports_elem = otmlDoc.search("/otrunk/imports")
-    imports = imports_elem.first.children.select {|c| c.elem? }
-    @imports = []
-    @imports << "org.concord.otrunk.OTIncludeRootObject"
-    imports.each do |i|
-      @imports << i.get_attribute("class")
-    end
-    bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles")
-    bundles = bundles_elem.first.children.select {|c| c.elem? }
-    @references = []
-    bundles.each_with_index do |b, i|
-      # get the object reference for this element
-      @references << getOtrunkID(b, otmlDoc.root, i)
-    end
-      # insert them into the overlay_otml
-    # OR
-      # get an external template
-      # if it exists, render it
+    setup_overlay_requirements(activity)
     
     # otherwise render the default template
     render(:template => 'shared/overlay_otml.builder', :layout => false)

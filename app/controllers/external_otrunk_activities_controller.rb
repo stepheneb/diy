@@ -176,38 +176,11 @@ class ExternalOtrunkActivitiesController < ApplicationController
         @group_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{group_id}.otml"
       end
     end
-    setup_default_overlay(learner.runnable.id, learner.id)
-    @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
-    
-    require 'hpricot'
-      # get the bundles and imports from the included activity
-    otmlDoc = Hpricot.XML(activity.otml)
-    imports_elem = otmlDoc.search("/otrunk/imports")
-    imports = imports_elem.first.children.select {|c| c.elem? }
-    @imports = []
-    @imports << "org.concord.otrunk.OTIncludeRootObject"
-    imports.each do |i|
-      @imports << i.get_attribute("class")
-    end
-    bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles")
-    bundles = bundles_elem.first.children.select {|c| c.elem? }
-    @references = []
-    bundles.each_with_index do |b, i|
-      # get the object reference for this element
-      @references << getOtrunkID(b, otmlDoc.root, i)
+    if setup_default_overlay(learner.runnable.id, learner.id)
+      @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
     end
     
-    # get root object
-    @rootObjectID = nil
-    otsystem_elem = otmlDoc.search("/otrunk/objects/OTSystem")
-    if otsystem_elem
-      otsystem = otsystem_elem.first.children.select {|c| c.elem? && c.name == "root"}
-      rootObj = otsystem[0].children.select {|c| c.elem? }[0]
-      @rootObjectID = getOtrunkID(rootObj, otmlDoc.root, nil)
-    else
-      objects_elem = otmlDoc.search("/otrunk/objects")
-      @rootObjectID = getOtrunkID(objects_elem.first.children.select {|c| c.elem? }[0], otmlDoc.root, 0)
-    end
+    setup_overlay_requirements(activity)
     
     # otherwise render the default template
     render(:template => 'shared/overlay_otml.builder', :layout => false)
@@ -226,7 +199,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
     # params[:nobundles] == '' => false
     # params[:nobundles] == anything else => true
     nobundles = ((params[:nobundles] && ! params[:nobundles].empty?) ? true : false)
-    useOverlay = OVERLAY_SERVER_ROOT && true
+    useOverlay = USE_OVERLAYS && OVERLAY_SERVER_ROOT
     redirect_to @external_otrunk_activity.sds_url(@user, self, {:use_overlay => useOverlay, :nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring, :group_id => params[:group_id]})
   end
   
