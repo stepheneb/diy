@@ -169,7 +169,13 @@ class ApplicationController < ActionController::Base
 
   def getOtrunkID(node, root, num = -1)
     if node.has_attribute? "refid"
-      node.get_attribute("refid")
+      ref_id = node.get_attribute("refid")
+      # if it's a reference to a local_id
+      if ref_id =~ /^\$\{(.*)\}$/
+        "#{root.get_attribute("id")}!/#{$1}"
+      else
+        ref_id
+      end
     elsif node.has_attribute? "id"
       node.get_attribute("id")
     elsif node.has_attribute? "local_id"
