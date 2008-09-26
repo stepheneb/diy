@@ -14,7 +14,17 @@ end
 CGI::Session::ActiveRecordStore::Session.table_name = "#{RAILS_DATABASE_PREFIX}sessions"
 
 # If you want to use overlays, define OVERLAY_SERVER_ROOT
-OVERLAY_SERVER_ROOT = "http://rails.dev.concord.org/webdav/#{RAILS_APPLICATION_KEY}"
+# You MUST create this root directory manually!
+require 'socket'
+require 'open-uri'
+server_root = "http://rails.dev.concord.org/webdav/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}"
+begin
+  doc = open(server_root)
+  OVERLAY_SERVER_ROOT = server_root
+rescue => e
+  $stderr.puts "Asking for the OVERLAY_SERVER_ROOT (#{server_root}) returned an error (#{e})!\nNot using overlays..."
+  OVERLAY_SERVER_ROOT = false
+end
 # otherwise, make OVERLAY_SERVER_ROOT = false
 # OVERLAY_SERVER_ROOT = false
 
