@@ -213,32 +213,40 @@ class ApplicationController < ActionController::Base
     
     # get the bundles from the original activity otml
     @bundles = []
-    bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles")
-    bundles = bundles_elem.first.children.select {|c| c.elem? }
-    bundles.each_with_index do |b, i|
-      # get the object reference for this element
-      @bundles << getOtrunkID(b, otmlDoc.root, i)
+    bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles").first
+    if bundles_elem
+      bundles = bundles_elem.children.select {|c| c.elem? }
+      bundles.each_with_index do |b, i|
+        # get the object reference for this element
+        @bundles << getOtrunkID(b, otmlDoc.root, i)
+      end
     end
     
     # get the overlays from the original activity otml
     @overlays = []
-    overlays_elem = otmlDoc.search("/otrunk/objects/OTSystem/overlays")
-    overlays = overlays_elem.first.children.select {|c| c.elem? }
-    overlays.each_with_index do |o, i|
-      # get the object reference for this element
-      @overlays << getOtrunkID(o, otmlDoc.root, i)
+    overlays_elem = otmlDoc.search("/otrunk/objects/OTSystem/overlays").first
+    if overlays_elem
+      overlays = overlays_elem.children.select {|c| c.elem? }
+      overlays.each_with_index do |o, i|
+        # get the object reference for this element
+        @overlays << getOtrunkID(o, otmlDoc.root, i)
+      end
     end
     
     # get root object
     @rootObjectID = nil
-    otsystem_elem = otmlDoc.search("/otrunk/objects/OTSystem")
+    otsystem_elem = otmlDoc.search("/otrunk/objects/OTSystem").first
     if otsystem_elem
-      otsystem = otsystem_elem.first.children.select {|c| c.elem? && c.name == "root"}
-      rootObj = otsystem[0].children.select {|c| c.elem? }[0]
-      @rootObjectID = getOtrunkID(rootObj, otmlDoc.root, nil)
+      otsystem = otsystem_elem.children.select {|c| c.elem? && c.name == "root"}[0]
+      if otsystem
+        rootObj = otsystem.children.select {|c| c.elem? }[0]
+        @rootObjectID = getOtrunkID(rootObj, otmlDoc.root, nil)
+      end
     else
-      objects_elem = otmlDoc.search("/otrunk/objects")
-      @rootObjectID = getOtrunkID(objects_elem.first.children.select {|c| c.elem? }[0], otmlDoc.root, 0)
+      objects_elem = otmlDoc.search("/otrunk/objects").first
+      if objects_elem
+        @rootObjectID = getOtrunkID(objects_elem.children.select {|c| c.elem? }[0], otmlDoc.root, 0)
+      end
     end
   end
   
