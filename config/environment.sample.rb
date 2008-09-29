@@ -126,11 +126,11 @@ begin
     # don't use auth
     $stderr.puts "not using auth: #{e}"
   end
-  # if use_http_auth
+  if use_http_auth
     doc = open(server_root, { :ssl_verify => false, :http_basic_authentication => [OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD] }).read
-  # else
-  #   doc = open(server_root, :ssl_verify => false).read
-  # end
+  else
+    doc = open(server_root, :ssl_verify => false).read
+  end
   OVERLAY_SERVER_ROOT = server_root
 rescue => e
   $stderr.puts "Asking for the OVERLAY_SERVER_ROOT (#{server_root}) returned an error (#{e})!\n\nNot using overlays...\n"
