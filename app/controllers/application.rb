@@ -126,11 +126,12 @@ class ApplicationController < ActionController::Base
     http.start() do |conn|
       req = Net::HTTP::Mkcol.new(uri.path)
       begin
-        if OVERLAY_SERVER_USER && OVERLAY_SERVER_PASSWORD
-          req.basic_auth OVERLAY_SERVER_USER, OVERLAY_SERVER_PASSWORD
+        if OVERLAY_SERVER_USERNAME && OVERLAY_SERVER_PASSWORD
+          req.basic_auth(OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD)
         end
       rescue Exception
         # don't use authentication
+        logger.info("not using auth in mkcol")
       end
       response = conn.request(req)
       logger.info "response code: #{response.code}"
@@ -164,8 +165,18 @@ class ApplicationController < ActionController::Base
     if setup_overlay_folder(runnable_id)
       # if the file doesn't exist...
       uri = URI.parse("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml")
+      useHttpAuth = false
       begin
-        doc = open("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false).read
+        useHttpAuth = OVERLAY_SERVER_USERNAME && OVERLAY_SERVER_PASSWORD
+      rescue Exception
+        # don't use auth
+      end
+      begin
+        if useHttpAuth
+          doc = open("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false, :http_basic_authentication => [OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD] ).read
+        else
+          doc = open("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false).read
+        end
       rescue => e
         logger.warn "Overlay file #{uri.to_s} doesn't exist. Creating it... \n#{e}"
         doc = nil
@@ -182,12 +193,8 @@ class ApplicationController < ActionController::Base
           logger.info("Path is #{uri.path}")
           req = Net::HTTP::Put.new(uri.path)
           req.body = otml
-          begin
-            if OVERLAY_SERVER_USER && OVERLAY_SERVER_PASSWORD
-              req.basic_auth OVERLAY_SERVER_USER, OVERLAY_SERVER_PASSWORD
-            end
-          rescue Exception
-            # don't use authentication
+          if useHttpAuth
+            req.basic_auth OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD
           end
           response = conn.request(req)
           logger.info "response code: #{response.code}"
