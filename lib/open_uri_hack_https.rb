@@ -42,7 +42,9 @@ module OpenURI
     if target.class == URI::HTTPS
       require 'net/https'
       http.use_ssl = true
-      http.enable_post_connection_check = true      
+      if http.respond_to? "enable_post_connection="
+        http.enable_post_connection_check = true
+      end
       if options[:ssl_verify] == false
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       else

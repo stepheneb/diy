@@ -118,9 +118,21 @@ class ApplicationController < ActionController::Base
   
       
   def mkcol(uri)
-    require 'net/http' 
-    Net::HTTP.start(uri.host) do |http| 
-      response = http.mkcol(uri.path)
+    require 'net/http'
+    http = Net::HTTP.new(uri.host, uri.port)
+    if uri.port == 443
+      http.use_ssl = true
+    end
+    http.start() do |conn|
+      req = Net::HTTP::Mkcol.new(uri.path)
+      begin
+        if OVERLAY_SERVER_USER && OVERLAY_SERVER_PASSWORD
+          req.basic_auth OVERLAY_SERVER_USER, OVERLAY_SERVER_PASSWORD
+        end
+      rescue Exception
+        # don't use authentication
+      end
+      response = conn.request(req)
       logger.info "response code: #{response.code}"
       if response.code.to_i < 200 || response.code.to_i >= 400
         raise "Error creating parent folder for overlay files"
@@ -130,7 +142,12 @@ class ApplicationController < ActionController::Base
   
   def setup_overlay_folder(runnable_id)
     # make sure the webdav subfolder(s) exist first
-    useOverlays = USE_OVERLAYS && OVERLAY_SERVER_ROOT
+    useOverlays = false
+    begin
+      useOverlays = USE_OVERLAYS && OVERLAY_SERVER_ROOT
+    rescue Exception
+      # don't use overlays
+    end
     if useOverlays
       begin
         mkcol URI.parse("#{OVERLAY_SERVER_ROOT}/#{runnable_id}")
@@ -147,14 +164,32 @@ class ApplicationController < ActionController::Base
     if setup_overlay_folder(runnable_id)
       # if the file doesn't exist...
       uri = URI.parse("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml")
-      res = Net::HTTP.get_response(uri)
-      if res.code.to_i < 200 || res.code.to_i >= 400
+      begin
+        doc = open("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false).read
+      rescue => e
+        logger.warn "Overlay file #{uri.to_s} doesn't exist. Creating it... \n#{e}"
+        doc = nil
+      end
+      if ! doc
         # create it
         uuid = UUID.timestamp_create().to_s
         otml = "<otrunk id='#{uuid}'><imports><import class='org.concord.otrunk.overlay.OTOverlay' /></imports><objects><OTOverlay /></objects></otrunk>"
-        require 'net/http'
-        Net::HTTP.start(uri.host) do |http| 
-          response = http.put(uri.path, otml)
+        http = Net::HTTP.new(uri.host, uri.port)
+        if uri.port == 443
+          http.use_ssl = true
+        end
+        http.start() do |conn|
+          logger.info("Path is #{uri.path}")
+          req = Net::HTTP::Put.new(uri.path)
+          req.body = otml
+          begin
+            if OVERLAY_SERVER_USER && OVERLAY_SERVER_PASSWORD
+              req.basic_auth OVERLAY_SERVER_USER, OVERLAY_SERVER_PASSWORD
+            end
+          rescue Exception
+            # don't use authentication
+          end
+          response = conn.request(req)
           logger.info "response code: #{response.code}"
           if response.code.to_i < 200 || response.code.to_i >= 400
             return false
