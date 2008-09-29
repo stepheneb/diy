@@ -108,3 +108,21 @@ end
 # set to true if you want to use per-student and per-group overlays (customizations) with your activities
 USE_OVERLAYS = false
 
+# If you want to use overlays, define OVERLAY_SERVER_ROOT
+# You MUST create this root directory manually!
+require 'socket'
+require 'open-uri'
+server_root = "https://rails.dev.concord.org/webdav/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}"
+begin
+  doc = open(server_root, :ssl_verify => false).read
+  OVERLAY_SERVER_ROOT = server_root
+rescue => e
+  $stderr.puts "Asking for the OVERLAY_SERVER_ROOT (#{server_root}) returned an error (#{e})!\nNot using overlays..."
+  OVERLAY_SERVER_ROOT = false
+end
+# otherwise, make OVERLAY_SERVER_ROOT = false
+# OVERLAY_SERVER_ROOT = false
+
+# if you need to authenticate to your overlay server uncomment and modify the next two lines
+# OVERLAY_SERVER_USERNAME = "user"
+# OVERLAY_SERVER_PASSWORD = "password"
