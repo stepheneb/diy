@@ -21,6 +21,19 @@ RAILS_DATABASE_PREFIX = ''
 # This key is used to select the look and feel of the application
 RAILS_APPLICATION_KEY = 'diy'
 
+# set to true if you want to use per-student and per-group overlays (customizations) with your activities
+USE_OVERLAYS = false
+
+# if you need to authenticate to your overlay server uncomment and modify the next two lines
+# OVERLAY_SERVER_USERNAME = "user"
+# OVERLAY_SERVER_PASSWORD = "password"
+
+# If you want to use overlays, define OVERLAY_SERVER_ROOT
+# You MUST create this root directory manually!
+OVERLAY_SERVER_ROOT = "https://rails.dev.concord.org/webdav/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/"
+# otherwise, make OVERLAY_SERVER_ROOT = false
+# OVERLAY_SERVER_ROOT = false
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
@@ -104,37 +117,3 @@ end
 # If you want to transfer data from another DIY and also want to transfer associated
 # learner data stored in an SDS uncomment the following Constant and set the value appropriately
 # OLD_SDS_HOST = "http://saildataservice.concord.org/7"
-
-# set to true if you want to use per-student and per-group overlays (customizations) with your activities
-USE_OVERLAYS = false
-
-# if you need to authenticate to your overlay server uncomment and modify the next two lines
-# OVERLAY_SERVER_USERNAME = "user"
-# OVERLAY_SERVER_PASSWORD = "password"
-
-# If you want to use overlays, define OVERLAY_SERVER_ROOT
-# You MUST create this root directory manually!
-require 'socket'
-require 'open-uri'
-server_root = "https://rails.dev.concord.org/webdav/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/"
-begin
-  use_http_auth = false
-  begin
-    use_http_auth = OVERLAY_SERVER_USERNAME && OVERLAY_SERVER_PASSWORD
-    $stderr.puts "using auth"
-  rescue Exception => e
-    # don't use auth
-    $stderr.puts "not using auth: #{e}"
-  end
-  if use_http_auth
-    doc = open(server_root, { :ssl_verify => false, :http_basic_authentication => [OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD] }).read
-  else
-    doc = open(server_root, :ssl_verify => false).read
-  end
-  OVERLAY_SERVER_ROOT = server_root
-rescue => e
-  $stderr.puts "Asking for the OVERLAY_SERVER_ROOT (#{server_root}) returned an error (#{e})!\n\nNot using overlays...\n"
-  OVERLAY_SERVER_ROOT = false
-end
-# otherwise, make OVERLAY_SERVER_ROOT = false
-# OVERLAY_SERVER_ROOT = false
