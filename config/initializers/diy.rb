@@ -57,6 +57,36 @@ if EXCEPTION_NOTIFIER_CONFIGS_EXISTS
   ExceptionNotifier.email_prefix = "[DIY ERROR]: #{APP_PROPERTIES[:application_name]} "
 end
 
+# check to make sure the overlay root folder exists
+require 'socket'
+require 'open-uri'
+require 'open_uri_hack_https'
+OpenSSL::SSL::VERIFY_NONE
+begin
+  use_http_auth = false
+  begin
+    use_http_auth = OVERLAY_SERVER_USERNAME && OVERLAY_SERVER_PASSWORD
+    $stderr.puts "using auth"
+  rescue Exception => e
+    # don't use auth
+    $stderr.puts "not using auth: #{e}"
+  end
+  if use_http_auth
+    doc = open(OVERLAY_SERVER_ROOT, { :ssl_verify => false, :http_basic_authentication => [OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD] }).read
+  else
+    doc = open(OVERLAY_SERVER_ROOT, :ssl_verify => false).read
+  end
+  $stderr.puts "Using overlays"
+rescue NameError
+  OVERLAY_SERVER_ROOT = false
+  USE_OVERLAYS = false
+  $stderr.puts "Not using overlays...\n"
+rescue => e
+  $stderr.puts "Asking for the OVERLAY_SERVER_ROOT (#{OVERLAY_SERVER_ROOT}) returned an error (#{e})!\n\nNot using overlays...\n"
+  OVERLAY_SERVER_ROOT = false
+  USE_OVERLAYS = false
+end
+
 # Load included libraries.
 
 require 'redcloth'
@@ -70,7 +100,3 @@ require 'diff/lcs'
 require 'diff/lcs/string'
 require 'htmldiff'
 require 'symboldiff'
-
-require 'open-uri'
-require 'open_uri_hack_https'
-OpenSSL::SSL::VERIFY_NONE
