@@ -28,6 +28,7 @@ USE_OVERLAYS = false
 # OVERLAY_SERVER_USERNAME = "user"
 # OVERLAY_SERVER_PASSWORD = "password"
 
+require 'socket'
 # If you want to use overlays, define OVERLAY_SERVER_ROOT
 # You MUST create this root directory manually!
 OVERLAY_SERVER_ROOT = "https://rails.dev.concord.org/webdav/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/"
