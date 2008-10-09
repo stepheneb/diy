@@ -166,16 +166,16 @@ class ReportsController < ApplicationController
     
     # render :text => "#{@report.short_name}: #{@report.reportable.id}, #{@report.otrunk_report_template.id}"
     if USE_OVERLAYS && OVERLAY_SERVER_ROOT && params[:group_id]
-      if params[:users].blank?
-        report_url_var = otml_report_url :group_id => params[:group_id]
-      else
+      if params.has_key? :users
         report_url_var = otml_report_url :users => params[:users], :group_id => params[:group_id]
+      else
+        report_url_var = otml_report_url :group_id => params[:group_id]
       end
     else
-      if params[:users].blank?
-        report_url_var = otml_report_url      
+      if params.has_key? :users
+        report_url_var = otml_report_url :users => params[:users]    
       else
-        report_url_var = otml_report_url :users => params[:users]
+        report_url_var = otml_report_url
       end
     end
 
@@ -218,7 +218,7 @@ class ReportsController < ApplicationController
         end
       end
       
-      if params[:users].blank? 
+      if ! params.has_key? :users
         learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable)
       else 
         learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable, :users => params[:users])      
