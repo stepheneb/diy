@@ -51,7 +51,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
   # GET /learners/1/ot_learner_data.xml
   def ot_learner_data
     @learners = @external_otrunk_activity.learners      
-    if not params[:users].blank?
+    if params.has_key? :users
       users_array = params[:users].split ',' 
       # @learners = @learners.find(:all, :conditions => { :user_id => users_array})
       
