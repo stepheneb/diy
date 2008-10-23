@@ -1,20 +1,39 @@
 <% parts = activity.interactive_components %>
 <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
   <td width="20px" >
-    <%= link_to 'Run', sail_jnlp_run_url(:id => activity, :vid => current_user.vendor_interface.id, :uid => current_user.id, :savedata => true, :authoring => nil, :nobundles => (if activity.nobundles then "nobundles" else "" end)),
-    :title => 'Start the activity as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive.'  %> <br />
+    <% nobundles_val = (if activity.nobundles then "nobundles" else "" end) %>
+    <% run_url = sail_jnlp_run_url(:id => activity, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val) %>
+    <% restrict_to 'guest' do
+       case APP_PROPERTIES[:anonymous_run_style]
+        when "savedata"
+          # use default value
+        when "view"
+          run_url = sail_jnlp_view_url(:id => activity, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val)
+        when "nobundles"
+          nobundles_val = "nobundles"
+          run_url = sail_jnlp_run_url(:id => activity, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val)
+        when "preview"
+          run_url = sail_jnlp_preview_url(:id => activity, :vid => current_user.vendor_interface.id, :uid => current_user.id)
+        when "norun"
+          run_url = nil
+       end
+    end %>
+    <% if run_url %>
+      <%= link_to 'Run', run_url,
+      :title => 'Start the activity as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive.'  %> <br />
+    <% end %>
     <%= link_to 'Show', {:action => 'show', :id => activity}, :title => 'Show the activity in your web browser' %><br />
     <% restrict_to 'admin || manager || teacher || member' do %>
-    <%= link_to 'Copy', {:action => 'copy', :id => activity, :page => params[:page] },
-    :title => "Make a copy of the activity: '#{activity.name}' and start editing it. You will be listed as the author of the copy. Please give credit to the original author." %><br />
-    <% if activity.changeable?(current_user) %>
-    <%= link_to 'Edit', {:action => 'edit', :id => activity, :page => params[:page] },
-    :title => "Make changes in #{activity.name}. As soon as you save your changes you can try it out." %><br />
-    <% restrict_to 'admin || manager' do %> 
-    <%= link_to 'Delete', activity, :confirm => "Are you sure you want to delete Activity: #{activity.id} #{activity.name}?", 
-    :method => :delete, :title => "Delete Activity: #{activity.id} #{activity.name}" %>              
-    <% end %>
-    <% end %>
+      <%= link_to 'Copy', {:action => 'copy', :id => activity, :page => params[:page] },
+      :title => "Make a copy of the activity: '#{activity.name}' and start editing it. You will be listed as the author of the copy. Please give credit to the original author." %><br />
+      <% if activity.changeable?(current_user) %>
+        <%= link_to 'Edit', {:action => 'edit', :id => activity, :page => params[:page] },
+        :title => "Make changes in #{activity.name}. As soon as you save your changes you can try it out." %><br />
+        <% restrict_to 'admin || manager' do %> 
+          <%= link_to 'Delete', activity, :confirm => "Are you sure you want to delete Activity: #{activity.id} #{activity.name}?", 
+          :method => :delete, :title => "Delete Activity: #{activity.id} #{activity.name}" %>              
+        <% end %>
+      <% end %>
     <% end %> 
   </td>
   <td width="100%">

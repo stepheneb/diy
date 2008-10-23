@@ -11,6 +11,10 @@ unless APP_PROPERTIES[:external_otrunk_activities_title]
   APP_PROPERTIES[:external_otrunk_activities_title] = "Otrunk Activity"
 end
 
+unless ["savedata", "view", "nobundles", "preview", "norun"].include? APP_PROPERTIES[:anonymous_run_style]
+  APP_PROPERTIES[:anonymous_run_style] = "savedata"
+end
+
 CGI::Session::ActiveRecordStore::Session.table_name = "#{RAILS_DATABASE_PREFIX}sessions"
 
 module ActiveRecord
