@@ -8,3 +8,4 @@
 :show_external_otrunk_activities: true
 :hide_activities: false
 :hide_models: false
+:anonymous_run_style: nobundles

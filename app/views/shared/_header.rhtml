@@ -54,9 +54,28 @@
           :title => "Start the report #{authorable_object.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> |
         <% end %>
         <% if runnable %>
-          <%= link_to 'Run', sail_jnlp_run_url(:id => authorable_object.id, :vid => current_user.vendor_interface.id, :uid => current_user.id, :savedata => true, :authoring => nil, :nobundles => (if authorable_object.nobundles then "nobundles" else "" end)),
-          :title => "Start #{authorable_object.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> |
-          <%= link_to 'Test', sail_jnlp_authoring_url(:id => authorable_object.id, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => "nobundles"), :title => "Test the activity: #{authorable_object.name}. No learner data will be saved."  %> |
+          <% nobundles_val = (if authorable_object.nobundles then "nobundles" else "" end) %>
+          <% run_url = sail_jnlp_run_url(:id => authorable_object, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val) %>
+          <% restrict_to 'guest' do
+             case APP_PROPERTIES[:anonymous_run_style]
+              when "savedata"
+                # use default value
+              when "view"
+                run_url = sail_jnlp_view_url(:id => authorable_object, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val)
+              when "nobundles"
+                nobundles_val = "nobundles"
+                run_url = sail_jnlp_run_url(:id => authorable_object, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val)
+              when "preview"
+                run_url = sail_jnlp_preview_url(:id => authorable_object, :vid => current_user.vendor_interface.id, :uid => current_user.id)
+              when "norun"
+                run_url = nil
+             end
+          end %>
+          <% if run_url %>
+            <%= link_to 'Run', run_url,
+            :title => "Start #{authorable_object.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> |
+            <%= link_to 'Test', sail_jnlp_authoring_url(:id => authorable_object.id, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => "nobundles"), :title => "Test the activity: #{authorable_object.name}. No learner data will be saved."  %> |
+          <% end %>
         <% end %>
       <% restriction = 'admin || manager || teacher || member' %>
       <% if @restricted_copy_and_create %>

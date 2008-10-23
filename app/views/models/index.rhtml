@@ -13,8 +13,27 @@
       model_activities =  model.activities.select {|a| a.contains_active_model(model) } %>
     <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
       <td width="20px" >
-        <%= link_to 'Run', sail_jnlp_run_url(:id => model, :vid => current_user.vendor_interface.id, :uid => current_user.id, :savedata => true, :authoring => nil, :nobundles => (if model.nobundles then "nobundles" else "" end)),
-        :title => "Start the model: #{model.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> <br />
+        <% nobundles_val = (if model.nobundles then "nobundles" else "" end) %>
+        <% run_url = sail_jnlp_run_url(:id => model, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val) %>
+        <% restrict_to 'guest' do
+           case APP_PROPERTIES[:anonymous_run_style]
+            when "savedata"
+              # use default value
+            when "view"
+              run_url = sail_jnlp_view_url(:id => model, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val)
+            when "nobundles"
+              nobundles_val = "nobundles"
+              run_url = sail_jnlp_run_url(:id => model, :vid => current_user.vendor_interface.id, :uid => current_user.id, :nobundles => nobundles_val)
+            when "preview"
+              run_url = sail_jnlp_preview_url(:id => model, :vid => current_user.vendor_interface.id, :uid => current_user.id)
+            when "norun"
+              run_url = nil
+           end
+        end %>
+        <% if run_url %>
+          <%= link_to 'Run', run_url,
+          :title => "Start the model: #{model.name} as a Java Web Start application. The first time you run this it may take a while to startup as the program is downloaded and saved on your hard drive."  %> <br />
+        <% end %>
         <%= link_to 'Show', model_path(model), :title => 'Show the model specification' %><br />
         <% restrict_to 'admin || manager || teacher || member' do %>
           <%= link_to 'Copy', {:action => 'copy', :id => model, :page => params[:page] },
