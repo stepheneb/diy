@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 
   layout "standard"
   
-  access_rule 'admin', :only => [:index, :new, :edit, :create, :update, :destroy]
+  access_rule 'admin', :only => [:index, :new, :edit, :update, :destroy]
   access_rule 'admin || manager', :only => :index
   
   protected
