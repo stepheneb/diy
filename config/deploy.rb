@@ -47,6 +47,7 @@ require 'mongrel_cluster/recipes'
 
 set :mydebug, false
 set :subroot_pass, nil
+set :start_port, nil
 
 set :application, "diy"
 set :repository,  "https://svn.concord.org/svn/diy/trunk"
@@ -75,6 +76,7 @@ role :db,  "seymour.concord.org", :primary => true
 
 after "deploy:setup", :chown_to_current_user
 after "deploy:setup", :copy_current_config
+after "deploy:cold", :setup_new_diy
 after "deploy:update_code", :copy_configs
 after "deploy:symlink", :chown_folders
 
@@ -133,14 +135,17 @@ end
 
 task :copy_current_config, :roles => :app do
   set :config_dir, "#{shared_path}/config"
-  set :otto_config, "/web/rails.dev.concord.org/#{application}diy/config"
   run "mkdir -p #{config_dir}"
-  run "scp otto:#{otto_config}/database.yml #{config_dir}/database.yml"
-  run "scp otto:#{otto_config}/sds.yml #{config_dir}/sds.yml"
-  run "scp otto:#{otto_config}/environment.rb #{config_dir}/environment.rb"
-  # write_environment
+  set_db_vars
+  create_local_dbs
+  write_database_conf
+  set_sds_vars
+  write_sds_conf
+  write_environment
   write_mongrel_conf
   write_apache_conf
+  write_mailer_conf
+  write_exception_notifier_config
 end
 
 task :write_mongrel_conf, :roles => :app do
@@ -149,6 +154,9 @@ task :write_mongrel_conf, :roles => :app do
       Capistrano::CLI.ui.ask "Enter the starting port number: "
     end
   end
+  
+  set :num_servers, version == "staging" ? 3 : 6
+  
   file = %Q!
 ---
 cwd: /web/#{version}/#{application}/current
@@ -157,7 +165,9 @@ port: "#{start_port}"
 environment: production
 address: 127.0.0.1
 pid_file: tmp/pids/mongrel.pid
-servers: 10
+servers: #{num_servers}
+user: mongrel
+group: users
 !
 
   put file, "#{shared_path}/config/mongrel_cluster.conf"
@@ -201,13 +211,7 @@ task :write_apache_conf, :roles => :app do
 
 \tErrorLog /var/log/httpd/#{application}.#{version}.concord.org-error_log
 \tCustomLog /var/log/httpd/#{application}.#{version}.concord.org-access_log combined
-
-\t### Proxy Configuration ###
-
-\tProxyPass /images !
-\tProxyPass /stylesheets !
-\tProxyPass / balancer://#{application}-#{version}-cluster
-\tProxyPassReverse / balancer://#{application}-#{version}-cluster
+\tCustomLog "|/usr/bin/logger -p local2.info -t #{application}.#{version}.concord.org" combined
 
 \t### ModRewrite Configuration ###
 
@@ -265,67 +269,16 @@ task :write_environment, :roles => :app do
   contents = File.open("config/environment.sample.rb").read
   contents.gsub!(/'diy_'/, "'#{application}#{version == "staging" ? "stage" : ""}_'")
   contents.gsub!(/'diy'/, "'#{application}'")
+  contents.gsub!(/\# ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS/, "ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS")
   put contents, "#{shared_path}/config/environment.rb"
 end
 
-task :move_database, :roles => :db do
-  set_db_vars
-  get_original_db
-  create_local_dbs
-  write_database_conf
-  import_original_db
-  deploy:restart
-end
-
-task :set_db_vars, :roles => :app do
-  set :temp_file, "/tmp/#{version}-#{application}.sql"
-  database_yml = ""
-  run "cat #{shared_path}/config/database.yml" do |channel, stream, data|
-    database_yml = data
-  end
-  set :db_config, YAML::load(ERB.new(database_yml).result)
-  set :remote, db_config['production']
-  
-  contents = ""
-  run "cat #{shared_path}/config/environment.rb" do |channel, stream, data|
-    contents = data
-  end
-  if (contents =~ /RAILS_DATABASE_PREFIX\s*=\s*'([^']+_)'/)
-    set :remote_table_prefix, Regexp.last_match(1)
-  else
-    raise "unable to figure out the database prefix"
-  end
-  
+task :set_db_vars, :roles => :db do
   clean_app_name = application.gsub('-', '_')
-  
+    
   set :local_username, "#{clean_app_name}"
   set :local_password, "#{clean_app_name}"
-  set :local_database_prefix, "#{version}_#{clean_app_name}"
-  
-  if mydebug
-    puts "temp file: #{temp_file}"
-    puts "db_config: #{YAML::dump(db_config)}"
-    puts "table prefix: #{remote_table_prefix}"
-    puts "local username: #{local_username}"
-    puts "local_password: #{local_password}"
-    puts "local prefix: #{local_database_prefix}"
-  end
-end
-
-
-task :get_original_db, :roles => :db do
-  # get the original db
-  print "Getting the stable database..."
-  cmd_body = "-u #{remote['username']} "
-  cmd_body << (remote['password'] ? "--password='#{remote['password']}' " : "")
-  cmd_body << "-h #{remote['host']} #{remote['database']}"
-  tables = []
-  run "mysqlshow #{cmd_body} '#{remote_table_prefix}%'" do |channel, stream, data|
-    tables = data.scan(/#{remote_table_prefix}\S+/)[1..-1].join(' ')
-  end
-  run "mysqldump #{cmd_body} #{tables} > #{temp_file}"
-  print " done.\n"
-end
+  set :local_database_prefix, "#{version}_#{clean_app_name}"end
 
 task :create_local_dbs, :roles => :db do
   if subroot_pass == nil
@@ -340,13 +293,9 @@ task :create_local_dbs, :roles => :db do
 end
 
 task :write_database_conf, :roles => :app do
-  require 'rubygems'
-  require 'pp'
-  
   real = {"prod" => "production", "test" => "test", "dev" => "development"}
   
-  db_config.delete("development_otto")
-  db_config.delete("development_local")
+  db_config = {}
   db_config["production"] = {}
   db_config["test"] = {}
   db_config["development"] = {}
@@ -363,11 +312,58 @@ task :write_database_conf, :roles => :app do
   put YAML::dump(db_config), "#{shared_path}/config/database.yml"
 end
 
-task :import_original_db, :roles => :db do
-  # import the stable db
-    print "Importing the stable database..."
-    command = "mysql -u #{local_username} --password='#{local_password}' -h localhost #{local_database_prefix}_prod < #{temp_file}"
-    run "#{command}"
-    print " done.\n"
+task :set_sds_vars, :roles => :app do
+  set(:sds_host) do
+    Capistrano::CLI.ui.ask( "Enter the sds host url (including portal id): ")
+  end
+  set(:sds_jnlp_id) do
+      Capistrano::CLI.ui.ask( "Enter the sds jnlp id: ")
+    end
+  set(:sds_curnit_id) do
+      Capistrano::CLI.ui.ask( "Enter the sds curnit id: ")
+    end
 end
 
+task :write_sds_conf, :roles => :app do
+  set :sds_conf, {}
+  sds_conf["development"] = {}
+  sds_conf["production"] = {}
+  
+  for i in ["production", "development"] do
+    sds_conf[i]["host"] = sds_host
+    sds_conf[i]["jnlp_id"] = sds_jnlp_id
+    sds_conf[i]["curnit_id"] = sds_curnit_id
+    sds_conf[i]["username"] = ""
+    sds_conf[i]["password"] = ""  end
+  
+  put YAML::dump(sds_conf), "#{shared_path}/config/sds.yml"end
+
+task :write_mailer_conf, :roles => :app do
+  set :mailer_conf, {}
+  mailer_conf["address"] = "internalsmtp.concord.org"
+  mailer_conf["port"] = "25"
+  mailer_conf["domain"] = "concord.org"
+  
+  put YAML::dump(mailer_conf), "#{shared_path}/config/mailer.yml"end
+
+task :write_mailer_conf, :roles => :app do
+  set :mailer_conf, {}
+  mailer_conf["address"] = "internalsmtp.concord.org"
+  mailer_conf["port"] = "25"
+  mailer_conf["domain"] = "concord.org"
+  
+  put YAML::dump(mailer_conf), "#{shared_path}/config/mailer.yml"
+end
+
+task :write_exception_notifier_config, :roles => :app do
+  set(:email_addresses) do
+    Capistrano::CLI.ui.ask( "Enter a semi-colon delimited list of email notification recipients: ")
+  end
+  
+  set :the_addresses, email_addresses.split(";")
+  
+  put YAML::dump(email_addresses.split(";")), "#{shared_path}/config/exception_notifier_recipients.yml"end
+
+desc "set up the database on a brand new diy"
+task :setup_new_diy, :roles => :app do
+  run "cd #{current_release}; RAILS_ENV=production rake diy:setup_new_database"end
