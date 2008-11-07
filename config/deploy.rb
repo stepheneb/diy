@@ -46,10 +46,33 @@
 require 'mongrel_cluster/recipes'
 
 set :mydebug, false
-set :subroot_pass, nil
-set :start_port, nil
 
-set :application, "diy"
+set(:subroot_pass) do
+  Capistrano::CLI.password_prompt( "Enter the subroot mysql password: ")
+end
+
+set(:start_port) do
+  Capistrano::CLI.ui.ask "Enter the starting port number: "
+end
+
+set(:application) do
+  Capistrano::CLI.ui.ask "Enter the instance name (eg itsi, udl, capa): "
+end
+
+set(:sds_host) do
+  Capistrano::CLI.ui.ask( "Enter the sds host url (including portal id): ")
+end
+set(:sds_jnlp_id) do
+    Capistrano::CLI.ui.ask( "Enter the sds jnlp id: ")
+end
+set(:sds_curnit_id) do
+  Capistrano::CLI.ui.ask( "Enter the sds curnit id: ")
+end
+
+set(:email_addresses) do
+  Capistrano::CLI.ui.ask( "Enter a semi-colon delimited list of email notification recipients: ")
+end
+
 set :repository,  "https://svn.concord.org/svn/diy/trunk"
 
 set :mongrel_user, "mongrel"
@@ -89,28 +112,18 @@ task :copy_configs, :roles => :app do
 end
 
 task :chown_folders, :roles => :app do
-  run "sudo chown -R mongrel.users #{deploy_to}"
-  run "sudo chmod -R g+w #{deploy_to}"
+  sudo "chown -R mongrel.users #{deploy_to}"
+  sudo "chmod -R g+w #{deploy_to}"
 end
 
 task :production do
   set :version, "production"
-  ask_instance
   set_vars
 end
 
 task :staging do
   set :version, "staging"
-  ask_instance
   set_vars
-end
-
-task :ask_instance do
-  if ! application || application == "diy"
-    set(:application) do
-      Capistrano::CLI.ui.ask "Enter the instance name (eg itsi, udl, capa): "
-    end
-  end
 end
 
 task :set_vars do
@@ -129,8 +142,8 @@ task :set_vars do
 end
 
 task :chown_to_current_user, :roles => :app do
-  run "sudo chown -R #{user}.users #{deploy_to}"
-  run "sudo chmod -R g+w #{deploy_to}"
+  sudo "chown -R #{user}.users #{deploy_to}"
+  sudo "chmod -R g+w #{deploy_to}"
 end
 
 task :copy_current_config, :roles => :app do
@@ -139,7 +152,6 @@ task :copy_current_config, :roles => :app do
   set_db_vars
   create_local_dbs
   write_database_conf
-  set_sds_vars
   write_sds_conf
   write_environment
   write_mongrel_conf
@@ -149,12 +161,6 @@ task :copy_current_config, :roles => :app do
 end
 
 task :write_mongrel_conf, :roles => :app do
-  if ! start_port
-    set(:start_port) do
-      Capistrano::CLI.ui.ask "Enter the starting port number: "
-    end
-  end
-  
   set :num_servers, version == "staging" ? 3 : 6
   
   file = %Q!
@@ -171,15 +177,10 @@ group: users
 !
 
   put file, "#{shared_path}/config/mongrel_cluster.conf"
-  run "sudo cp #{shared_path}/config/mongrel_cluster.conf /etc/mongrel_cluster/#{version}-#{application}.conf"
+  sudo "cp #{shared_path}/config/mongrel_cluster.conf /etc/mongrel_cluster/#{version}-#{application}.conf"
 end
 
 task :write_apache_conf, :roles => :app do
-  if ! start_port
-    set(:start_port) do
-      Capistrano::CLI.ui.ask "Enter the starting port number: "
-    end
-  end
   file = %Q~
 # This sets up a mongrel balancer (name should be servername-cluster)
 
@@ -281,11 +282,6 @@ task :set_db_vars, :roles => :db do
   set :local_database_prefix, "#{version}_#{clean_app_name}"end
 
 task :create_local_dbs, :roles => :db do
-  if subroot_pass == nil
-    set(:subroot_pass) do
-      Capistrano::CLI.password_prompt( "Enter the subroot mysql password: ")
-    end
-  end
   for i in ["prod", "test", "dev"] do
     cmd_str = "create database #{local_database_prefix}_#{i}; grant all on #{local_database_prefix}_#{i}.* to #{local_username}@'%' identified by '#{local_password}';"
     run "echo \"#{cmd_str}\" | mysql -u subroot -p#{subroot_pass}"
@@ -310,18 +306,6 @@ task :write_database_conf, :roles => :app do
   end
 
   put YAML::dump(db_config), "#{shared_path}/config/database.yml"
-end
-
-task :set_sds_vars, :roles => :app do
-  set(:sds_host) do
-    Capistrano::CLI.ui.ask( "Enter the sds host url (including portal id): ")
-  end
-  set(:sds_jnlp_id) do
-      Capistrano::CLI.ui.ask( "Enter the sds jnlp id: ")
-    end
-  set(:sds_curnit_id) do
-      Capistrano::CLI.ui.ask( "Enter the sds curnit id: ")
-    end
 end
 
 task :write_sds_conf, :roles => :app do
@@ -356,10 +340,6 @@ task :write_mailer_conf, :roles => :app do
 end
 
 task :write_exception_notifier_config, :roles => :app do
-  set(:email_addresses) do
-    Capistrano::CLI.ui.ask( "Enter a semi-colon delimited list of email notification recipients: ")
-  end
-  
   set :the_addresses, email_addresses.split(";")
   
   put YAML::dump(email_addresses.split(";")), "#{shared_path}/config/exception_notifier_recipients.yml"end
