@@ -1,0 +1,13 @@
+--- 
+:application_name: Geniquest DIY
+:page_title_prefix: Geniquest
+:logo: diy_logo.gif
+:home_link: http://www.concord.org/
+:stylesheet: diy
+:external_otrunk_activities_title: Activities
+:show_external_otrunk_activities: true
+:cache_external_otrunk_activities: false
+:hide_activities: true
+:hide_models: true
+# run style options are: savedata, view, nobundles, preview, norun
+:anonymous_run_style: savedata
