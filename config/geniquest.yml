@@ -1,9 +1,9 @@
 --- 
 :application_name: Geniquest DIY
 :page_title_prefix: Geniquest
-:logo: diy_logo.gif
+:logo: geniquest_64x64.png
 :home_link: http://www.concord.org/
-:stylesheet: diy
+:stylesheet: geniquest
 :external_otrunk_activities_title: Activities
 :show_external_otrunk_activities: true
 :cache_external_otrunk_activities: false
