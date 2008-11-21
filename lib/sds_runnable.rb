@@ -474,6 +474,8 @@ module SdsRunnable
     if object2.kind_of? self.class
       attributes = self.authorable_attribute_names
       attributes.keys.each do |att|
+        # FIXME skip comparing the otml for now. This uses a huge amount of memory...
+        next if att == "otml"
         type = attributes[att]
         if type == :combined && att =~ /([^_]+)_([^_]+)_combined/
           attrs = real_attributes(att)
