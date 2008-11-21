@@ -32,7 +32,7 @@
           <span class="listTitle"><%= report.id %>: <%= h(report.name) %></span><br />
           <%= h(truncate(report.description, 160)) %><br />
           <span class="listTitle">
-            DIY Author: <strong><%= (report.user ? report.user.name : "") %></strong>, 
+            Types: <strong><%= report.report_types.collect{|rt| rt.name }.join(",") %></strong>, DIY Author: <strong><%= (report.user ? report.user.name : "") %></strong>, 
           </span>
         </td>
       </tr>

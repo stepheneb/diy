@@ -1,0 +1,19 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => nil,
+  :function => 'Edit',
+  :authorable_object => @report_type,
+  :authorable_object_class => ReportType, 
+  :all_viewable_objects => @all_viewable_report_types, 
+  :all_editable_objects => @all_editable_report_types }) %>
+
+<div class="pageEdit">
+<% form_for(@report_type) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+    <%= f.submit "Update" %>
+    </div>
+  </div>
+  <%= render :partial => 'form', :object => f %>
+<% end %>
+</div>

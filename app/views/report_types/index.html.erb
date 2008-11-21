@@ -1,0 +1,32 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :runnable_as_report => true,
+  :function => 'Index',
+  :authorable_object_class => ReportType, 
+  :authorable_object_pages => @report_type_pages,
+  :all_viewable_objects => @all_viewable_report_types, 
+  :all_editable_objects => @all_editable_report_types }) %> 
+
+<div class="activityList">
+<table cellpadding="5" cellspacing="0" width="100%">
+  <colgroup width="120px" />
+  <colgroup  />
+  
+    <% for report_type in @report_types %>
+      <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
+        <td>
+          <%= link_to 'Show', report_type_path(report_type), :title => 'Show the report type specification' %><br />
+          <% restrict_to 'admin || manager' do %>
+            <%= link_to 'Edit', edit_report_type_path(report_type), :title => "Make changes in #{report_type.name}." %><br />
+            <%= link_to 'Delete', report_type_path(report_type), :confirm => "Are you sure you want to delete: #{report_type.name}?", :method => :delete %>
+
+          <% end %>              
+        </td>
+        <td>
+          <span class="listTitle"><%= report_type.id %>: <%= h(report_type.name) %></span>, <%= h(report_type.uri) %>
+        </td>
+      </tr>
+    <% end %>
+</table>
+</div>

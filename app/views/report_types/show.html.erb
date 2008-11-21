@@ -1,0 +1,12 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => nil,
+  :function => 'Show',
+  :authorable_object => @report_type,
+  :authorable_object_class => ReportType, 
+  :all_viewable_objects => @all_viewable_report_types, 
+  :all_editable_objects => @all_editable_report_types }) %>
+
+<p><span class="SectionTitle">Name: </span><%= @report_type.name%></p>
+<p><span class="SectionTitle">URI: </span><%= @report_type.uri%></p>
+<p><span class="SectionTitle">Limit one report of this type per activity?: </span><strong><%= boolean_to_yes_no(@report_type.limit_to_one) %></strong></p>
