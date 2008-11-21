@@ -26,15 +26,14 @@
 <p><span class="SectionTitle">Custom sds workgroup id: </span><%= form.text_field :custom_workgroup_id, :size => 7 %></p>
 
 <p>
-   <span class="SectionTitle">Report Types: </span>
+  <span class="SectionTitle">Report Types: </span>
   <div style="padding-left: 50px">
   <% ReportType.find(:all, :order => :name).each do |r|  %>
-  <tr><td>
- <%= r.name %>
-  <input type="checkbox" name="report[report_type_ids][]" value="<%= r.id %>" 
-         <% if @report.report_types.include?(r) %> checked="checked" <% end %> />
-         <br/>
-<% end %>
-</div>
+    <input type="checkbox" name="report[report_type_ids][]" value="<%= r.id %>"
+    <% if @report.report_types.include?(r) %> checked="checked" <% end %> />
+    <%= r.name %>
+    <br/>
+  <% end %>
+  </div>
 </p>
 
