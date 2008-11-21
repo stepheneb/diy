@@ -1,0 +1,7 @@
+<%= error_messages_for :report_type %>
+
+<p><span class="SectionTitle">URI: </span><%= form.text_field :uri, :size => 72 %></p>
+
+<p><span class="SectionTitle">Name: </span><%= form.text_field :name, :size => 72 %></p>
+
+<p><span class="SectionTitle">Only one of these types per activity?: </span><%= form.check_box :limit_to_one %></p>

@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
   has_many :probes
   has_many :probe_types
   has_many :vendor_interfaces
+  has_many :report_types
   
   has_many :memberships
   has_and_belongs_to_many :roles, :order => 'position', :join_table => "#{RAILS_DATABASE_PREFIX}roles_users", :foreign_key => "user_id"

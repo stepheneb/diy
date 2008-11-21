@@ -13,3 +13,4 @@
 <p><span class="SectionTitle">Description: </span><br /><%= @report.description %></p>
 <p><span class="SectionTitle"><%= @report.reportable_type %>:</span> <%= @report.reportable_id %>: <%= @report.reportable.name %></p>  
 <p><span class="SectionTitle">OTrunk Report Template:</span> <%= @report.otrunk_report_template.id %>: <%= @report.otrunk_report_template.name %> </p>
+<p><span class="SectionTitle">Report Types:</span> <%= @report.report_types.collect{|rt| link_to(rt.name, report_type_path(rt)) }.join(" , ") %> </p>

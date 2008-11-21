@@ -45,6 +45,7 @@
           <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title].pluralize, external_otrunk_activities_path) %><br />
           <% restrict_to 'admin' do %>
             <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title] + " Report Templates", otrunk_report_templates_path) %><br />
+            <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title] + " Report Types", report_types_path) %><br />
             <%= link_to("&#187; " + APP_PROPERTIES[:external_otrunk_activities_title] + " Reports", reports_path) %><br />
           <% end %>
           <% restrict_to 'admin || manager' do %>
@@ -53,6 +54,7 @@
           <% restrict_to 'admin' do %>
             <%= link_to("&#187; External OTrunk Activities", external_otrunk_activities_path) %><br />
             <%= link_to("&#187; OTrunk Report Templates", otrunk_report_templates_path) %><br />
+            <%= link_to("&#187; Report Types", report_types_path) %><br />
             <%= link_to("&#187; Reports", reports_path) %><br />
           <% end %>
           <% restrict_to 'admin || manager' do %>
