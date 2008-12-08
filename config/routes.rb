@@ -45,7 +45,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :users do |users|
     users.resources :activities, :name_prefix => "user_"
-    users.resources :learners, :name_prefix => "user_", :member => { :sessions => :get }
+    users.resources :learners, :name_prefix => "user_", :member => { :sessions => :get, :ot_learner_data => :get  }
   end
 
   map.login  'login', :controller => 'session', :action => 'new'
