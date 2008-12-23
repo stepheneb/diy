@@ -13,6 +13,17 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
         @bundles.each do |r|
           xml.object("refid" => r)
         end
+        if @learners.size > 0 || @userListURL
+          if @userListURL
+            xml.OTClassListManager("userListURL" => @userListURL)
+          else
+            @learners.each do |l|
+              xml.userList {
+                xml.OTUserObject("name" => l.name)
+              }
+            end
+          end
+        end
       }
       if @group_overlay_url || @learner_overlay_url || @overlays.size > 0
         xml.overlays {

@@ -175,6 +175,8 @@ class ExternalOtrunkActivitiesController < ApplicationController
     activity = @external_otrunk_activity
     learner = activity.find_or_create_learner(@user)
     group_id = params[:group_id]
+    group_list_url = params[:group_list_url]
+    group_list = params[:group_list]
     savedata = params[:savedata]
     authoring = params[:authoring]
     reporting = params[:reporting]
@@ -190,7 +192,28 @@ class ExternalOtrunkActivitiesController < ApplicationController
       @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
     end
     
+    if group_list_url
+      @userListURL = group_list_url
+    end
+    
+    @learners = []
+    if (group_list && ! group_list.empty?)
+      uids = group_list.split(",")
+      uids.each do |uid|
+        begin
+          @learners << activity.find_or_create_learner(User.find(uid))
+        rescue
+          # ignore it for now
+        end
+      end
+    end
+    
     setup_overlay_requirements(activity)
+    
+    if @learners.size > 0 || @userListURL
+      @imports << "org.concord.otrunk.view.OTClassListManager"
+      @imports << "org.concord.otrunk.user.OTUserObject"
+    end
     
     # otherwise render the default template
     render(:template => 'shared/overlay_otml.builder', :layout => false)
@@ -210,7 +233,8 @@ class ExternalOtrunkActivitiesController < ApplicationController
     # params[:nobundles] == anything else => true
     nobundles = ((params[:nobundles] && ! params[:nobundles].empty?) ? true : false)
     useOverlay = USE_OVERLAYS && OVERLAY_SERVER_ROOT
-    redirect_to @external_otrunk_activity.sds_url(@user, self, {:use_overlay => useOverlay, :nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring, :group_id => params[:group_id]})
+        
+    redirect_to @external_otrunk_activity.sds_url(@user, self, {:use_overlay => useOverlay, :nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring, :group_id => params[:group_id], :group_list => params[:group_list], :group_list_url => params[:group_list_url]})
   end
   
   def html_export_jnlp
