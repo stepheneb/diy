@@ -33,7 +33,7 @@ module SdsRunnable
     if options[:otml_url]
       my_otml_url = options[:otml_url]
     elsif options[:use_overlay]
-      my_otml_url = controller.url_for(:only_path => false, :action => "overlay_otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata], :group_id => options[:group_id])
+      my_otml_url = controller.url_for(:only_path => false, :action => "overlay_otml", :vid => user.vendor_interface.id, :uid => user.id, :lid => learner.id, :savedata => options[:savedata], :group_id => options[:group_id], :group_list => (options[:group_list] ? options[:group_list] : nil), :group_list_url => (options[:group_list_url] ? options[:group_list_url] : nil) )
     else
       my_otml_url = self.otml_url(user, controller, options)
     end
