@@ -47,6 +47,8 @@ require 'mongrel_cluster/recipes'
 
 set :mydebug, false
 
+set :erb_templates_folder, "lib/capistrano/recipes/templates"
+
 set(:subroot_pass) do
   Capistrano::CLI.password_prompt( "Enter the subroot mysql password: ")
 end
@@ -63,7 +65,7 @@ set(:sds_host) do
   Capistrano::CLI.ui.ask( "Enter the sds host url (including portal id): ")
 end
 set(:sds_jnlp_id) do
-    Capistrano::CLI.ui.ask( "Enter the sds jnlp id: ")
+  Capistrano::CLI.ui.ask( "Enter the sds jnlp id: ")
 end
 set(:sds_curnit_id) do
   Capistrano::CLI.ui.ask( "Enter the sds curnit id: ")
@@ -141,6 +143,19 @@ task :set_vars do
   depend :remote, :file, "#{shared_path}/config/exception_notifier_recipients.yml"
 end
 
+task :reset_staging_db, :roles => :db do
+  set :version, "staging"
+  set_vars
+  set_db_vars
+  
+  # put the app into maintenance mode
+  !deploy::web::disable
+  # dump the production db into the staging db
+  run "mysqldump -u subroot -p#{subroot_pass} --add-drop-table --quick --extended-insert #{local_production_database_prefix}_prod | mysql -u #{local_username} -p#{local_password} #{local_database_prefix}_prod"
+  # put app into running mode
+  !deploy::web::enable
+end
+
 task :chown_to_current_user, :roles => :app do
   sudo "chown -R #{user}.users #{deploy_to}"
   sudo "chmod -R g+w #{deploy_to}"
@@ -163,106 +178,14 @@ end
 task :write_mongrel_conf, :roles => :app do
   set :num_servers, version == "staging" ? 3 : 6
   
-  file = %Q!
----
-cwd: /web/#{version}/#{application}/current
-log_file: log/mongrel.log
-port: "#{start_port}"
-environment: production
-address: 127.0.0.1
-pid_file: tmp/pids/mongrel.pid
-servers: #{num_servers}
-user: mongrel
-group: users
-!
+  file = render "mongrel-cluster-conf.rhtml"
 
   put file, "#{shared_path}/config/mongrel_cluster.conf"
   sudo "cp #{shared_path}/config/mongrel_cluster.conf /etc/mongrel_cluster/#{version}-#{application}.conf"
 end
 
 task :write_apache_conf, :roles => :app do
-  file = %Q~
-# This sets up a mongrel balancer (name should be servername-cluster)
-
-<Proxy balancer://#{application}-#{version}-cluster>
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 0}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 1}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 2}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 3}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 4}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 5}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 6}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 7}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 8}
-\tBalancerMember http://127.0.0.1:#{start_port.to_i + 9}
-
-\t# if you want to affect traffic to the proxied machines
-\t# add a " loadfactor=n" parameter at the end of one of the above line
-</Proxy>
-
-<VirtualHost *:80 *:8080 *:443>
-\t### Basic Configuration ###
-
-\tServerAdmin webmaster@concord.org
-\tServerName #{application}#{version == "staging" ? ".staging" : ".diy"}.concord.org
-\t#{version == "production" ? ("ServerAlias " + application + ".test.concord.org") : ""}
-\tDocumentRoot /web/#{version}/#{application}/current/public
-
-\t### Logging Configuration ###
-
-\tErrorLog /var/log/httpd/#{application}.#{version}.concord.org-error_log
-\tCustomLog /var/log/httpd/#{application}.#{version}.concord.org-access_log combined
-\tCustomLog "|/usr/bin/logger -p local2.info -t #{application}.#{version}.concord.org" combined
-
-\t### ModRewrite Configuration ###
-
-\tRewriteEngine On
-        
-\t# Should perhaps use modrewrite to fix the www issue instead of the vhost below
-\tRewriteCond %{HTTP_HOST} ^www\\.#{application}#{version == "staging" ? ('\.' + version) : ".diy"}\\.concord\\.org$ [NC]
-\tRewriteRule ^(.*)$ http://#{application}#{version == "staging" ? ('.' + version) : ".diy"}.concord.org/$1 [R=301,L]
-
-\t# Uncomment for rewrite debugging
-\t#RewriteLog logs/myapp_rewrite_log
-\t#RewriteLogLevel 9
-
-\t# Check for maintenance file and redirect all requests
-\t# ( this is for use with Capistrano's disable_web task )
-\tRewriteCond %{DOCUMENT_ROOT}/system/maintenance.html -f
-\tRewriteCond %{SCRIPT_FILENAME} !maintenance.html
-\tRewriteRule ^.*$ /system/maintenance.html [L]
-
-\t# Rewrite index to check for static
-\tRewriteRule ^/$ /index.html [QSA]
-
-\t# Rewrite to check for Rails cached page
-\tRewriteRule ^([^.]+)$ $1.html [QSA]
-
-\t# Redirect all non-static requests to cluster
-\tRewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
-\tRewriteRule ^/(.*)$ balancer://#{application}-#{version}-cluster%{REQUEST_URI} [P,QSA,L]
-
-\t# Deflate
-\tAddOutputFilterByType DEFLATE text/html text/plain text/css
-\t# ... text/xml application/xml application/xhtml+xml text/javascript
-\tBrowserMatch ^Mozilla/4 gzip-only-text/html
-\tBrowserMatch ^Mozilla/4.0[678] no-gzip
-\tBrowserMatch \\bMSIE !no-gzip !gzip-only-text/html
-
-\t### SSL Configuration ###
-
-\t# To use this server on SSL, copy this virtual host, change it to only have the :443
-\t# part in the main directive and uncomment the following lines.
-
-\t#SSLEngine on
-\t#SSLCertificateFile /usr/share/ssl/certs/cc-wild-2006.crt
-\t#SSLCertificateKeyFile /usr/share/ssl/certs/cc-wild-2006.key
-\t#SSLCertificateChainFile /usr/share/ssl/certs/sf_issuing.crt
-
-\t# to convince Rails (via mod_proxy_balancer) that we're actually using HTTPS.
-\t#RequestHeader set X_FORWARDED_PROTO 'https'
-</VirtualHost>
-~
+  file = render "apache-conf"
   put file, "/web/#{version}/conf/#{application}.conf"
 end
 
@@ -279,7 +202,9 @@ task :set_db_vars, :roles => :db do
     
   set :local_username, "#{clean_app_name}"
   set :local_password, "#{clean_app_name}"
-  set :local_database_prefix, "#{version}_#{clean_app_name}"end
+  set :local_database_prefix, "#{version}_#{clean_app_name}"
+  set :local_production_database_prefix, "production_#{clean_app_name}"
+  set :local_staging_database_prefix, "staging_#{clean_app_name}"end
 
 task :create_local_dbs, :roles => :db do
   for i in ["prod", "test", "dev"] do
@@ -330,15 +255,6 @@ task :write_mailer_conf, :roles => :app do
   
   put YAML::dump(mailer_conf), "#{shared_path}/config/mailer.yml"end
 
-task :write_mailer_conf, :roles => :app do
-  set :mailer_conf, {}
-  mailer_conf["address"] = "internalsmtp.concord.org"
-  mailer_conf["port"] = "25"
-  mailer_conf["domain"] = "concord.org"
-  
-  put YAML::dump(mailer_conf), "#{shared_path}/config/mailer.yml"
-end
-
 task :write_exception_notifier_config, :roles => :app do
   set :the_addresses, email_addresses.split(";")
   
@@ -347,3 +263,9 @@ task :write_exception_notifier_config, :roles => :app do
 desc "set up the database on a brand new diy"
 task :setup_new_diy, :roles => :app do
   run "cd #{current_release}; RAILS_ENV=production rake diy:setup_new_database"end
+
+def render(template_file)
+  require 'erb'
+  template = File.read(erb_templates_folder + "/" + template_file)
+  result = ERB.new(template).result(binding)  
+end
