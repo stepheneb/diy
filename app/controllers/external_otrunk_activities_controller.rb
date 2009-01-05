@@ -192,18 +192,19 @@ class ExternalOtrunkActivitiesController < ApplicationController
       @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
     end
     
+    @learners = []
+    # if we have a group_list_url, use it and don't bother setting up the @learners array
     if group_list_url
       @userListURL = group_list_url
-    end
-    
-    @learners = []
-    if (group_list && ! group_list.empty?)
-      uids = group_list.split(",")
-      uids.each do |uid|
-        begin
-          @learners << activity.find_or_create_learner(User.find(uid))
-        rescue
-          # ignore it for now
+    else
+      if (group_list && ! group_list.empty?)
+        uids = group_list.split(",")
+        uids.each do |uid|
+          begin
+            @learners << activity.find_or_create_learner(User.find(uid))
+          rescue
+            # ignore it for now
+          end
         end
       end
     end
@@ -212,6 +213,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
     
     if @learners.size > 0 || @userListURL
       @imports << "org.concord.otrunk.view.OTClassListManager"
+      @imports << "org.concord.otrunk.view.OTClassMember"
       @imports << "org.concord.otrunk.user.OTUserObject"
     end
     
