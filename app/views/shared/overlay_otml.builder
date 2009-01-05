@@ -17,11 +17,18 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
           if @userListURL
             xml.OTClassListManager("userListURL" => @userListURL)
           else
-            @learners.each do |l|
+            xml.OTClassListManager {
               xml.userList {
-                xml.OTUserObject("name" => l.name)
+                @learners.each do |l|
+                
+                  xml.OTClassMember("name" => l.user.name, "overlayURL" => "#{OVERLAY_SERVER_ROOT}/#{l.runnable.id}/#{l.id}.otml", "isCurrentUser" => (l.user_id == @user.id)) {
+                    xml.userObject {
+                      xml.OTUserObject
+                    }
+                  }
+                end
               }
-            end
+            }
           end
         end
       }
