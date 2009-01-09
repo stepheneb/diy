@@ -192,7 +192,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
       @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
     end
     
-    @learners = []
+    @learners = [learner]
     # if we have a group_list_url, use it and don't bother setting up the @learners array
     if group_list_url
       @userListURL = group_list_url
@@ -208,6 +208,8 @@ class ExternalOtrunkActivitiesController < ApplicationController
         end
       end
     end
+    
+    @learners.uniq!
     
     setup_overlay_requirements(activity)
     
