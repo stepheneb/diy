@@ -16,6 +16,6 @@ class ReportType < ActiveRecord::Base
   validates_presence_of :uri
   validates_uniqueness_of :uri
   
-  has_and_belongs_to_many :reports
+  has_and_belongs_to_many :reports, :join_table => "#{RAILS_DATABASE_PREFIX}report_types_reports"
   belongs_to :user
 end
