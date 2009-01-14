@@ -4,6 +4,10 @@ class ScoringController < ApplicationController
   before_filter :setup_attributes
   
   def index
+    @ignore_concord_folk = params[:ignore_concord]
+    @ignore_private = params[:ignore_private]
+    @ignore_original = params[:ignore_original]
+    @ignore_copies = params[:ignore_copies]
     if request.post?
       require 'spreadsheet/excel'
 
@@ -48,6 +52,10 @@ class ScoringController < ApplicationController
       delta = 1
       
       Activity.find(:all).each do |a|
+        next if (@ignore_private && (! a.public?))
+        next if (@ignore_concord && (a.user.email =~ /concord\.org/))
+        next if (@ignore_original && (! a.parent_id))
+        next if (@ignore_copies && (a.parent_id))
         score = a.score(@rubric)
         row = []
         row << a.id
