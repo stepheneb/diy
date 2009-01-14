@@ -10,7 +10,7 @@ Also, some of the attributes we track:
 -->
 <% form_tag(:action => :index) do -%>
 <%= submit_tag("Get Report") %><br/>
-Ignore Concord: <%= check_box_tag("ignore_concord", "true", @ignore_concord_folk) %>
+Ignore Concord: <%= check_box_tag("ignore_concord", "true", @ignore_concord) %>
 Ignore private: <%= check_box_tag("ignore_private", "true", @ignore_private) %>
 Ignore original: <%= check_box_tag("ignore_original", "true", @ignore_original) %>
 Ignore copies: <%= check_box_tag("ignore_copies", "true", @ignore_copies) %>

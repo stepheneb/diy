@@ -4,7 +4,7 @@ class ScoringController < ApplicationController
   before_filter :setup_attributes
   
   def index
-    @ignore_concord_folk = params[:ignore_concord]
+    @ignore_concord = params[:ignore_concord]
     @ignore_private = params[:ignore_private]
     @ignore_original = params[:ignore_original]
     @ignore_copies = params[:ignore_copies]
