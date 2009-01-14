@@ -42,13 +42,14 @@ class ScoringController < ApplicationController
       
       reason_sheet.format_column(0, 7, format)  # ID
       reason_sheet.format_column(1, 4, format)  # Score
-      reason_sheet.format_column(2, 32, format) # Reason
+      reason_sheet.format_column(2, 22, format) # Section
+      reason_sheet.format_column(3, 22, format) # Reason
       
       scores_row = 0
       reasons_row = 0
       
       score_sheet.write(scores_row, 0, ["ID", "Score", "Copy?", "Parent ID", "Public?", "L 1M", "S 1M", "L 3M", "S 3M", "L 6M","S 6M", "L T", "S T", "Author", "Title", "Compare Link"])
-      reason_sheet.write(reasons_row, 0, ["ID", "Score", "Reason"])
+      reason_sheet.write(reasons_row, 0, ["ID", "Score", "Section", "Reason"])
       delta = 1
       
       Activity.find(:all).each do |a|
@@ -79,7 +80,7 @@ class ScoringController < ApplicationController
         row << (a.parent_id ? url_for(:controller => "activities", :action => "compare", :id => a.id, :other => a.parent_id) : "n/a")
         
         score_sheet.write(scores_row += 1, 0, row)
-        reason_sheet.write(reasons_row += delta, 0, [a.id, score[:reasons].collect{|r| r[:score]}, score[:reasons].collect{|r| r[:reason]}] )
+        reason_sheet.write(reasons_row += delta, 0, [a.id, score[:reasons].collect{|r| r[:score]}, score[:reasons].collect{|r| r[:section]}, score[:reasons].collect{|r| r[:reason]}] )
         delta = score[:reasons].size
       end
       
