@@ -302,23 +302,23 @@ module SdsRunnable
           if r == w[0]
             if r <= 0
               # no change
-              reasons << { :reason => "#{k}: Content changed #{r}%", :score => 0 }
+              reasons << { :section => k, :reason => "Content changed #{r}%", :score => 0 }
             elsif r > 75
-              reasons << { :reason => "#{k}: Content changed #{r}%", :score => rubric[k]["changed75"] }
+              reasons << { :section => k, :reason => "Content changed #{r}%", :score => rubric[k]["changed75"] }
             elsif r > 50
-              reasons << { :reason => "#{k}: Content changed #{r}%", :score => rubric[k]["changed50"] }
+              reasons << { :section => k, :reason => "Content changed #{r}%", :score => rubric[k]["changed50"] }
             elsif r > 25
-              reasons << { :reason => "#{k}: Content changed #{r}%", :score => rubric[k]["changed25"] }
+              reasons << { :section => k, :reason => "Content changed #{r}%", :score => rubric[k]["changed25"] }
             else
-              reasons << { :reason => "#{k}: Content changed #{r}%", :score => rubric[k]["changed0"] }
+              reasons << { :section => k, :reason => "Content changed #{r}%", :score => rubric[k]["changed0"] }
             end
           elsif r =~ /(.*) (added|changed|deleted)/
-            reasons << { :reason => "#{k}: #{r}", :score => rubric[Regexp.last_match(1)][Regexp.last_match(2)] }
+            reasons << { :section => k, :reason => "#{r}", :score => rubric[Regexp.last_match(1)][Regexp.last_match(2)] }
           end
         end
       else
         begin
-          reasons << { :reason => "#{k}: #{v[:action]}", :score => rubric[k][v[:action]] }
+          reasons << { :section => k, :reason => "#{v[:action]}", :score => rubric[k][v[:action]] }
         rescue
           # debugger
           logger.warn("Error on k: #{k}, v: #{v[:action]}")
