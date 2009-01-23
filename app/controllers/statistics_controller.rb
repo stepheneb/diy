@@ -53,17 +53,17 @@ class StatisticsController < ApplicationController
     
     ## this code is very much database cpu bound
     Learner.find(:all).each do |l|
-      if l.runnable
+      if r = l.runnable
         temp[l.runnable_type] ||= []
-        temp[l.runnable_type][l.runnable_id] ||= {:count => 0, :activity => l.runnable, :controller => l.runnable.class.to_s.underscore.pluralize, :session_count => 0 }
+        temp[l.runnable_type][r.id] ||= {:count => 0, :activity => r, :controller => r.class.to_s.underscore.pluralize, :session_count => 0 }
         LearnerSession.find(:all, :conditions => ['learner_id = ? AND created_at > ?', l.id, cutoff_time]).each do |s|
         # l.learner_sessions.each do |s|
         #   if cutoff_time == nil || s.created_at < cutoff_time
-            if (seenUsers["#{s.learner.runnable_type}-#{s.learner.runnable_id}-#{s.learner.user_id}"] != true)
-              temp[s.learner.runnable_type][s.learner.runnable_id][:count] += 1
-              seenUsers["#{s.learner.runnable_type}-#{s.learner.runnable_id}-#{s.learner.user_id}"] = true
+            if (seenUsers["#{l.runnable_type}-#{r.id}-#{l.user_id}"] != true)
+              temp[l.runnable_type][r.id][:count] += 1
+              seenUsers["#{l.runnable_type}-#{r.id}-#{l.user_id}"] = true
             end
-            temp[s.learner.runnable_type][s.learner.runnable_id][:session_count] += 1
+            temp[l.runnable_type][r.id][:session_count] += 1
         #  end
         end
       end
