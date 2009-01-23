@@ -1,6 +1,5 @@
 class ReportTypesController < ApplicationController
-  access_rule 'admin', :only => [:new, :edit, :create, :update, :destroy]
-  access_rule 'admin || manager', :only => [:index, :show]
+  access_rule 'admin || manager', :only => [:new, :edit, :create, :update, :copy, :destroy]
     
   layout "standard"
   
