@@ -21,7 +21,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
               xml.userList {
                 @learners.each do |l|
                 
-                  xml.OTClassMember("name" => l.user.name, "id" => l.user.uuid, "overlayURL" => "#{OVERLAY_SERVER_ROOT}/#{l.runnable.id}/#{l.id}.otml", "isCurrentUser" => (l.user_id == @user.id)) {
+                  xml.OTClassMember("name" => l.user.name, "uuid" => l.user.uuid, "overlayURL" => "#{OVERLAY_SERVER_ROOT}/#{l.runnable.id}/#{l.id}.otml", "isCurrentUser" => (l.user_id == @user.id)) {
                     xml.userObject {
                       xml.OTUserObject
                     }
