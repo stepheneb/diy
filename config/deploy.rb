@@ -111,6 +111,8 @@ task :copy_configs, :roles => :app do
   run "cp #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
   run "cp #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
   run "cp #{shared_path}/config/exception_notifier_recipients.yml #{release_path}/config/exception_notifier_recipients.yml"
+  
+  run "ln -sf #{shared_path}/xls #{release_path}/tmp/xls"
 end
 
 task :chown_folders, :roles => :app do
@@ -143,6 +145,7 @@ task :set_vars do
   depend :remote, :file, "#{shared_path}/config/exception_notifier_recipients.yml"
 end
 
+desc "copies the production db over the staging db"
 task :reset_staging_db, :roles => :db do
   set :version, "staging"
   set_vars
@@ -270,3 +273,7 @@ def render(template_file)
   template = File.read(erb_templates_folder + "/" + template_file)
   result = ERB.new(template).result(binding)  
 end
+
+desc "calls user.save for every user"
+task :save_all_users, :roles => :app do
+  run "cd #{current_release}; script/runner -e production 'User.find(:all).each{|u| u.save }'"end
