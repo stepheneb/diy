@@ -124,6 +124,8 @@ ActionController::Routing::Routes.draw do |map|
     external_otrunk_activities.resources :subjects, :name_prefix => "external_otrunk_activity_"
   end
   
+  map.notification 'notification/:action', :controller => 'notification'
+  
   map.statistics 'statistics', :controller => 'statistics', :action => 'month', :months => 1
   map.statistics 'statistics/month/:months', :controller => 'statistics', :action => 'month'
   map.statistics 'statistics/:action', :controller => 'statistics'
