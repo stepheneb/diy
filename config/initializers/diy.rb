@@ -67,6 +67,7 @@ require 'open-uri'
 require 'open_uri_hack_https'
 OpenSSL::SSL::VERIFY_NONE
 begin
+	if USE_OVERLAYS
   use_http_auth = false
   begin
     use_http_auth = OVERLAY_SERVER_USERNAME && OVERLAY_SERVER_PASSWORD
@@ -81,6 +82,7 @@ begin
     doc = open(OVERLAY_SERVER_ROOT, :ssl_verify => false).read
   end
   $stderr.puts "Using overlays"
+	end
 rescue NameError
   OVERLAY_SERVER_ROOT = false
   USE_OVERLAYS = false
