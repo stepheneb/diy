@@ -214,8 +214,8 @@ class ExternalOtrunkActivitiesController < ApplicationController
     setup_overlay_requirements(activity)
     
     if @learners.size > 0 || @userListURL
-      @imports << "org.concord.otrunk.view.OTClassListManager"
-      @imports << "org.concord.otrunk.view.OTClassMember"
+      @imports << "org.concord.otrunk.view.OTGroupListManager"
+      @imports << "org.concord.otrunk.view.OTGroupMember"
       @imports << "org.concord.otrunk.user.OTUserObject"
     end
     
