@@ -25,8 +25,8 @@ class NotificationController < ApplicationController
     
     # 2) parses it to determine the lead member and other members of the on-the-fly workgroup
     # it looks for the OTWorkgroupMemberChooser element, and then takes the LeadMember and OtherWorkgroupMembers
-    lead_member = ot_learner_data.elements["//OTWorkgroupMemberChooser/leadMember/OTClassMember"]
-    other_members = ot_learner_data.elements.to_a("//OTWorkgroupMemberChooser/otherWorkgroupMembers/OTClassMember")
+    lead_member = ot_learner_data.elements["//OTWorkgroupMemberChooser/leadMember/OTGroupMember"]
+    other_members = ot_learner_data.elements.to_a("//OTWorkgroupMemberChooser/otherWorkgroupMembers/OTGroupMember")
     
     # 3) if the notification is for the lead member, copies the bundle to the other member's sds workgroups
     notification_learner = Learner.find_by_sds_workgroup_id(@bundle_workgroup_id)
