@@ -36,6 +36,8 @@ class NotificationController < ApplicationController
       logger.info("there are #{other_members.size} other members") if DEBUG
       other_members.each do |mem|
         uuid = mem.attributes["uuid"]
+        # avoid copying the bundle to the source workgroup
+        next if notification_learner.user.uuid == uuid
         user = User.find_by_uuid(uuid)
         workgroup_id = notification_learner.runnable.find_or_create_learner(user).sds_workgroup_id
         
