@@ -1,7 +1,7 @@
 class NotificationController < ApplicationController
   require "rexml/document"
   
-  DEBUG = true
+  DEBUG = false
   
   def workgroup_sync
     # This action takes a bundle:create notification from the SDS and:
@@ -30,8 +30,10 @@ class NotificationController < ApplicationController
     
     # 3) if the notification is for the lead member, copies the bundle to the other member's sds workgroups
     notification_learner = Learner.find_by_sds_workgroup_id(@bundle_workgroup_id)
-    if notification_learner && lead_member && notification_learner.user.uuid == lead_member.attributes["uuid"]
+    if (notification_learner != nil && lead_member != nil && notification_learner.user.uuid == lead_member.attributes["uuid"])
+      logger.info("have learner, lead member, and they match") if DEBUG
       # for each member, find the uuid, look up the diy user and sds workgroup, copy the bundle
+      logger.info("there are #{other_members.size} other members") if DEBUG
       other_members.each do |mem|
         uuid = mem.attributes["uuid"]
         user = User.find_by_uuid(uuid)
@@ -39,10 +41,12 @@ class NotificationController < ApplicationController
         
         # copy the bundle
         # make this an XML request to avoid authenticating
-        open("#{@bundle_url}/copy/#{workgroup_id}.xml")
+        logger.info("copying bundle: #{@bundle_url}/copy/#{workgroup_id}.xml")
+        logger.info("result: " + open("#{@bundle_url}/copy/#{workgroup_id}.xml").read)
       end
     else
       # 4) this bundle is not from a workgroup lead. Ignore it. (This avoids endless copying loops, too.)
+      logger.info("have learner and lead member didn't match!") if DEBUG
     end
     render :xml => "<success>true</success>"
   end
