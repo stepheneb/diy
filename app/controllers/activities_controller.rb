@@ -68,9 +68,6 @@ class ActivitiesController < ApplicationController
     @learners = @activity.learners
     # setup overlay folder. These overlay files hold per-user customizations to the activity.
     @useOverlays = setup_overlay_folder(@activity.id)
-    @learners.each do |l|
-      setup_default_overlay(@activity.id, l.id)
-    end
     render(:template => "shared/ot_learner_data.builder", :layout => false)
   end
   
