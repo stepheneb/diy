@@ -14,13 +14,16 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
           xml.object("refid" => r)
         end
         if @learners.size > 0 || @userListURL
+        hash = {}
+          if @group_overlay_url
+            hash["groupDataURL"] = @group_overlay_url.gsub(/\.otml$/,"-data.otml")
+          end
           if @userListURL
-            xml.OTGroupListManager("userListURL" => @userListURL)
-          else
-            xml.OTGroupListManager {
+            hash["userListURL"] = @userListURL
+          end
+            xml.OTGroupListManager(hash) {
               xml.userList {
                 @learners.each do |l|
-                
                   xml.OTGroupMember("name" => l.user.name, "uuid" => l.user.uuid, "dataURL" => "#{OVERLAY_SERVER_ROOT}/#{l.runnable.id}/#{l.id}-data.otml", "isCurrentUser" => (l.user_id == @user.id)) {
                     xml.userObject {
                       xml.OTUserObject
@@ -29,7 +32,6 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
                 end
               }
             }
-          end
         end
       }
       if @group_overlay_url || @learner_overlay_url || @overlays.size > 0
