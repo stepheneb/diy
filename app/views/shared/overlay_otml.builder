@@ -26,7 +26,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
                 @learners.each do |l|
                   xml.OTGroupMember("name" => l.user.name, "uuid" => l.user.uuid, "dataURL" => "#{OVERLAY_SERVER_ROOT}/#{l.runnable.id}/#{l.id}-data.otml", "isCurrentUser" => (l.user_id == @user.id)) {
                     xml.userObject {
-                      xml.OTUserObject
+                      xml.OTUserObject("id" => l.uuid)
                     }
                   }
                 end
