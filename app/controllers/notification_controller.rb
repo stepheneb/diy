@@ -39,7 +39,9 @@ class NotificationController < ApplicationController
         # avoid copying the bundle to the source workgroup
         next if notification_learner.user.uuid == uuid
         user = User.find_by_uuid(uuid)
-        workgroup_id = notification_learner.runnable.find_or_create_learner(user).sds_workgroup_id
+        other_learner = notification_learner.runnable.find_or_create_learner(user)
+        other_learner.create_session
+        workgroup_id = other_learner.sds_workgroup_id
         
         # copy the bundle
         # make this an XML request to avoid authenticating
