@@ -166,17 +166,9 @@ class ReportsController < ApplicationController
     
     # render :text => "#{@report.short_name}: #{@report.reportable.id}, #{@report.otrunk_report_template.id}"
     if USE_OVERLAYS && OVERLAY_SERVER_ROOT && params[:group_id]
-      if params.has_key? :users
-        report_url_var = otml_report_url :users => params[:users], :group_id => params[:group_id]
-      else
-        report_url_var = otml_report_url :group_id => params[:group_id]
-      end
+      report_url_var = otml_report_url :users => params[:users], :group_id => params[:group_id], :group_list => params[:group_list]
     else
-      if params.has_key? :users
-        report_url_var = otml_report_url :users => params[:users]    
-      else
-        report_url_var = otml_report_url
-      end
+      report_url_var = otml_report_url :users => params[:users]    
     end
 
    system_properties = []
