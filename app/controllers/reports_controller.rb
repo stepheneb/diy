@@ -207,14 +207,14 @@ class ReportsController < ApplicationController
   def otml
     begin
       @report = Report.find(params[:id])
-      otml_report_template = Hpricot.XML(report_template_otml)
+      otml_report_template = REXML::Document.new(report_template_otml).root
       
-      activity = otml_report_template.search("//*[@local_id='external_activity_url']")
+      activity = otml_report_template.elements["//*[@local_id='external_activity_url']"]
       unless activity.blank?
         if ((@report.reportable.kind_of? ExternalOtrunkActivity) && ! @report.reportable.external_otml_url.blank?)
-          activity.first[:href] = @report.reportable.external_otml_url
+          activity.attributes["href"] = @report.reportable.external_otml_url
         else 
-	  activity.first[:href] = otml_external_otrunk_activity_report_url(@report.reportable)
+          activity.attributes["href"] = otml_external_otrunk_activity_report_url(@report.reportable)
         end
       end
       
@@ -224,22 +224,22 @@ class ReportsController < ApplicationController
         learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable, :users => params[:users])      
       end
       
-      external_user_list = otml_report_template.search("//*[@local_id='external_user_list_url']")
+      external_user_list = otml_report_template.elements["//*[@local_id='external_user_list_url']"]
       if external_user_list.blank?
         raise "Need to have a user_list object with a local_id='external_user_list_url'"
       end
-      external_user_list.first[:href] = learner_list_url
+      external_user_list.attributes["href"] = learner_list_url
       
       otml_activity = Hpricot.XML(@report.reportable.otml)
       otml_activity_uuid = otml_activity.search("/otrunk[@id]").first[:id]
       
-      script_object = otml_report_template.search("//*[@local_id='script_object']")
-      script_object.first[:id] = otml_activity_uuid + "!/activity_script" unless script_object.blank?
+      script_object = otml_report_template.elements["//*[@local_id='script_object']"]
+      script_object.attributes["id"] = otml_activity_uuid + "!/activity_script" unless script_object.blank?
       
       # the codebase is set so any relative urls in the original report_template_will still work
       codebase = @report.otrunk_report_template.generate_otml_codebase
       unless codebase.nil?
-        otml_report_template.search("/otrunk").set(:codebase,  codebase)
+        otml_report_template.elements["/otrunk"].attributes["codebase"] = codebase
       end
       
       # setup the group-wide overlay if a group_id has been set in
@@ -250,11 +250,55 @@ class ReportsController < ApplicationController
         setup_default_overlay(@report.reportable.id, group_id)
         
         # insert the overlay URL into the template
-        otml_report_template.search("//OTMultiUserRoot").first[:groupOverlayURL] = @groupOverlayURL
+        otml_report_template.elements["//OTMultiUserRoot"].attributes["groupOverlayURL"] = @groupOverlayURL
       end
-      render :xml => otml_report_template
-    rescue
-      render :xml => $!, :layout => "otml_message"
+      
+      # insert the OTGroupListManager, OTGroupMember imports
+      imports = otml_report_template.elements["/otrunk/imports"]
+      new_imports = []
+      new_imports << "org.concord.otrunk.view.OTGroupListManager"
+      new_imports << "org.concord.otrunk.view.OTGroupMember"
+      new_imports << "org.concord.otrunk.user.OTUserObject"
+      new_imports.each do |i|
+        im = imports.add_element "import"
+        im.attributes["class"] = i
+      end
+      # insert the OTGroupListManager object
+      bundles = otml_report_template.elements["/otrunk/objects/OTSystem/bundles"]
+      otglm_element = bundles.add_element "OTGroupListManager"
+      if group_id
+        otglm_element.attributes["groupDataURL"] = "#{OVERLAY_SERVER_ROOT}/#{@report.reportable.id}/#{group_id}-data.otml"
+      end
+      
+      @learners = []
+      if (params[:group_list] && ! params[:group_list].empty?)
+        uids = params[:group_list].split(",")
+        uids.each do |uid|
+          begin
+            @learners << @report.reportable.find_or_create_learner(User.find(uid))
+          rescue
+            # ignore it for now
+          end
+        end
+      end
+      
+      @learners.uniq!
+      
+      if @learners.size > 0
+        user_list = otglm_element.add_element "userList"
+        @learners.each do |l|
+          mem = user_list.add_element "OTGroupMember"
+          mem.attributes["name"] = l.user.name
+          mem.attributes["uuid"] = l.user.uuid
+          mem.attributes["isCurrentUser"] = "false"
+          mem.attributes["dataURL"] = "#{OVERLAY_SERVER_ROOT}/#{@report.reportable.id}/#{l.id}-data.otml"
+          user = mem.add_element("userObject").add_element("OTUserObject")
+          user.attributes["id"] = l.uuid
+        end
+      end
+      render :xml => otml_report_template.to_s
+      rescue => e
+      render :xml => "#{$!}\n#{e.backtrace.join("\n")}", :layout => "otml_message"
     end
   end  
 end
