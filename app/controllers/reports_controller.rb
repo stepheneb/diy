@@ -283,6 +283,7 @@ class ReportsController < ApplicationController
           mem.attributes["name"] = l.user.name
           mem.attributes["uuid"] = l.user.uuid
           mem.attributes["isCurrentUser"] = "false"
+          mem.attributes["passwordHash"] = l.user.password_hash
           mem.attributes["dataURL"] = "#{OVERLAY_SERVER_ROOT}/#{@report.reportable.id}/#{l.id}-data.otml"
           user = mem.add_element("userObject").add_element("OTUserObject")
           user.attributes["id"] = l.uuid
