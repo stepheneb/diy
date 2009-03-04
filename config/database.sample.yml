@@ -1,80 +1,39 @@
-# MySQL (default setup).  Versions 4.1 and 5.0 are recommended.
-#
-# Get the fast C bindings:
-#   gem install mysql
-#   (on OS X: gem install mysql -- --include=/usr/local/lib)
-# And be sure to use new-style password hashing:
-#   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
-
-
 development:
-  adapter: mysql
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   encoding: utf8
   host: localhost
-  database: <%= RAILS_DATABASE_PREFIX %>development
+  database: development
   username: root
   password: 
 
 test:
-  adapter: mysql
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   encoding: utf8
   host: localhost
-  database: <%= RAILS_DATABASE_PREFIX %>test
+  database: test
   username: root
   password: 
-  socket: /tmp/mysql.sock
 
 production:
-  adapter: mysql
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   encoding: utf8
   host: localhost
-  database: <%= RAILS_DATABASE_PREFIX %>production
+  database: production
   username: root
   password: 
-  socket: /tmp/mysql.sock
 
 sunflower:
-  adapter: mysql
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   host: database.concord.org
   username: rails
   password: 
   database: sunflower
 
-teemss2:
-  adapter: mysql
-  host: database.concord.org
-  username: rails
-  password: 
-  database: teemss2
-
-test:
-  adapter: mysql
+remote:
+  adapter: <% if RUBY_PLATFORM =~ /java/ %>jdbcmysql<% else %>mysql<% end %>
   encoding: utf8
-  database: teemss2_test
-  username: root
+  host: 
+  database: 
+  username: 
   password: 
-  socket: /tmp/mysql.sock
-
-# This is an example of a production database configuration that
-# is used on a server where the tables are in a database shared
-# with other applications
-# production:
-#   adapter: mysql
-#   encoding: utf8
-#   host: railsdb.concord.org
-#   database: rails
-#   username: rails
-#   password:
-#   socket: /tmp/mysql.sock
-#   # add the following if you want to copy the production database to the development database
-#   # table_prefix: prefix_
-
-# Connect on a TCP socket.  If omitted, the adapter will connect on the
-# domain socket given by socket instead.
-# host: localhost
-# port: 3306
-#
-# Warning: The database defined as 'test' will be erased and
-# re-generated from your development database when you run 'rake'.
-# Do not set this db to the same as development or production.
-
+  table_prefix: 
