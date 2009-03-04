@@ -10,6 +10,7 @@ class HomeController < ApplicationController
     rescue
       @activity = Activity.find(:first, :conditions => "public='1'")
     end
+    render :layout => 'standard'
   end
    
 end
