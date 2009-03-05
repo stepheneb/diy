@@ -1,6 +1,6 @@
 class CreatePhysicalUnits < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}physical_units" do |t|
+    create_table "physical_units" do |t|
       t.column :user_id, :integer
       t.column :name, :string
       t.column :quantity, :string
@@ -13,6 +13,6 @@ class CreatePhysicalUnits < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}physical_units"
+    drop_table "physical_units"
   end
 end

@@ -1,6 +1,6 @@
 class CreateOtrunkReportTemplates < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}otrunk_report_templates" do |t|
+    create_table "otrunk_report_templates" do |t|
       t.integer  "user_id", "parent_id"
       t.boolean  "public"
       t.string   "name"
@@ -20,7 +20,7 @@ class CreateOtrunkReportTemplates < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}otrunk_report_templates"
+    drop_table "otrunk_report_templates"
     # drop version table
     OtrunkReportTemplate.drop_versioned_table
   end

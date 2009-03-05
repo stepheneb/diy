@@ -4,7 +4,7 @@ require 'net/http'
 require 'uri'
 
 class ExternalOtrunkActivity < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}external_otrunk_activities"
+  set_table_name "external_otrunk_activities"
   include Changeable
   acts_as_replicatable
     
@@ -19,7 +19,7 @@ class ExternalOtrunkActivity < ActiveRecord::Base
     end
   end
 
-  acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}external_otrunk_activities_versions"
+  acts_as_versioned :table_name => "external_otrunk_activities_versions"
 
   belongs_to :user
 

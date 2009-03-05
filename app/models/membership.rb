@@ -1,5 +1,5 @@
 class Membership < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}memberships"
+  set_table_name "memberships"
   
   acts_as_replicatable
   

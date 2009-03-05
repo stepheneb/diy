@@ -40,7 +40,7 @@ module SdsRunnable
     
     jnlp_url = "#{sds_url}?sailotrunk.otmlurl=#{URI.escape(my_otml_url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
     
-    jnlp_filename = "#{RAILS_DATABASE_PREFIX}#{self.short_name}_#{user.vendor_interface.short_name}.jnlp"
+    jnlp_filename = "#{self.short_name}_#{user.vendor_interface.short_name}.jnlp"
     jnlp_url = jnlp_url << "&jnlp_filename=#{URI.escape(jnlp_filename, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
 
     if options[:system_properties].blank?
@@ -86,7 +86,7 @@ module SdsRunnable
     
     jnlp_url = "#{sds_url}?sailotrunk.otmlurl=#{URI.escape(my_otml_url, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
     
-    jnlp_filename = "#{RAILS_DATABASE_PREFIX}#{self.short_name}_#{user.vendor_interface.short_name}.jnlp"
+    jnlp_filename = "#{self.short_name}_#{user.vendor_interface.short_name}.jnlp"
     jnlp_url = jnlp_url << "&jnlp_filename=#{URI.escape(jnlp_filename, /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)}"
     
     if options[:authoring]

@@ -1,5 +1,5 @@
 class Learner < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}learners"
+  set_table_name "learners"
   
   acts_as_replicatable
   

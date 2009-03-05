@@ -1,7 +1,7 @@
 require 'digest/sha1'
 require 'md5' 
 class User < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}users"
+  set_table_name "users"
   include Changeable
   
   acts_as_replicatable
@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   has_many :report_types
   
   has_many :memberships
-  has_and_belongs_to_many :roles, :order => 'position', :join_table => "#{RAILS_DATABASE_PREFIX}roles_users", :foreign_key => "user_id"
+  has_and_belongs_to_many :roles, :order => 'position', :join_table => "roles_users", :foreign_key => "user_id"
   
   has_many :learners
 #  has_many :runnables

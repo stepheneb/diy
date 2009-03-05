@@ -4,6 +4,7 @@
   <br /><small>Curnit: <%= link_to "#{SdsConnect::Connect.curnit_id}", SdsConnect::Connect.curnit_url %></small>
 </p>
 <%= yield :admin_sidebar %>
+<p>Rails: <%= Rails.version %></p>
 <p>Database:
   <% db_info = ActiveRecord::Base.configurations %>
   <br /><small>type: <%= db_info[RAILS_ENV]['adapter'] %></small>

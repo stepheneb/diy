@@ -1,6 +1,6 @@
 class ModelAndModelTypes < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}model_types" do |t|
+    create_table "model_types" do |t|
       t.column :name, :string
       t.column :description, :string
       t.column :url, :string
@@ -9,7 +9,7 @@ class ModelAndModelTypes < ActiveRecord::Migration
       t.column :otrunk_view_class, :string    
     end
 
-    create_table "#{RAILS_DATABASE_PREFIX}models" do |t|
+    create_table "models" do |t|
       t.column :user_id, :integer
       t.column :model_type_id, :integer
       t.column :name, :string
@@ -22,7 +22,7 @@ class ModelAndModelTypes < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}model_types"
-    drop_table "#{RAILS_DATABASE_PREFIX}models"
+    drop_table "model_types"
+    drop_table "models"
   end
 end

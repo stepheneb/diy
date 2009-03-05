@@ -1,6 +1,6 @@
 class CreateCalibrations < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}calibrations" do |t|
+    create_table "calibrations" do |t|
       t.column :data_filter_id, :integer
       t.column :probe_type_id, :integer
       t.column :default_calibration, :boolean
@@ -16,6 +16,6 @@ class CreateCalibrations < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}calibrations"
+    drop_table "calibrations"
   end
 end

@@ -1,9 +1,9 @@
 class AddPublicAttributeToReports < ActiveRecord::Migration
   def self.up
-    add_column "#{RAILS_DATABASE_PREFIX}reports", :public, :boolean
+    add_column "reports", :public, :boolean
   end
 
   def self.down
-    remove_column "#{RAILS_DATABASE_PREFIX}reports", :public
+    remove_column "reports", :public
   end
 end

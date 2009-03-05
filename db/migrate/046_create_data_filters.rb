@@ -1,6 +1,6 @@
 class CreateDataFilters < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}data_filters" do |t|
+    create_table "data_filters" do |t|
       t.column :user_id, :integer
       t.column :name, :string
       t.column :description, :text
@@ -13,6 +13,6 @@ class CreateDataFilters < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}data_filters"
+    drop_table "data_filters"
   end
 end

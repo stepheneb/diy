@@ -1,6 +1,6 @@
 class CreateLevelings < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}levelings" do |t|
+    create_table "levelings" do |t|
       t.integer :level_id
       t.integer :levelable_id
       t.string :levelable_type
@@ -8,6 +8,6 @@ class CreateLevelings < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}levelings"
+    drop_table "levelings"
   end
 end

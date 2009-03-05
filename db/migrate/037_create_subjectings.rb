@@ -1,6 +1,6 @@
 class CreateSubjectings < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}subjectings" do |t|
+    create_table "subjectings" do |t|
       t.integer :subject_id
       t.integer :subjectable_id
       t.string :subjectable_type
@@ -8,6 +8,6 @@ class CreateSubjectings < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}subjectings"
+    drop_table "subjectings"
   end
 end

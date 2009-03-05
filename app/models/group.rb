@@ -1,5 +1,5 @@
 class Group < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}groups"
+  set_table_name "groups"
   
   acts_as_replicatable
   

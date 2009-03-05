@@ -1,6 +1,6 @@
 class CreateLevels < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}levels" do |t|      
+    create_table "levels" do |t|      
       t.string :name
       t.text :description
       t.date :created_on
@@ -9,6 +9,6 @@ class CreateLevels < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}levels"
+    drop_table "levels"
   end
 end

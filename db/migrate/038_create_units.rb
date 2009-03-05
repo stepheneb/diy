@@ -1,6 +1,6 @@
 class CreateUnits < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}units" do |t|
+    create_table "units" do |t|
       t.string :name
       t.text :description
       t.text :notes
@@ -10,6 +10,6 @@ class CreateUnits < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}units"
+    drop_table "units"
   end
 end

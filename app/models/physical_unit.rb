@@ -1,5 +1,5 @@
 class PhysicalUnit < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}physical_units"
+  set_table_name "physical_units"
   include Changeable
   
   acts_as_replicatable

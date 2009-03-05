@@ -1,6 +1,6 @@
 class CreateReports < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}reports" do |t|
+    create_table "reports" do |t|
       t.integer "otrunk_report_template_id", "reportable_id"
       t.string "reportable_type"
       t.string "uuid"
@@ -9,6 +9,6 @@ class CreateReports < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}reports"
+    drop_table "reports"
   end
 end

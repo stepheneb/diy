@@ -1,5 +1,5 @@
 class ProbeType < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}probe_types"
+  set_table_name "probe_types"
   include Changeable
   
   acts_as_replicatable

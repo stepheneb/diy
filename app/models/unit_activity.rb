@@ -1,5 +1,5 @@
 class UnitActivity < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}unit_activities"
+  set_table_name "unit_activities"
 
   belongs_to :activity 
   belongs_to :unit

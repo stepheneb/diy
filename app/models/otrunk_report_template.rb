@@ -3,7 +3,7 @@ require 'net/http'
 require 'uri'
 
 class OtrunkReportTemplate < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}otrunk_report_templates"
+  set_table_name "otrunk_report_templates"
   include Changeable
   
   acts_as_replicatable
@@ -18,7 +18,7 @@ class OtrunkReportTemplate < ActiveRecord::Base
     end
   end
   
-  acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}otrunk_report_templates_versions" 
+  acts_as_versioned :table_name => "otrunk_report_templates_versions" 
 
   has_many :reports
   belongs_to :user

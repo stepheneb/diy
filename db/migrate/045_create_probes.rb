@@ -1,6 +1,6 @@
 class CreateProbes < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}probes" do |t|
+    create_table "probes" do |t|
       t.column :user_id, :integer
       t.column :probe_type_id, :integer
       t.column :vendor_interface_id, :integer
@@ -11,6 +11,6 @@ class CreateProbes < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}probes"
+    drop_table "probes"
   end
 end

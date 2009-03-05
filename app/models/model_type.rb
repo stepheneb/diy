@@ -1,5 +1,5 @@
 class ModelType < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}model_types"
+  set_table_name "model_types"
   include Changeable
   
   acts_as_replicatable

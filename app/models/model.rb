@@ -1,5 +1,5 @@
 class Model < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}models"
+  set_table_name "models"
   include Changeable
   
   acts_as_replicatable
@@ -15,7 +15,7 @@ class Model < ActiveRecord::Base
     end
   end
   
-  acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}models_versions"
+  acts_as_versioned :table_name => "models_versions"
   
   has_many :activities
   belongs_to :user

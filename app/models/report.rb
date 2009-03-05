@@ -1,5 +1,5 @@
 class Report < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}reports"
+  set_table_name "reports"
   include Changeable
   
   acts_as_replicatable
@@ -9,7 +9,7 @@ class Report < ActiveRecord::Base
   belongs_to :user
   belongs_to :reportable, :polymorphic => true  
   belongs_to :otrunk_report_template
-  has_and_belongs_to_many :report_types, :join_table => "#{RAILS_DATABASE_PREFIX}report_types_reports"
+  has_and_belongs_to_many :report_types, :join_table => "report_types_reports"
   
   @@searchable_attributes = %w{name description}
   class <<self

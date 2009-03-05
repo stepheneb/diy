@@ -261,7 +261,7 @@ Save and mount your results and try it out with a different atmosphere!
 
     # get a connection to the current db
     con = User.connection
-    old_version = con.execute("select version from #{RAILS_DATABASE_PREFIX}schema_info").fetch_hash['version']
+    old_version = con.execute("select version from schema_info").fetch_hash['version']
 
     # get the stable db
     print "\nGetting the remote database ... "
@@ -297,25 +297,24 @@ Save and mount your results and try it out with a different atmosphere!
     # clear out the current db
     print "Deleting tables in the current database "
     con.tables.each do |t|
-      if t.match "^#{RAILS_DATABASE_PREFIX}"
-        con.drop_table(t)
-        print "."
-      end
+      con.drop_table(t)
     end
     puts " done.\n\n"
 
-    # The table prefixes may not match...
-    # we need to convert the db dump to the current prefix
-    File.open(temp_file) { |file|
-      File.open(temp_file + ".new", "w") { |new_file|
-        begin
-          while line = file.readline
-            new_file.write(line.gsub(/#{remote['table_prefix']}/,"#{RAILS_DATABASE_PREFIX}"))
+    # We need to remove any table prefixes in the 
+    # the db dump from the remote db
+    if remote['table_prefix']
+      File.open(temp_file) { |file|
+        File.open(temp_file + ".new", "w") { |new_file|
+          begin
+            while line = file.readline
+              new_file.write(line.gsub(/#{remote['table_prefix']}/,""))
+            end
+          rescue
           end
-        rescue
-        end
+        }
       }
-    }
+    end
 
     # import the stable db
     print "Importing the stable database ... "
@@ -324,7 +323,7 @@ Save and mount your results and try it out with a different atmosphere!
     puts "done.\n\n"
 
     con = User.connection
-    new_version = con.execute("select version from #{RAILS_DATABASE_PREFIX}schema_info").fetch_hash['version']
+    new_version = con.execute("select version from schema_info").fetch_hash['version']
     puts "Previous database version: #{old_version}"
     puts "Production database version: #{new_version}"
     if old_version > new_version

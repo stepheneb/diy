@@ -1,5 +1,5 @@
 class Calibration < ActiveRecord::Base
-  set_table_name "#{RAILS_DATABASE_PREFIX}calibrations"
+  set_table_name "calibrations"
   include Changeable
   
   acts_as_replicatable

@@ -1,6 +1,6 @@
 class CreateExternalOtrunkActivities < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}external_otrunk_activities" do |t|
+    create_table "external_otrunk_activities" do |t|
       t.column :user_id, :integer
       t.column :public, :boolean
       t.column :name, :string
@@ -12,6 +12,6 @@ class CreateExternalOtrunkActivities < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}external_otrunk_activities"
+    drop_table "external_otrunk_activities"
   end
 end

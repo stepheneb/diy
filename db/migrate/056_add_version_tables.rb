@@ -16,9 +16,9 @@ class AddVersionTables < ActiveRecord::Migration
   def self.down
     #remove version from Runnables
     # only necessary because *.drop_versioned_table doesn't delete it for us
-     remove_column "#{RAILS_DATABASE_PREFIX}activities", :version
-     remove_column "#{RAILS_DATABASE_PREFIX}models",:version
-     remove_column "#{RAILS_DATABASE_PREFIX}external_otrunk_activities", :version
+     remove_column "activities", :version
+     remove_column "models",:version
+     remove_column "external_otrunk_activities", :version
     
     # remove version tables
     Activity.drop_versioned_table

@@ -1,9 +1,9 @@
 class AddUuidToExternalOtrunkActivities < ActiveRecord::Migration
   def self.up
-    add_column "#{RAILS_DATABASE_PREFIX}external_otrunk_activities", :uuid, :string
+    add_column "external_otrunk_activities", :uuid, :string
   end
 
   def self.down
-    remove_column "#{RAILS_DATABASE_PREFIX}external_otrunk_activities", :uuid
+    remove_column "external_otrunk_activities", :uuid
   end
 end

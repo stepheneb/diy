@@ -1,6 +1,6 @@
 class CreateUnitActivities < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}unit_activities" do |t|
+    create_table "unit_activities" do |t|
       t.integer :activity_id
       t.integer :unit_id
       t.integer :position
@@ -8,6 +8,6 @@ class CreateUnitActivities < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}unit_activities"
+    drop_table "unit_activities"
   end
 end

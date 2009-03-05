@@ -1,6 +1,6 @@
 class CreateSubjects < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}subjects" do |t|
+    create_table "subjects" do |t|
       t.string :name
       t.text :description
       t.date :created_on
@@ -9,6 +9,6 @@ class CreateSubjects < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table "#{RAILS_DATABASE_PREFIX}subjects"
+    drop_table "subjects"
   end
 end

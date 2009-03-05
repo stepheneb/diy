@@ -15,15 +15,13 @@ unless ["savedata", "view", "nobundles", "preview", "norun"].include? APP_PROPER
   APP_PROPERTIES[:anonymous_run_style] = "savedata"
 end
 
-CGI::Session::ActiveRecordStore::Session.table_name = "#{RAILS_DATABASE_PREFIX}sessions"
-
-module ActiveRecord
-  class Migrator
-    def Migrator.schema_info_table_name
-      Base.table_name_prefix + "#{RAILS_DATABASE_PREFIX}schema_info" + Base.table_name_suffix
-    end
-  end
-end
+# module ActiveRecord
+#   class Migrator
+#     def Migrator.schema_info_table_name
+#       Base.table_name_prefix + "schema_info" + Base.table_name_suffix
+#     end
+#   end
+# end
 
 # application key specific layouts, if they exist, otherwise use the default layout
 # module ActionController
@@ -56,7 +54,7 @@ end
 if EXCEPTION_NOTIFIER_CONFIGS_EXISTS
   ExceptionNotifier.exception_recipients = YAML::load(IO.read("#{RAILS_ROOT}/config/exception_notifier_recipients.yml"))
   # Sender address: defaults to exception.notifier@default.com
-  ExceptionNotifier.sender_address = %("[DIY ERROR]: #{APP_PROPERTIES[:application_name]}" <#{RAILS_DATABASE_PREFIX}error@concord.org>)
+  ExceptionNotifier.sender_address = %("[DIY ERROR]: #{APP_PROPERTIES[:application_name]}" <error@concord.org>)
   # defaults to "[ERROR] "
   ExceptionNotifier.email_prefix = "[DIY ERROR]: #{APP_PROPERTIES[:application_name]} "
 end

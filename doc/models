@@ -1,6 +1,6 @@
 User
   belongs_to :vendor_interface
-  has_and_belongs_to_many :roles, options = {:join_table => "#{RAILS_DATABASE_PREFIX}roles_users"}
+  has_and_belongs_to_many :roles, options = {:join_table => "roles_users"}
   has_many :activities
   has_many :memberships
   has_many :groups, :through => :memberships

@@ -1,6 +1,6 @@
 class AddTables < ActiveRecord::Migration
   def self.up
-    create_table "#{RAILS_DATABASE_PREFIX}activities" do |t|
+    create_table "activities" do |t|
       t.column :user_id, :integer
       t.column :uuid, :string
       t.column :public, :boolean
@@ -22,7 +22,7 @@ class AddTables < ActiveRecord::Migration
       t.column :further, :text
     end
     
-    create_table "#{RAILS_DATABASE_PREFIX}probe_types" do |t|
+    create_table "probe_types" do |t|
       t.column :name, :string
       t.column :ptype, :integer
       t.column :step_size, :float
@@ -34,7 +34,7 @@ class AddTables < ActiveRecord::Migration
       t.column :period, :float
     end
     
-    create_table "#{RAILS_DATABASE_PREFIX}vendor_interfaces" do |t|
+    create_table "vendor_interfaces" do |t|
       t.column :name, :string
       t.column :short_name, :string
       t.column :description, :text
@@ -42,25 +42,25 @@ class AddTables < ActiveRecord::Migration
       t.column :image, :string
     end
 
-    add_column "#{RAILS_DATABASE_PREFIX}users", :first_name, :string
-    add_column "#{RAILS_DATABASE_PREFIX}users", :last_name, :string
-    add_column "#{RAILS_DATABASE_PREFIX}users", :vendor_interface_id, :integer
-    add_column "#{RAILS_DATABASE_PREFIX}users", :password_hash, :string
+    add_column "users", :first_name, :string
+    add_column "users", :last_name, :string
+    add_column "users", :vendor_interface_id, :integer
+    add_column "users", :password_hash, :string
 
-    create_table "#{RAILS_DATABASE_PREFIX}roles", :force => true do |t|
+    create_table "roles", :force => true do |t|
       t.column :title, :string
     end
   end
   
   def self.down
-    remove_column "#{RAILS_DATABASE_PREFIX}users", :first_name
-    remove_column "#{RAILS_DATABASE_PREFIX}users", :last_name
-    remove_column "#{RAILS_DATABASE_PREFIX}users", :vendor_interface_id
-    remove_column "#{RAILS_DATABASE_PREFIX}users", :password_hash
-    drop_table "#{RAILS_DATABASE_PREFIX}activities"
-    drop_table "#{RAILS_DATABASE_PREFIX}probe_types"
-    drop_table "#{RAILS_DATABASE_PREFIX}roles"
-    drop_table "#{RAILS_DATABASE_PREFIX}vendor_interfaces"
+    remove_column "users", :first_name
+    remove_column "users", :last_name
+    remove_column "users", :vendor_interface_id
+    remove_column "users", :password_hash
+    drop_table "activities"
+    drop_table "probe_types"
+    drop_table "roles"
+    drop_table "vendor_interfaces"
   end
 end
 
