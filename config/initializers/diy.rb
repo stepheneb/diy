@@ -26,23 +26,23 @@ module ActiveRecord
 end
 
 # application key specific layouts, if they exist, otherwise use the default layout
-module ActionController
-  module Layout
-    module ClassMethods
-      def layout(template_name, conditions = {}, auto = false)
-        add_layout_conditions(conditions)
-        # custom code here
-          possible_layouts = layout_list.select{|path| path =~ /#{template_name}-#{RAILS_APPLICATION_KEY}/}
-          if possible_layouts.size > 0
-            template_name = "#{template_name}-#{RAILS_APPLICATION_KEY}"
-          end
-        # end custom code
-        write_inheritable_attribute "layout", template_name
-        write_inheritable_attribute "auto_layout", auto
-      end
-    end
-  end
-end
+# module ActionController
+#   module Layout
+#     module ClassMethods
+#       def layout(template_name, conditions = {}, auto = false)
+#         add_layout_conditions(conditions)
+#         # custom code here
+#           possible_layouts = layout_list.select{|path| path =~ /#{template_name}-#{RAILS_APPLICATION_KEY}/}
+#           if possible_layouts.size > 0
+#             template_name = "#{template_name}-#{RAILS_APPLICATION_KEY}"
+#           end
+#         # end custom code
+#         write_inheritable_attribute "layout", template_name
+#         write_inheritable_attribute "auto_layout", auto
+#       end
+#     end
+#   end
+# end
 
 # To enable the Exception Notifier plugin look at sample configurations in config/ and:
 # 1) Create config/mailer.yml with the smtp host settings for sending mail.
@@ -98,7 +98,6 @@ end
 require 'redcloth'
 
 require 'uuidtools'
-
 require 'sds_connect'
 SdsConnect::Connect.setup
 
@@ -106,3 +105,4 @@ require 'diff/lcs'
 require 'diff/lcs/string'
 require 'htmldiff'
 require 'symboldiff'
+
