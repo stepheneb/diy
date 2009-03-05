@@ -1,10 +1,7 @@
 # Filters added to this controller will be run for all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 class ApplicationController < ActionController::Base
-  # helper :all # include all helpers, all the time
 
-  SdsConnect::Connect.setup
-  
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   # protect_from_forgery :secret => 'ace4fa914693f0739e588729756205e7'
@@ -400,5 +397,5 @@ class ApplicationController < ActionController::Base
     include ActionView::Helpers::TextHelper
     include ActionView::Helpers::DateHelper
   end
-    
+
 end
