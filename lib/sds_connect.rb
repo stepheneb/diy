@@ -20,10 +20,10 @@ module SdsConnect
     # If you change these values after they have been set
     # you will probably invalidate any local copies of sds recource ids.
     def self.setup(config = nil)
-      return if @@config && @@config['version']
+      return @@config if @@config && @@config['version']
       config = YAML::load(ERB.new(IO.read("#{RAILS_ROOT}/config/sds.yml")).result)[RAILS_ENV] unless config
       @@config = config
-      @@config = @@config.merge(properties)
+      @@config = @@config.merge({"name"=>"Sail Data Service", "version"=>"1.1"})
       if @@config['version'].to_f >= 1.1
         @@sail_user_path = '/sail_user' 
         @@sail_user_resource = 'sail-user'
@@ -31,8 +31,31 @@ module SdsConnect
         @@sail_user_path = '/user' 
         @@sail_user_resource = 'user'
       end
+      @@config
     end
     
+    # Note: strange bug that should be tracked down!
+    #
+    # For some reason this method:
+    #
+    #   SdsConnect::Connect.properties
+    #
+    # doesn't work when both the DIY and the SDS are run 
+    # from Phusion Passenger. Line 26 above should have looked like this:
+    #
+    #   @@config = @@config.merge(properties)
+    #
+    # but that causes a hang on first page load.
+    #
+    # If the statement SdsConnect::Connect.properties is placed in 
+    # config/initializers/diy.rb or app/controllers/application.rb
+    # the startup process will hang.
+    #
+    # However if it is placed in app/controlelrs/home_controller.rb
+    # the startup process works normally.
+    #
+    # So for now since all the SDSs we work with are version 1.1
+    # these properties are hard-coded.
     def self.properties
       get_resource('/')['sds']
     end
