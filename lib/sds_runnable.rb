@@ -141,9 +141,34 @@ module SdsRunnable
   # and for the specified user.
   def find_or_create_learner(user)
     check_sds_offering
-    learner = self.learners.find_or_initialize_by_user_id(user.id)
-    learner.runnable = self
-    learner.save
+    
+    # lock the table, so that if anyone else is looking for this user's learner,
+    # they will find the one we're about to find or create
+    learner = nil
+    begin
+      Learner.transaction do
+        if self.class.connection.kind_of? ActiveRecord::ConnectionAdapters::MysqlAdapter
+          table = Learner.table_name
+          Learner.connection.execute( 'SET AUTOCOMMIT=0' ) 
+          Learner.connection.execute("LOCK TABLES #{table} WRITE")
+        end
+        learner = self.learners.find_by_user_id(user.id)
+        if ! learner
+          learner = Learner.create!(:user => user, :runnable => self)
+        end
+        
+        if self.class.connection.kind_of? ActiveRecord::ConnectionAdapters::MysqlAdapter
+          Learner.connection.execute( 'SET AUTOCOMMIT=1' )
+        end
+      end
+    rescue ActiveRecord::StatementInvalid => e
+      learner = self.learners.find_or_initialize_by_user_id(user.id)
+      learner.runnable = self
+      learner.save
+    end
+    if self.class.connection.kind_of? ActiveRecord::ConnectionAdapters::MysqlAdapter
+      Learner.connection.execute('UNLOCK TABLES')
+    end
     learner
   end
   
