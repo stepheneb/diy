@@ -37,7 +37,11 @@ module SearchableModel
     if user.has_role("admin", "manager") || self == User
       sql_conditions = ""
     else
-      sql_conditions = "(#{table_name}.user_id = ? or #{table_name}.public = '1') and "
+      sql_conditions = "(#{table_name}.user_id = ?"
+      if self.respond_to? "public"
+        sql_conditions << " or #{table_name}.public = '1'"
+      end
+      sql_conditions << ") and "
       sql_parameters << user.id
     end
     # debugger
