@@ -84,9 +84,13 @@ class ExternalOtrunkActivitiesController < ApplicationController
   # GET /external_otrunk_activities/1
   # GET /external_otrunk_activities/1.xml
   def show
+    exceptions = []
+    if params[:except]
+      exceptions = params[:except].split(",")
+    end
     respond_to do |format|
       format.html # show.rhtml
-      format.xml  { render :xml => @external_otrunk_activity.to_xml }
+      format.xml  { render :xml => @external_otrunk_activity.to_xml(:except => exceptions) }
     end
   end
 

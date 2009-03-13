@@ -154,6 +154,8 @@ task :reset_staging_db, :roles => :db do
   # put the app into maintenance mode
   !deploy::web::disable
   # dump the production db into the staging db
+  run "mysqladmin -u subroot -p#{subroot_pass} -f drop #{local_database_prefix}_prod"
+  run "mysqladmin -u subroot -p#{subroot_pass} create #{local_database_prefix}_prod"
   run "mysqldump -u subroot -p#{subroot_pass} --lock-tables=false --add-drop-table --quick --extended-insert #{local_production_database_prefix}_prod | mysql -u #{local_username} -p#{local_password} #{local_database_prefix}_prod"
   # put app into running mode
   !deploy::web::enable
