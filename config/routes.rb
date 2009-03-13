@@ -102,6 +102,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :activities, :member => { :usage => :get }
   map.resources :activities, :member => { :ot_learner_data => :get }
   map.resources :activities, :member => { :save_draft => :put }
+  map.resources :activities, :member => { :run_report => :get }
   map.resources :activities do |activities|
     activities.resources :units, :name_prefix => "activity_"
     activities.resources :learners, :name_prefix => "activity_", :member => { :sessions => :get, :ot_learner_data => :get  }
@@ -119,6 +120,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resources :external_otrunk_activities, :member => { :copy => :get, :usage => :get, :ot_learner_data => :get }
+  map.resources :external_otrunk_activities, :member => { :run_report => :get }
   map.resources :external_otrunk_activities do |external_otrunk_activities|
     external_otrunk_activities.resources :reports, :name_prefix => "external_otrunk_activity_"
     external_otrunk_activities.resources :units, :name_prefix => "external_otrunk_activity_"

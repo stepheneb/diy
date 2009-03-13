@@ -10,7 +10,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
 
   before_filter :setup_vars
   before_filter :setup_object
-  before_filter :find_collections, :except => [:destroy, :otml, :sail_jnlp ]
+  before_filter :find_collections, :except => [:destroy, :otml, :sail_jnlp, :run_report ]
   before_filter :get_learner, :only => [:show, :edit, :update]
 
   protected
@@ -265,6 +265,23 @@ class ExternalOtrunkActivitiesController < ApplicationController
   
   def compare
     @other_activity = ExternalOtrunkActivity.find(params[:other])
+  end
+  
+  def run_report
+    if params[:type]
+      @reports = @external_otrunk_activity.reports.select{|r| r.report_type.uri == params[:type] }
+    else
+      @reports = @external_otrunk_activity.reports
+    end
+    
+    if @reports.size > 0
+      redirect_to sail_jnlp_report_path(@reports[0])
+    else
+      respond_to do |format|
+        format.html {:head, :status => 404 }
+        format.xml {:head, :status => 404 }
+      end
+    end
   end
   
 end
