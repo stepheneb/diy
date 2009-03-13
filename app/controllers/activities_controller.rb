@@ -312,11 +312,11 @@ class ActivitiesController < ApplicationController
     end
     
     if @reports.size > 0
-      redirect_to sail_jnlp_report_path(@reports[0])
+      redirect_to sail_jnlp_report_path(@reports[0], params)
     else
       respond_to do |format|
-        format.html {:head, :status => 404 }
-        format.xml {:head, :status => 404 }
+        format.html { render :head, :status => 404 }
+        format.xml { render :head, :status => 404 }
       end
     end
   end

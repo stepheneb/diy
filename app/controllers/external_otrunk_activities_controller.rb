@@ -269,7 +269,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
   
   def run_report
     if params[:type]
-      @reports = @external_otrunk_activity.reports.select{|r| r.report_type.uri == params[:type] }
+      @reports = @external_otrunk_activity.reports.select{|r| r.report_types.select{|rt| rt.uri == params[:type] }.size > 0 }
     else
       @reports = @external_otrunk_activity.reports
     end
@@ -278,8 +278,8 @@ class ExternalOtrunkActivitiesController < ApplicationController
       redirect_to sail_jnlp_report_path(@reports[0])
     else
       respond_to do |format|
-        format.html {:head, :status => 404 }
-        format.xml {:head, :status => 404 }
+        format.html {render :text => "Report not found", :status => 404 }
+        format.xml {render :xml => "<report-not-found />", :status => 404 }
       end
     end
   end
