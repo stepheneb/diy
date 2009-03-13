@@ -274,8 +274,14 @@ class ExternalOtrunkActivitiesController < ApplicationController
       @reports = @external_otrunk_activity.reports
     end
     
+    extras = params.clone
+    extras.delete(:action)
+    extras.delete(:controller)
+    extras.delete(:id)
+    extras.delete(:type)
+    
     if @reports.size > 0
-      redirect_to sail_jnlp_report_path(@reports[0])
+      redirect_to sail_jnlp_report_path(@reports[0], extras)
     else
       respond_to do |format|
         format.html {render :text => "Report not found", :status => 404 }
