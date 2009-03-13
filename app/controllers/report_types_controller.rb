@@ -39,7 +39,11 @@ class ReportTypesController < ApplicationController
   # GET /report_types
   # GET /report_types.xml
   def index
-    @report_types = ReportType.search(params[:search], params[:page], current_user)
+    if params[:report_id]
+      @report_types = Report.find(params[:report_id]).report_types
+    else
+      @report_types = ReportType.search(params[:search], params[:page], current_user)
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @report_types }

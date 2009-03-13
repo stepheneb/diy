@@ -2,6 +2,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :report_types, :member => { :copy => :get }
 
   map.resources :reports, :member => { :copy => :get, :sail_jnlp => :get, :otml => :get }
+  map.resources :reports do |report|
+    report.resources :report_types    
+  end
 
   map.resources :otrunk_report_templates, :member => { :copy => :get, :usage => :get, :otml => :get }
   
