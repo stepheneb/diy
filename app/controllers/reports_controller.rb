@@ -43,7 +43,11 @@ class ReportsController < ApplicationController
   # GET /reports
   # GET /reports.xml
   def index
-    @reports = Report.search(params[:search], params[:page], current_user)
+    if params[:external_otrunk_activity_id]
+      @reports = ExternalOtrunkActivity.find(params[:external_otrunk_activity_id]).reports
+    else
+      @reports = Report.search(params[:search], params[:page], current_user)
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @reports }
