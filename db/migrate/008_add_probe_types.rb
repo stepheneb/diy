@@ -4,7 +4,7 @@ class AddProbeTypes < ActiveRecord::Migration
   end
   
   def self.down
-    ProbeType.find_all.each {|pt| pt.destroy}
+    ProbeType.find(:all).each {|pt| pt.destroy}
   end
 end
 

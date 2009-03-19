@@ -4,7 +4,7 @@ class AddVendorInterfaces < ActiveRecord::Migration
   end
 
   def self.down
-    VendorInterface.find_all.each {|vi| vi.destroy}
+    VendorInterface.find(:all).each {|vi| vi.destroy}
   end
 end
 
