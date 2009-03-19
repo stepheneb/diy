@@ -81,9 +81,11 @@
       <% if @restricted_copy_and_create %>
         <% restriction = 'admin || manager' %>
       <% end %>
-        <% restrict_to restriction do %> 
-          <%= link_to 'Copy', eval("copy_#{@class_name}_path(authorable_object)"),
-              :title => "Make a copy of: '#{authorable_object.name}' and start editing it." %> | 
+        <% restrict_to restriction do %>
+          <% if self.respond_to? :copy_vendor_interface_path %>
+            <%= link_to 'Copy', eval("copy_#{@class_name}_path(authorable_object)"),
+                :title => "Make a copy of: '#{authorable_object.name}' and start editing it." %> | 
+          <% end %>
         <% end %>
         <% if runnable && changeable %>
           <%= link_to 'Otml', otml_run_url(:id => authorable_object.id, :vid => current_user.vendor_interface.id, 
@@ -107,7 +109,7 @@
     <% if authorable_object.user != current_user %>
       <div class="flashbox">
         <div class="flash">
-        <%= current_user.name %>: you are able to edit this DIY model: <b><%= authorable_object.name %></b> created by the user: <b><%= authorable_object.user.name %></b> because you have the role: <b><%= current_user.roles.find(:first).title.capitalize %></b>. Use that power wisely.
+        <%= @current_user.name %>: you are able to edit this DIY model: <b><%= authorable_object.name %></b> created by the user: <b><%= authorable_object.user.name %></b> because you have the role: <b><%= current_user.roles.find(:first).title.capitalize %></b>. Use that power wisely.
         </div>
       </div>
     <% end %>

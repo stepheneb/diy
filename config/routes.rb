@@ -1,4 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :vendor_interfaces
+
+  map.resources :device_configs
+  map.resources :vendor_interfaces
+
   map.resources :report_types, :member => { :copy => :get }
 
   map.resources :reports, :member => { :copy => :get, :sail_jnlp => :get, :otml => :get }
@@ -43,6 +48,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users, :member => { :interface => :get }
   map.resources :users, :member => { :interface => :put }
+  map.resources :users, :member => { :vendor_interface => :get }
   map.resources :users, :member => { :roles => :get }
   map.resources :users, :member => { :roles => :put }
   

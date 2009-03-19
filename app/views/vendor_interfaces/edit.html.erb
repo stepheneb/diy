@@ -1,0 +1,38 @@
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'top',
+  :runnable => false,
+  :function => 'Edit',
+  :authorable_object => @vendor_interface,
+  :all_viewable_objects => @all_viewable_vendor_interfaces, 
+  :all_editable_objects => @all_editable_vendor_interfaces }) %>
+
+
+<div class="pageEdit">
+<% form_for(:vendor_interface, :url => vendor_interface_path(@vendor_interface), :html => { :method => :put }) do |f| %>
+  <div class="top">
+    <div class='editbox'>
+      <%= submit_tag 'Save' %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+  <span class="flash"> <%= flash[:notice] %></span>
+  <%= render :partial => 'form', :object => f %>
+  <div class="bottom">
+    <div class='editbox'>
+      <%= submit_tag 'Save' %>
+    </div>
+    <div class='flashbox'>
+      <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+    </div>
+  </div>
+<% end %>
+</div>
+<%= render(:partial => 'shared/header', :locals => {
+  :location => 'bottom',
+  :runnable => false,
+  :function => 'Edit',
+  :authorable_object => @vendor_interface,
+  :all_viewable_objects => @all_viewable_vendor_interfaces, 
+  :all_editable_objects => @all_editable_vendor_interfaces }) %>

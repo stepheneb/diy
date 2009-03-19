@@ -323,6 +323,12 @@ form {
 	font-size: 1.25em;
 }
 
+.SectionBody {
+	color:	#3D63AE;
+	font-weight: normal;
+	font-size: 1.1em;
+}
+
 .listActivityName {
 	font-weight: 600;
 	font-size: 0.9em;
@@ -556,4 +562,16 @@ div.progressBar div.background {
 
 .match {
 	color: green;
+}
+
+
+.vi_image {
+	padding: 1em;
+	margin: 1em;
+}
+.vi_image_float_right {
+	padding: 1em;
+	margin: -6em 0em 1em 0em;
+	border: 1px solid #99cc99;
+	float: right;
 }

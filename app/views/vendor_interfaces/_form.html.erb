@@ -1,0 +1,22 @@
+<%= error_messages_for :vendor_interface %>
+<p>
+  <span class="SectionTitle">Name</span><br />
+  <%= form.text_field :name, :size => 48 %>
+  <%= image_tag(@vendor_interface.image, :class => "vi_image_float_right") %>
+</p>
+<p>
+  <span class="SectionTitle">Description</span><br />
+  <%= form.text_area :description, :cols => 96, :rows => 2  %>
+</p>
+<p>
+  <span class="SectionTitle">Communications Protocol: </span><br />
+  <%= form.text_field :communication_protocol, :size => 12 %> usb, serial, or bluetooth
+</p>
+
+<% if device_configs = @vendor_interface.device_configs %>
+  <ol>
+    <% device_configs.each do |dc| %>
+      <li><%= link_to dc.config_string, edit_device_config_path(dc) %>
+    <% end %>
+  </ol>
+<% end %>

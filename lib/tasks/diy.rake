@@ -18,17 +18,55 @@ namespace :diy do
     end
   end
 
-  desc "create default vendor interfaces"
-  task :create_default_vendor_interfaces => :environment do
-    VendorInterface.create(:name => "Fourier Ecolog", :short_name => "fourier_ecolog", :communication_protocol => 'usb', :description => "The Fourier EcoLog has several built-in sensors, can read external Fourier sensors, and communicates via usb.", :image => "SensorImages/EcoLogXL_sm.png")
-    VendorInterface.create(:name => "Data Harvest Easysense Q", :short_name => "dataharvest_easysense_q", :communication_protocol => 'usb', :description => "The Data Harvest EasySense Q works with all the Data Harvest sensors and communicates via usb.", :image => "SensorImages/EasysenseQ_sm.png")
-    VendorInterface.create(:name => "Pasco Science Workshop 500", :short_name => "pasco_sw500", :communication_protocol => 'serial', :description => "The Pasco Science Workshop 500 has four input ports for connecting older Pasco sensors and communicates to your computer via a serial port.", :image => "SensorImages/Pasco500_sm.png")
-    VendorInterface.create(:name => "Pasco Airlink SI", :short_name => "pasco_airlink", :communication_protocol => 'bluetooth', :description => "The Pasco AirLink Si uses PASPORT sensors and communicates to your computer via Bluetooth wireless networking.", :image => "SensorImages/pasportairlinksi_sm.png")
-    VendorInterface.create(:name => "Texas Instruments CBL2", :short_name => "ti_cbl2", :communication_protocol => 'usb', :description => "The Texas Instruments CBL2 works with TI sensors and communicates via usb.", :image => "SensorImages/ti_cbl2.jpg")
-    VendorInterface.create(:name => "Vernier Go! Link", :short_name => "vernier_goio", :communication_protocol => 'usb', :description => "Vernier's usb Go!Link interface works with many Vernier sensors. The Go! Temp and Go!Motion sensors have a Go!Link interfaces integrated into the sensor.", :image => "SensorImages/VernierGoLink_sm.png")
-    VendorInterface.create(:name => "Simulated Data", :short_name => "pseudo_interface", :communication_protocol => 'simulated', :description => "Use the Simulated Data interface when you have no probeware to attach to your computer but you stillwant to test your activity.", :image => "SensorImages/psuedo_interface.jpg")
-    VendorInterface.create(:name => "Vernier LabPro", :short_name => "vernier_labpro", :communication_protocol => 'usb', :description => "Vernier's LabPro interface works with many Vernier sensors.", :image => "SensorImages/VernierGoLink_sm.png")
+  VENDOR_INTERFACES = [
+    ["Fourier Ecolog", 30, ["_auto_"], "fourier_ecolog", 'usb', "SensorImages/EcoLogXL_sm.png",
+      "The Fourier EcoLog has several built-in sensors, can read external Fourier sensors, and communicates via USB."],
+      
+    ["Data Harvest Easysense Q", 40, ["_auto_"], "dataharvest_easysense_q", 'usb', "SensorImages/EasysenseQ_sm.png",
+      "The Data Harvest EasySense Q works with all the Data Harvest sensors and communicates via USB."],
+      
+    ["Pasco Science Workshop 500", 60, ["_auto_"], "pasco_sw500", 'serial', "SensorImages/Pasco500_sm.png",
+      "The Pasco Science Workshop 500 has four input ports for connecting older Pasco sensors and communicates to your computer via a serial port."],
+      
+    ["Pasco Airlink SI", 61, ["/dev/tty.PascoAirLink", "/dev/tty.PascoAirLink1"], "pasco_airlink", 'bluetooth', "SensorImages/pasportairlinksi_sm.png",
+      "The Pasco AirLink Si uses PASPORT sensors and communicates to your computer via Bluetooth wireless networking."],
+      
+    ["Texas Instruments CBL2", 20, ["none"], "ti_cbl2", 'usb', "SensorImages/CBL2_sm.png",
+      "The Texas Instruments CBL2 works with TI sensors and communicates via USB."],
+      
+    ["Vernier Go! Link", 10, ["none"], "vernier_goio", 'usb', "SensorImages/VernierGoLink_sm.png",
+      "Vernier's USB Go!Link interface works with many Vernier sensors. The Go!Temp and Go!Motion sensors have Go!Link interfaces integrated into the sensor."],
+      
+    ["Simulated Data", 0, ["none"], "pseudo_interface", 'simulated', "SensorImages/psuedo_interface.jpg",
+      "Use the Simulated Data interface when you have no probeware to attach to your computer but you stillwant to test your activity."],
+      
+    ["Vernier LabPro", 11, ["_auto_"], "vernier_labpro", 'usb', "SensorImages/labpro_sm.jpg",
+      "Vernier's LabPro interface works with many Vernier sensors."],
+      
+    ["Vernier LabQuest", 99, ["_auto_"], "vernier_labquest", 'usb', "SensorImages/labquest_sm.jpg",
+      "Vernier's LabQuest interface works with many Vernier sensors."]
+  ]
+
+  desc "update or create default vendor interfaces"
+  task :update_or_create_default_vendor_interfaces => :environment do
+    VENDOR_INTERFACES.each do |vi_data|
+      vendor_interface = VendorInterface.find_or_create_by_short_name(vi_data[3])
+      vendor_interface.attributes = {
+        :user_id => 2,
+        :name => vi_data[0], 
+        :device_id => vi_data[1],
+        :short_name => vi_data[3],
+        :communication_protocol => vi_data[4],
+        :image => vi_data[5],
+        :description => vi_data[6]
+      }
+      vi_data[2].each do |config_string|
+        vendor_interface.device_configs.find_or_create_by_config_string(config_string)
+      end
+      vendor_interface.save!
+    end
   end
+
   
   desc "create default probe types"
   task :create_default_probes_types => :environment do
@@ -58,7 +96,7 @@ namespace :diy do
   end 
   
   desc "Setup default data in brand new database"
-  task :setup_new_database => [:environment, :create_default_probes_types, :create_default_vendor_interfaces, :create_default_users_groups_roles, 
+  task :setup_new_database => [:environment, :create_default_probes_types, :update_or_create_default_vendor_interfaces, :create_default_users_groups_roles, 
     :create_default_model_types_and_models, :create_activity_mixing_water, :create_activity_greenhouse_effect] do
   end
 

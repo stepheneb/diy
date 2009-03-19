@@ -1,0 +1,23 @@
+<h1>Vendor Interfaces</h1>
+
+<table cellpadding=4 >
+
+<% for vendor_interface in @vendor_interfaces %>
+  <tr>
+    <td>
+      <%= link_to 'Show', vendor_interface %><br />
+      <%= link_to 'Edit', edit_vendor_interface_path(vendor_interface) %><br />
+      <%= link_to 'Destroy', vendor_interface, :confirm => 'Are you sure?', :method => :delete %><br />      
+    </td>
+    <td>
+      <p><%= vendor_interface.name %><p/>
+      <p><small><%= vendor_interface.description %></small></p>
+    </td>
+    <td><%= image_tag(vendor_interface.image, :class => "vi_image", :height => "80" ) %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New vendor_interface', new_vendor_interface_path %>

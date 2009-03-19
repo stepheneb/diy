@@ -99,24 +99,8 @@ module OtmlHelper
       }
       xml.OTInterfaceManager {
         xml.deviceConfigs {
-          case @vendor_interface.short_name
-          when "vernier_goio"
-            xml.OTDeviceConfig("configString" => "none", "deviceId" => "10")
-          when "vernier_labpro"
-            xml.OTDeviceConfig("configString" => "_auto_", "deviceId" => "11")
-          when "dataharvest_easysense_q"
-            xml.OTDeviceConfig("configString" => "_auto_", "deviceId" => "40")
-          when "fourier_ecolog"
-            xml.OTDeviceConfig("configString" => "_auto_", "deviceId" => "30")
-          when "pasco_airlink"
-            xml.OTDeviceConfig("configString" => "/dev/tty.PascoAirLink", "deviceId" => "61")
-            xml.OTDeviceConfig("configString" => "/dev/tty.PascoAirLink1", "deviceId" => "61")
-          when "pasco_sw500"
-            xml.OTDeviceConfig("configString" => "_auto_", "deviceId" => "60")
-          when "ti_cbl2"
-            xml.OTDeviceConfig("configString" => "none", "deviceId" => "20")
-          when "pseudo_interface"
-            xml.OTDeviceConfig("configString" => "none", "deviceId" => "0")
+          @vendor_interface.device_configs.each do |dc|
+            xml.OTDeviceConfig("configString" => dc.config_string, "deviceId" => @vendor_interface.device_id)
           end
         }
       }

@@ -164,4 +164,13 @@ class UsersController < ApplicationController
     end
   end
   
+  def vendor_interface
+    v_id = params[:vendor_interface]
+    if v_id
+      @vendor_interface = VendorInterface.find(v_id)
+      render :partial=>'vendor_interface', :layout=>false 
+    else
+      render(:nothing => true) 
+    end
+  end
 end

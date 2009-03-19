@@ -5,6 +5,7 @@
     <title><%= APP_PROPERTIES[:page_title_prefix] %>: <%= controller.controller_name.humanize %>: <%= controller.action_name %></title>
     <%= stylesheet_link_tag APP_PROPERTIES[:stylesheet] %>
     <%= javascript_include_tag :defaults unless current_user.disable_javascript %>
+    <%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
     <%= yield :head %>
   </head>
   <body>

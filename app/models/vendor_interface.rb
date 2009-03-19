@@ -4,23 +4,21 @@ class VendorInterface < ActiveRecord::Base
   
   acts_as_replicatable
 
-  has_many :users
+  belongs_to :user
+  has_many :device_configs
   belongs_to :author, :class_name => 'User'
   has_many :probes
   has_many :probe_types, :through => :probes
   
-  @@device_id_hash = {
-    "vernier_goio" => "10",
-    "dataharvest_easysense_q" => "41",
-    "fourier_ecolog" => "30",
-    "pasco_airlink" => "61",
-    "pasco_sw500" => "60",
-    "ti_cbl2" => "20",
-    "pseudo_interface" => "0"
-  }
+  @@searchable_attributes = %w{name description}
+  class <<self
+    def searchable_attributes
+      @@searchable_attributes
+    end
+  end
 
   def VendorInterface.deviceid(shortname)
-    @@device_id_hash[shortname]
+    VendorInterface.find_by_short_name(shortname).device_id
   end
  
 end

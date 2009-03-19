@@ -1,0 +1,13 @@
+<p>
+  <b>Vendor interface:</b>
+  <%=h @device_config.vendor_interface_id %>
+</p>
+
+<p>
+  <b>Config string:</b>
+  <%=h @device_config.config_string %>
+</p>
+
+
+<%= link_to 'Edit', edit_device_config_path(@device_config) %> |
+<%= link_to 'Back', device_configs_path %>

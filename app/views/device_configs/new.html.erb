@@ -1,0 +1,21 @@
+<h1>New device_config</h1>
+
+<%= error_messages_for :device_config %>
+
+<% form_for(@device_config) do |f| %>
+  <p>
+    <b>Vendor interface</b><br />
+    <%= f.text_field :vendor_interface_id %>
+  </p>
+
+  <p>
+    <b>Config string</b><br />
+    <%= f.text_field :config_string %>
+  </p>
+
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', device_configs_path %>
