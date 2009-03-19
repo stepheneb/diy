@@ -17,7 +17,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
 
   def setup_vars
     @class_name = ExternalOtrunkActivity.to_s.underscore
-    @class_name_titleized = APP_PROPERTIES[:external_otrunk_activities_title]
+    @class_name_titleized = APP_PROPERTIES[:external_otrunk_activities_title].singularize
     @searchable_attributes = ExternalOtrunkActivity.searchable_attributes
     @restricted_copy_and_create = true
   end
