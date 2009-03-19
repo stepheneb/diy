@@ -74,7 +74,7 @@ hr {
 
 #side {
 	float: left;
-	padding-top: 1em 0.5em 0.7em 1em;
+	padding: 1em 0.5em 0.7em 1em;
 	width: 13.5em;
 	background: #141;
 }
@@ -303,7 +303,7 @@ form {
   width: 100%;
   clear: right;
   float: left;
-	font-style: sans-serif;
+	font-style: normal;
 	font-size: 0.9em;
 }
 
