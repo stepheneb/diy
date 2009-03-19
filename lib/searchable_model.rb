@@ -38,7 +38,7 @@ module SearchableModel
       sql_conditions = ""
     else
       sql_conditions = "(#{table_name}.user_id = ?"
-      if self.respond_to? "public"
+      if self.columns_hash.keys.include? "public"
         sql_conditions << " or #{table_name}.public = '1'"
       end
       sql_conditions << ") and "
