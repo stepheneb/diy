@@ -4,3 +4,5 @@
 :logo: teemss_logo.png
 :home_link: http://teemss.concord.org/
 :stylesheet: diy
+# run style options are: savedata, view, nobundles, preview, norun
+:anonymous_run_style: preview

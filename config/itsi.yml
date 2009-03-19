@@ -8,3 +8,5 @@
 :show_external_otrunk_activities: false
 :hide_activities: false
 :hide_models: false
+# run style options are: savedata, view, nobundles, preview, norun
+:anonymous_run_style: preview

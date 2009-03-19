@@ -10,4 +10,4 @@
 :hide_activities: true
 :hide_models: true
 # run style options are: savedata, view, nobundles, preview, norun
-:anonymous_run_style: savedata
+:anonymous_run_style: preview

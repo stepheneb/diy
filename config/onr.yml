@@ -4,3 +4,5 @@
 :logo: onr.png
 :home_link: http://onr.navy.mil/
 :stylesheet: onr
+# run style options are: savedata, view, nobundles, preview, norun
+:anonymous_run_style: preview
