@@ -110,7 +110,7 @@ hr {
 
 #side a {
 	color: #ffffff;
-	font-size; 0.85em;	
+	font-size: 0.85em;
 }
 
 #side p {
@@ -163,8 +163,8 @@ hr {
 
 .flashbox {
   float: left;
-  height 80px;
-	padding: 10px 5px 8px 10px;
+  height: 80px;
+  padding: 10px 5px 8px 10px;
 }
 
 .flash {

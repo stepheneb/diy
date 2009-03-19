@@ -260,7 +260,7 @@ form {
 */
 
 .pageHeader select {
-	font-style: sans-serif;
+	font-style: normal;
 	font-size: 0.8em;
 }
 
@@ -329,7 +329,7 @@ form {
 }
 
 .activityList select {
-	font-style: sans-serif;
+	font-style: normal;
 	font-size: 0.8em;
 }
 

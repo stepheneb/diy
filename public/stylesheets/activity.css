@@ -26,11 +26,11 @@
   margin: 10px 0px 5px 0px; 
   padding: 8px 8px 8px 8px; 
   background-color: rgb(255, 252, 248); 
-  font-family: Optima ExtraBlack; 
+  font-family: "Optima ExtraBlack";
   border-width: 1px; 
   border-color: silver; 
   border-style: solid; 
-  list-style-type: square;"
+  list-style-type: square;
 }
 
 .otrunkActivityContent  {
@@ -39,10 +39,7 @@
   font-family: Optima;
 }
 
-.otrunkActivityObject  {
-  
-  margin: 10px 0px 10px 0px; padding: 8px 20px 15px 20px
-  
+.otrunkActivityObject  { 
   margin: 10px 20px 10px 10px; 
   padding: 10px 20px 10px 20px;  
   background-color: rgb(255, 252, 248); 

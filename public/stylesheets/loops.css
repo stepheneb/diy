@@ -192,7 +192,7 @@ hr {
 
 a {
 	text-decoration: none;
-	font: normal sans-serif;
+	font: normal;
 }
 
 a:hover {
@@ -234,7 +234,7 @@ a:hover {
 }
 
 .pageHeader select {
-	font-style: sans-serif;
+	font-style: normal;
 	font-size: 0.8em;
 }
 
@@ -373,7 +373,7 @@ form {
 }
 
 .activityList select {
-	font-style: sans-serif;
+	font-style: normal;
 	font-size: 0.9em;
 }
 
@@ -381,7 +381,7 @@ form {
   width: 100%;
   clear: right;
   float: left;
-	font-style: sans-serif;
+	font-style: normal;
 	font-size: 0.9em;
 }
 
