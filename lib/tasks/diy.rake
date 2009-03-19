@@ -43,7 +43,7 @@ namespace :diy do
     ["Vernier LabPro", 11, ["_auto_"], "vernier_labpro", 'usb', "SensorImages/labpro_sm.jpg",
       "Vernier's LabPro interface works with many Vernier sensors."],
       
-    ["Vernier LabQuest", 99, ["_auto_"], "vernier_labquest", 'usb', "SensorImages/labquest_sm.jpg",
+    ["Vernier LabQuest", 12, ["_auto_"], "vernier_labquest", 'usb', "SensorImages/labquest_sm.jpg",
       "Vernier's LabQuest interface works with many Vernier sensors."]
   ]
 
