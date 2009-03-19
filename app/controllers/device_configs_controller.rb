@@ -76,15 +76,15 @@ class DeviceConfigsController < ApplicationController
     end
   end
 
-  # DELETE /device_configs/1
-  # DELETE /device_configs/1.xml
-  def destroy
-    @device_config = DeviceConfig.find(params[:id])
-    @device_config.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(device_configs_url) }
-      format.xml  { head :ok }
-    end
-  end
+  # # DELETE /device_configs/1
+  # # DELETE /device_configs/1.xml
+  # def destroy
+  #   @device_config = DeviceConfig.find(params[:id])
+  #   @device_config.destroy
+  # 
+  #   respond_to do |format|
+  #     format.html { redirect_to(device_configs_url) }
+  #     format.xml  { head :ok }
+  #   end
+  # end
 end

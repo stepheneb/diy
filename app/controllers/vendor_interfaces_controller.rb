@@ -108,15 +108,15 @@ class VendorInterfacesController < ApplicationController
     end
   end
 
-  # DELETE /vendor_interfaces/1
-  # DELETE /vendor_interfaces/1.xml
-  def destroy
-    @vendor_interface = VendorInterface.find(params[:id])
-    @vendor_interface.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(vendor_interfaces_url) }
-      format.xml  { head :ok }
-    end
-  end
+  # # DELETE /vendor_interfaces/1
+  # # DELETE /vendor_interfaces/1.xml
+  # def destroy
+  #   @vendor_interface = VendorInterface.find(params[:id])
+  #   @vendor_interface.destroy
+  # 
+  #   respond_to do |format|
+  #     format.html { redirect_to(vendor_interfaces_url) }
+  #     format.xml  { head :ok }
+  #   end
+  # end
 end
