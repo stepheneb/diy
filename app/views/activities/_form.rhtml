@@ -5,7 +5,7 @@
   <p><label for="activity_name"><span class="SectionTitle">Activity Name</span></label> <span class='required'>(required)</span><br/>
   <%= text_field 'activity', 'name', :size => 72  %></p>
 
-  <p><label for="activity_description"><span class="SectionTitle">Description</label><br/>
+  <p><label for="activity_description"><span class="SectionTitle">Description</span></label><br/>
   <%= text_area 'activity', 'description', "cols" => 72, :rows => 2 %></p>
 
   <% if current_user == User.anonymous %>
@@ -18,7 +18,7 @@
   <%= check_box 'activity', 'textile'  %><br />
   <small>
     Textile is a simple markup language you can use to format text and embed images.<br />
-    Open the </small><%= link_to ("Textile Quick Reference", "http://hobix.com/textile/quick.html", 'popup' => true) %>
+    Open the </small><%= link_to("Textile Quick Reference", "http://hobix.com/textile/quick.html", 'popup' => true) %>
   <small>in another window for a guide.</small><br/>
   <label for="activity_nobundles">Don't load prior session data:</label>
   <%= check_box 'activity', 'nobundles'  %><br />
@@ -236,7 +236,7 @@
   <hr />
 
   <p>
-    <label for="activity_analysis"><span class="SectionTitle">Analysis</span><br />
+    <label for="activity_analysis"><span class="SectionTitle">Analysis</span></label><br />
     <%= text_area 'activity', 'analysis', "cols" => 96, :rows => 12  %><br />
     <label for="activity_analysis_text_response">Open text response:</label><%= check_box 'activity', 'analysis_text_response'  %><br />
     <label for="activity_analysis_drawing_response">  Drawing response:</label><%= check_box 'activity', 'analysis_drawing_response' %>
@@ -252,7 +252,7 @@
   <hr />
 
   <p>
-    <label for="activity_conclusion"><span class="SectionTitle">Conclusion</span><br />
+    <label for="activity_conclusion"><span class="SectionTitle">Conclusion</span></label><br />
     <%= text_area 'activity', 'conclusion', "cols" => 96, :rows => 12  %><br />
     <label for="activity_conclusion_text_response">Open text response:</label><%= check_box 'activity', 'conclusion_text_response'  %><br />
     <label for="activity_conclusion_drawing_response">  Drawing response:</label><%= check_box 'activity', 'conclusion_drawing_response' %>

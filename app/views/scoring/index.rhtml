@@ -9,116 +9,89 @@ Also, some of the attributes we track:
 - links added/deleted
 -->
 <% form_tag(:action => :index) do -%>
-<%= submit_tag("Get Report") %><br/>
-Ignore Concord: <%= check_box_tag("ignore_concord", "true", @ignore_concord) %>
-Ignore private: <%= check_box_tag("ignore_private", "true", @ignore_private) %>
-Ignore original: <%= check_box_tag("ignore_original", "true", @ignore_original) %>
-Ignore copies: <%= check_box_tag("ignore_copies", "true", @ignore_copies) %>
-
-<table>
+  <%= submit_tag("Get Report") %><br/>
+  Ignore Concord: <%= check_box_tag("ignore_concord", "true", @ignore_concord) %>
+  Ignore private: <%= check_box_tag("ignore_private", "true", @ignore_private) %>
+  Ignore original: <%= check_box_tag("ignore_original", "true", @ignore_original) %>
+  Ignore copies: <%= check_box_tag("ignore_copies", "true", @ignore_copies) %>
+  <table>
     <tr>
-        <td>
-            <table>
-                <tr>
-                    <td>
-                        <b>Attribute</b>
-                    </td>
-                    <td>
-                        <b>Added</b>
-                    </td>
-                    <td>
-                        <b>Changed</b>
-                    </td>
-                    <td>
-                        <b>Deleted</b>
-                    </td>
-                </tr>
-                <% @attributes.keys.sort.each do |a| -%>
-				<% type = @attributes[a] -%>
-				<% next if type == :custom -%>
-                <tr>
-                    <td>
-                    	<% if a =~ /_combined/ -%>
-							<%= a.gsub("_combined", "") %>
-						<% else -%>
-                        	<%= a %>
-						<% end -%>
-                    </td>
-                    <td valign="bottom">
-                        <%= text_field_tag("rubric[#{a}][added]", @rubric[a]["added"], :size => 2) %>
-                    </td>
-                    <td valign="bottom">
-                    	<% if (a =~ /_(active|response|multi)/) -%>
-						<% elsif (type == :text || type == :string) -%>
-							<table cellpadding="0">
-								<tr>
-									<td style="font-size: smaller;">&lt; 25%</td>
-									<td style="font-size: smaller;">&lt; 50%</td>
-									<td style="font-size: smaller;">&lt; 75%</td>
-									<td style="font-size: smaller;">&lt; 100%</td>
-								</tr>
-								<tr>
-									<td>
-										<%= text_field_tag("rubric[#{a}][changed0]", @rubric["#{a}"]["changed0"], :size => 2) %>
-									</td>
-									<td>
-										<%= text_field_tag("rubric[#{a}][changed25]", @rubric["#{a}"]["changed25"], :size => 2) %>
-									</td>
-									<td>
-										<%= text_field_tag("rubric[#{a}][changed50]", @rubric["#{a}"]["changed50"], :size => 2) %>
-									</td>
-									<td>
-										<%= text_field_tag("rubric[#{a}][changed75]", @rubric["#{a}"]["changed75"], :size => 2) %>
-									</td>
-								</tr>
-							</table>
-						<% else -%>
-                        	<%= text_field_tag("rubric[#{a}][changed]", @rubric["#{a}"]["changed"], :size => 2) %>
-						<% end -%>
-                    </td>
-                    <td valign="bottom">
-                        <%= text_field_tag("rubric[#{a}][deleted]", @rubric["#{a}"]["deleted"], :size => 2) %>
-                    </td>
-                </tr>
+      <td>
+        <table>
+          <tr>
+            <td><b>Attribute</b></td>
+            <td><b>Added</b></td>
+            <td><b>Changed</b></td>
+            <td><b>Deleted</b></td>
+          </tr>
+          <% @attributes.keys.sort.each do |a| -%>
+            <% type = @attributes[a] -%>
+            <% next if type == :custom -%>
+            <tr>
+              <td><% if a =~ /_combined/ -%>
+                  <%= a.gsub("_combined", "") %>
+                <% else -%>
+                  <%= a %>
                 <% end -%>
-            </table>
+              </td>
+              <td valign="bottom">
+                 <%= text_field_tag("rubric[#{a}][added]", @rubric[a]["added"], :size => 2) %>
+              </td>
+              <td valign="bottom">
+                <% if (a =~ /_(active|response|multi)/) -%>
+                <% elsif (type == :text || type == :string) -%>
+                  <table cellpadding="0">
+                    <tr>
+                      <td style="font-size: smaller;">&lt; 25%</td>
+                      <td style="font-size: smaller;">&lt; 50%</td>
+                      <td style="font-size: smaller;">&lt; 75%</td>
+                      <td style="font-size: smaller;">&lt; 100%</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <%= text_field_tag("rubric[#{a}][changed0]", @rubric["#{a}"]["changed0"], :size => 2) %>
+                      </td>
+                      <td>
+                        <%= text_field_tag("rubric[#{a}][changed25]", @rubric["#{a}"]["changed25"], :size => 2) %>
+                      </td>
+                      <td>
+                        <%= text_field_tag("rubric[#{a}][changed50]", @rubric["#{a}"]["changed50"], :size => 2) %>
+                      </td>
+                      <td>
+                        <%= text_field_tag("rubric[#{a}][changed75]", @rubric["#{a}"]["changed75"], :size => 2) %>
+                      </td>
+                    </tr>
+                  </table>
+                <% else -%>
+                  <%= text_field_tag("rubric[#{a}][changed]", @rubric["#{a}"]["changed"], :size => 2) %>
+                <% end -%>
+              </td>
+              <td valign="bottom">
+                <%= text_field_tag("rubric[#{a}][deleted]", @rubric["#{a}"]["deleted"], :size => 2) %>
+              </td>
+            </tr>
+          <% end -%>
+          </table>
         </td>
         <td valign="top">
-            <table>
-                <tr>
-                <td>
-                    <b>Text attribute</b>
-                </td>
-                <td>
-                    <b>Added</b>
-                </td>
-                <td>
-                    <b>Changed</b>
-                </td>
-                <td>
-                    <b>Deleted</b>
-                </td>
-                </td>
+          <table>
+            <tr>
+              <td><b>Text attribute</b></td>
+              <td><b>Added</b></td>
+              <td><b>Changed</b></td>
+              <td><b>Deleted</b></td>
             </tr>
             <% for att in @attributes.select{|k,v| v == :custom }.collect{|a| a[0]}.sort do -%>
             <tr>
-                <td>
-                    <%= att %>
-                </td>
-                <td>
-                    <%= text_field_tag("rubric[#{att}][added]", @rubric["#{att}"]["added"], :size => 2) %>
-                </td>
-                <td>
-                    <%= text_field_tag("rubric[#{att}][changed]", @rubric["#{att}"]["changed"], :size => 2) %>
-                </td>
-                <td>
-                    <%= text_field_tag("rubric[#{att}][deleted]", @rubric["#{att}"]["deleted"], :size => 2) %>
-                </td>
+              <td><%= att %></td>
+              <td><%= text_field_tag("rubric[#{att}][added]", @rubric["#{att}"]["added"], :size => 2) %></td>
+              <td><%= text_field_tag("rubric[#{att}][changed]", @rubric["#{att}"]["changed"], :size => 2) %></td>
+              <td><%= text_field_tag("rubric[#{att}][deleted]", @rubric["#{att}"]["deleted"], :size => 2) %></td>
             </tr>
-            <% end -%>
-            </table>
+          <% end -%>
+          </table>
         </td>
-    </tr>
-</table>
-<%= submit_tag("Get Report") %>
+      </tr>
+  </table>
+  <%= submit_tag("Get Report") %>
 <% end -%>

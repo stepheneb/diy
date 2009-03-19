@@ -7,13 +7,14 @@
 
 <div class="pageEdit">
   <% form_for :user , :url => interface_user_path(@user), :html => { :method => :put } do |f| -%>
-<div class="top">
-  <div class='editbox'>      
-    <%= submit_tag 'Save' %> <%= submit_tag 'Cancel' %>
-  </div>
-  <div class='flashbox'>
-    <span id='draft-message' class='flash'> <%= flash[:notice] %></span>    
-  </div>
+    <div class="top">
+      <div class='editbox'>
+        <%= submit_tag 'Save' %> <%= submit_tag 'Cancel' %>
+      </div>
+      <div class='flashbox'>
+        <span id='draft-message' class='flash'> <%= flash[:notice] %></span>
+      </div>
+    </div>
+    <%= render :partial => 'interface', :object => f %>
+  <% end %>
 </div>
-  <%= render :partial => 'interface', :object => f %>
-<% end %>

@@ -11,7 +11,7 @@
 <p><span class="SectionTitle">Name, First: </span><%= form.text_field :first_name, :size => 30 %>
    <span class="SectionTitle">Last: </span><%= form.text_field :last_name, :size => 36 %></p>
 <p><span class="SectionTitle">Default vendor interface </span><%= form.select(:vendor_interface_id,  VendorInterface.find(:all).map { |i| [i.name, i.id] } )%></p>
-<p><span class="SectionTitle">Disable Javascript: <%= form.check_box :disable_javascript %></p>
+<p><span class="SectionTitle">Disable Javascript: </span><%= form.check_box :disable_javascript %></p>
 
 <!--
   ><p><span class="SectionTitle">New password: </span><%= form.password_field :password, :size => 24 %><br />
