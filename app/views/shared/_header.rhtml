@@ -3,7 +3,7 @@
     <div class='clearBoth'>&nbsp;</div>
     <hr />
   <% end %>
-  <% creating = (function == 'Create') %>\
+  <% creating = (function == 'Create') %>
   <% no_delete = ((defined? no_delete) ? no_delete : false) %>
   <% unless creating || (function == 'Index') %>
     <% changeable = authorable_object.changeable?(current_user) %>
