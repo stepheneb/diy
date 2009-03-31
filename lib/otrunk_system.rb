@@ -6,6 +6,8 @@
 #
 module OtrunkSystem
   include ActionController::UrlWriter
+  
+  require 'hpricot'
 
   # The short_name is used as part of the jnlp filename.
   # It should be run whenever the name of the runnable changes.
