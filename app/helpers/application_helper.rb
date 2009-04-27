@@ -16,7 +16,14 @@ module ApplicationHelper
   end
 
   def fix_web_start_warning
-    %{<p><b>Mac OS X Note: </b>If you are using Java 1.5 on MacOS 10.4 or 10.5 you will almost certainly need to run some version of our <a href="http://confluence.concord.org/display/CCTR/How+to+fix+Mac+OS+X+WebStart+bugs" title="Java 1.5.0_06, 1.5.0_07, 1.5.0_13 and 1.5.0_16 on MacOS X 10.4 and 10.5 have a bug in their implementation of Java Web Start that can cause the downloading of a Java resource to fail. You may notice this bug when the progress bar in the Java Web Start status window freezes while downloading a Java jar resource.">Fix MacOS Java 1.5 Web Start Scripts</a> once on each computer you run the Concord SAIL-OTrunk activities on. If you update Java on your Macintosh you will need to fix this problem again. The problem appears on Mac OS X computers when starting a Java Web Start program you have run before -- if a jar file needs to be updated the download process will freeze without completing.</p>}
+%{
+  <p>
+    <b>Mac OS X Web Start Fix:</b> If you are using Java 1.5 on Mac OS X 10.4 or 10.5, you will need to run our <a href="http://jnlp.concord.org/dev/org/concord/maven-jnlp/web-start-fix/web-start-fix.jnlp" >Fix MacOS Java 1.5
+    Web Start Utility</a> once on each computer before you launch any activities. Without the fix, activities that you have run before
+    will freeze during download. Click <a href="http://jnlp.concord.org/dev/org/concord/maven-jnlp/web-start-fix/web-start-fix.jnlp" >here</a> to run it now.<br/>
+    <b>WARNING:</b> If you update Java on your Macintosh you will need to fix this problem again.
+  </p>
+}
   end
 
   # This method will work the same as image_path
