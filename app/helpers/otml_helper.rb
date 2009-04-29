@@ -1,6 +1,10 @@
 module OtmlHelper
 
-  require 'redcloth'  
+  require 'redcloth'
+  
+  def probeware_msg
+    "Your current probeware interface is: *#{@vendor_interface.name}*. If you want to use this activity with a different probeware interface, close this activity, change the probeware selection in your user settings and re-launch the activity."
+  end
 
   def ot_user_list_imports(xml)
     xml.imports {
@@ -417,10 +421,11 @@ module OtmlHelper
   end
 
   def otml_activity_preamble(xml)
+    msg = ""
     if @learner
       sessions = @learner.learner_sessions.length
       if @savedata && !@nobundles # run
-        msg = "Hi #{@learner.user.name}, "
+        msg << "Hi #{@learner.user.name}, "
         if sessions
           msg << "you have run this activity #{pluralize(sessions, 'time')}."
         else
@@ -438,14 +443,15 @@ module OtmlHelper
           msg << "this is the first time you have run: #{h(@activity.name)}."
         end
       end
-      xml.div('style' => 'text-align: center; font-style: italic; font-family: Optima; color: rgb(0, 102, 0); margin-top: 0px; margin-bottom: 4px;') { 
-        xml.font('size' => @savedata ? '-1' : '100%') {
-          xml.span('style' => 'font-family: Futura;') {
-            xml << RedCloth.new(msg).to_html
-          }
+    end
+    msg << "\n" + probeware_msg
+    xml.div('style' => 'text-align: center; font-style: italic; font-family: Optima; color: rgb(0, 102, 0); margin-top: 0px; margin-bottom: 4px;') { 
+      xml.font('size' => @savedata ? '-1' : '100%') {
+        xml.span('style' => 'font-family: Futura;') {
+          xml << RedCloth.new(msg).to_html
         }
       }
-    end
+    }
   end
 
   def otml_infobar(xml)
@@ -453,7 +459,7 @@ module OtmlHelper
       xml.hr
       xml.div('style' => 'text-align: center; font-style: normal; font-family: Optima; color: rgb(0, 102, 0); margin: 0px 20px 0px 20px; padding: 0px 0px 0px 0px;') { 
         xml.font('size' => '-1') {
-          xml << RedCloth.new("SensorPortfolio (c) 2005-2006 by the Concord Consortium, developed by the \"TEEMSS2\":http://teemss2.concord.org project.\nThis activity was created by #{@activity.user.name} using the #{link_to APP_PROPERTIES[:application_name], {:action => 'index', :only_path => false}, :title => 'tooltip test'} portal.\nThis copy of the activity works with *#{@vendor_interface.name}* probeware. If you want to use this activity with a different probeware interface open this web page: #{link_to h(@activity.name), :action => 'show', :id => @activity.id, :only_path => false}, select another interface and *Run* the activity again.").to_html
+          xml << RedCloth.new("SensorPortfolio (c) 2005-2006 by the Concord Consortium, developed by the \"TEEMSS2\":http://teemss2.concord.org project.\nThis activity was created by #{@activity.user.name} using the #{link_to APP_PROPERTIES[:application_name], {:action => 'index', :only_path => false}, :title => 'tooltip test'} portal.\n" + probeware_msg).to_html
         }
       }
     }
