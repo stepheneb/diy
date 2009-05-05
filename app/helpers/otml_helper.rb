@@ -3,7 +3,7 @@ module OtmlHelper
   require 'redcloth'
   
   def probeware_msg
-    "Your current probeware interface is: *#{@vendor_interface.name}*. If you want to use this activity with a different probeware interface, close this activity, change the probeware selection in your user settings and re-launch the activity."
+    "Your current probe interface is: *#{@vendor_interface.name}*. If you want to use this activity with a different probe interface, close this activity, change the *probe interface* selection in your user settings and re-launch the activity."
   end
 
   def ot_user_list_imports(xml)
@@ -432,7 +432,7 @@ module OtmlHelper
           msg << "this is the first time you have run: #{h(@activity.name)}."
         end
       elsif !@savedata && @nobundles # preview
-        msg = "You are previewing the activity: *#{h(@activity.name)}*. Saving data is disabled"
+        msg = "You are previewing the activity: *#{h(@activity.name)}*. Saving data is disabled."
       elsif !@savedata && !@nobundles # view
         msg = "*#{@learner.user.name}* has run this activity: *#{h(@activity.name)}* #{pluralize(sessions, 'time')}.\nSaving data is disabled because you are *Viewing* (instead of Running) this activity.\n"
       elsif @savedata && @nobundles # run with no previous bundles
@@ -444,18 +444,26 @@ module OtmlHelper
         end
       end
     end
-    msg << "\n" + probeware_msg
-    xml.div('style' => 'text-align: center; font-style: italic; font-family: Optima; color: rgb(0, 102, 0); margin-top: 0px; margin-bottom: 4px;') { 
-      xml.font('size' => @savedata ? '-1' : '100%') {
-        xml.span('style' => 'font-family: Futura;') {
-          xml << RedCloth.new(msg).to_html
-        }
+    has_probes = @activity.interactive_components[:probes].size > 0
+    if (msg.length > 1 || has_probes)
+      font_size = @savedata ? "1.0em" : "1.1em"
+      xml.div('style' => "text-align: center; font-style: italic; font-family: Optima; color: rgb(0, 102, 0); margin-top: 0px; margin-bottom: 4px; padding-top: 0px; padding-bottom: 10px; border-style: solid; border-width: 1px; border-color: silver; background-color: rgb(255, 249, 249);") {
+        if msg.length > 1
+          xml.div('style' => "font-size: #{font_size};") { 
+            xml << RedCloth.new(msg).to_html
+          }
+        end
+        if has_probes
+          xml.div('style' => 'font-size: 1.0em; color: rgb(0, 0, 102);') {
+            xml << RedCloth.new(probeware_msg).to_html
+          }
+        end
       }
-    }
+    end
   end
 
   def otml_infobar(xml)
-    xml.div('style' => 'margin: 10px 0px 0px 0px; padding: 0px 0px 0px 0px; border: border-width: 5px; border-color: blue; border-style: solid;') { 
+    xml.div('style' => 'margin: 10px 0px 0px 0px; padding: 0px 0px 0px 0px;') { 
       xml.hr
       xml.div('style' => 'text-align: center; font-style: normal; font-family: Optima; color: rgb(0, 102, 0); margin: 0px 20px 0px 20px; padding: 0px 0px 0px 0px;') { 
         xml.font('size' => '-1') {
