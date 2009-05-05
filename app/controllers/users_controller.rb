@@ -137,7 +137,8 @@ class UsersController < ApplicationController
     # The result is expressed not only in the jnlp and otml files which are
     # downloaded to the users computer but the vendor_interface id (vid) which is 
     # also included in the contruction of the url
-    if !@user.changeable?(current_user)
+    if (!@user.changeable?(current_user)) || @user.id == 1
+      # we're not allowing anonymous to change their probe interface selection
       flash[:warning]  = "You need to be logged in first."
       redirect_to login_url 
     else
