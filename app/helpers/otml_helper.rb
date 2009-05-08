@@ -3,7 +3,7 @@ module OtmlHelper
   require 'redcloth'
   
   def probeware_msg
-    "Your current probe interface is: *#{@vendor_interface.name}*. If you want to use this activity with a different probe interface, close this activity, change the *probe interface* selection in your user settings and re-launch the activity."
+    "Your current probe interface is: *#{@vendor_interface.name}*. To change this, close this activity, select a different *probe interface* in your user settings and re-launch the activity."
   end
 
   def ot_user_list_imports(xml)
