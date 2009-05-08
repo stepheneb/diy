@@ -84,6 +84,8 @@ namespace :diy do
     ProbeType.create(:name => "Salinity", :ptype => 21, :step_size => 0.1, :display_precision => -1, :port => 0, :unit => "ppt", :min => 0, :max => 50, :period => 0.1)
     ProbeType.create(:name => "Raw Data", :ptype => 22, :step_size => 1, :display_precision => 0, :port => 0, :unit => "raw", :min => -10000, :max => 10000, :period => 0.1)
     ProbeType.create(:name => "Raw Voltage", :ptype => 23, :step_size => 0.01, :display_precision => -2, :port => 0, :unit => "V", :min => -1, :max => 10, :period => 0.1)
+    ProbeType.create(:name => "Colorimeter", :ptype => 33, :step_size => 0.057, :display_precision => 0, :port => 0, :unit => "%T", :min => 0, :max => 100, :period => 0.1)
+    ProbeType.create(:name => "Hand Dynamometer", :ptype => 34, :step_size => 0.35, :display_precision => 0, :port => 0, :unit => "N", :min => 0, :max => 400, :period => 0.1)
   end
 
   desc "Print plugins managed by Piston."           
