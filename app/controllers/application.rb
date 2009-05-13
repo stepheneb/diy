@@ -135,7 +135,8 @@ class ApplicationController < ActionController::Base
       end
       response = conn.request(req)
       logger.info "response code: #{response.code}"
-      if response.code.to_i < 200 || response.code.to_i >= 400
+      # svndav returns 405 if a folder already exists
+      if response.code.to_i < 200 || (response.code.to_i >= 400 && response.code.to_i != 405)
         raise "Error creating parent folder for overlay files"
       end
     end
