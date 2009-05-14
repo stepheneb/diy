@@ -1,6 +1,46 @@
 # rake file
 
 namespace :diy do
+  
+  require 'activerecord'
+  class RemovePrefixFromTableNames < ActiveRecord::Migration
+    def self.up
+      rename_table("#{RAILS_DATABASE_PREFIX}activities","activities")
+      rename_table("#{RAILS_DATABASE_PREFIX}calibrations","calibrations")
+      rename_table("#{RAILS_DATABASE_PREFIX}data_filters","data_filters")
+      rename_table("#{RAILS_DATABASE_PREFIX}device_configs","device_configs")
+      rename_table("#{RAILS_DATABASE_PREFIX}external_otrunk_activities","external_otrunk_activities")
+      rename_table("#{RAILS_DATABASE_PREFIX}groups","groups")
+      rename_table("#{RAILS_DATABASE_PREFIX}learners","learners")
+      rename_table("#{RAILS_DATABASE_PREFIX}learner_sessions","learner_sessions")
+      rename_table("#{RAILS_DATABASE_PREFIX}levels","levels")
+      rename_table("#{RAILS_DATABASE_PREFIX}levelings","levelings")
+      rename_table("#{RAILS_DATABASE_PREFIX}memberships","memberships")
+      rename_table("#{RAILS_DATABASE_PREFIX}models","models")
+      rename_table("#{RAILS_DATABASE_PREFIX}model_types","model_types")
+      rename_table("#{RAILS_DATABASE_PREFIX}otrunk_report_templates","otrunk_report_templates")
+      rename_table("#{RAILS_DATABASE_PREFIX}physical_units","physical_units")
+      rename_table("#{RAILS_DATABASE_PREFIX}probes","probes")
+      rename_table("#{RAILS_DATABASE_PREFIX}probe_types","probe_types")
+      rename_table("#{RAILS_DATABASE_PREFIX}reports","reports")
+      rename_table("#{RAILS_DATABASE_PREFIX}report_types","report_types")
+      rename_table("#{RAILS_DATABASE_PREFIX}roles","roles")
+      rename_table("#{RAILS_DATABASE_PREFIX}subjects","subjects")
+      rename_table("#{RAILS_DATABASE_PREFIX}subjectings","subjectings")
+      rename_table("#{RAILS_DATABASE_PREFIX}units","units")
+      rename_table("#{RAILS_DATABASE_PREFIX}unit_activities","unit_activities")
+      rename_table("#{RAILS_DATABASE_PREFIX}users","users")
+      rename_table("#{RAILS_DATABASE_PREFIX}vendor_interfaces","vendor_interfaces")
+    end
+
+    def self.down
+    end
+  end
+
+  desc "remove the table prefix from all table names"
+  task :remove_prefix_from_table_names => :environment do
+    RemovePrefixFromTableNames.up
+  end
 
   def find_models
     Dir.chdir(File.join(RAILS_ROOT, 'app', 'models')) do
