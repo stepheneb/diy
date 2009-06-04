@@ -169,18 +169,25 @@ class ReportsController < ApplicationController
     reportable = @report.reportable
     
     # render :text => "#{@report.short_name}: #{@report.reportable.id}, #{@report.otrunk_report_template.id}"
+    otml_report_hash = {:users => params[:users]}
+   
     if USE_OVERLAYS && OVERLAY_SERVER_ROOT && params[:group_id]
-      report_url_var = otml_report_url :users => params[:users], :group_id => params[:group_id], :group_list => params[:group_list]
-    else
-      report_url_var = otml_report_url :users => params[:users]    
+      otml_report_hash[:group_id] = params[:group_id]
+      otml_report_hash[:group_list] = params[:group_list]
     end
+    
+    if params[:overlay_root]
+      otml_report_hash[:overlay_root] = params[:overlay_root]
+    end
+    
+    report_url_var = otml_report_url(otml_report_hash)    
 
-   system_properties = []
-   params.each_key do |key|
-     if match = /^system\.(.*)/.match(key) 
-       system_properties << (match[1] + "=" + params[key]) 
-     end
-   end
+    system_properties = []
+    params.each_key do |key|
+      if match = /^system\.(.*)/.match(key) 
+        system_properties << (match[1] + "=" + params[key]) 
+      end
+    end
 
     # authoring is enabled so the current user is not added to the list of users
     # that the OTrunk activity sees.  this is not clean because we aren't
@@ -241,7 +248,7 @@ class ReportsController < ApplicationController
       # setup the group-wide overlay if a group_id has been set in
       if params[:group_id]
         group_id = params[:group_id]
-        @groupOverlayURL = "#{OVERLAY_SERVER_ROOT}/#{@report.reportable.id}/#{group_id}.otml" if group_id
+        @groupOverlayURL = (params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{group_id}.otml" if group_id
         # make sure the group overlay exists
         setup_default_overlay(@report.reportable.id, group_id)
         
@@ -263,7 +270,7 @@ class ReportsController < ApplicationController
       bundles = otml_report_template.elements["/otrunk/objects/OTSystem/bundles"]
       otglm_element = bundles.add_element "OTGroupListManager"
       if group_id
-        otglm_element.attributes["groupDataURL"] = "#{OVERLAY_SERVER_ROOT}/#{@report.reportable.id}/#{group_id}-data.otml"
+        otglm_element.attributes["groupDataURL"] = (params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{group_id}-data.otml"
       end
       
       @learners = []
@@ -288,7 +295,7 @@ class ReportsController < ApplicationController
           mem.attributes["uuid"] = l.user.uuid
           mem.attributes["isCurrentUser"] = "false"
           mem.attributes["passwordHash"] = l.user.password_hash
-          mem.attributes["dataURL"] = "#{OVERLAY_SERVER_ROOT}/#{@report.reportable.id}/#{l.id}-data.otml"
+          mem.attributes["dataURL"] = (params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{l.id}-data.otml"
           user = mem.add_element("userObject").add_element("OTUserObject")
           user.attributes["id"] = l.uuid
         end
