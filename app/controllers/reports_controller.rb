@@ -180,6 +180,10 @@ class ReportsController < ApplicationController
       otml_report_hash[:overlay_root] = params[:overlay_root]
     end
     
+    if params[:overlay_params]
+      otml_report_hash[:overlay_params] = URI.escape(params[:overlay_params], /[#{URI::REGEXP::PATTERN::RESERVED}\s]/)
+    end
+    
     report_url_var = otml_report_url(otml_report_hash)    
 
     system_properties = []
@@ -248,7 +252,7 @@ class ReportsController < ApplicationController
       # setup the group-wide overlay if a group_id has been set in
       if params[:group_id]
         group_id = params[:group_id]
-        @groupOverlayURL = (params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{group_id}.otml" if group_id
+        @groupOverlayURL = CGI.escapeHTML((params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{group_id}.otml" + (params[:overlay_params] ? "?#{params[:overlay_params]}" : "")) if group_id
         # make sure the group overlay exists
         setup_default_overlay(@report.reportable.id, group_id)
         
@@ -270,7 +274,7 @@ class ReportsController < ApplicationController
       bundles = otml_report_template.elements["/otrunk/objects/OTSystem/bundles"]
       otglm_element = bundles.add_element "OTGroupListManager"
       if group_id
-        otglm_element.attributes["groupDataURL"] = (params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{group_id}-data.otml"
+        otglm_element.attributes["groupDataURL"] = CGI.escapeHTML((params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{group_id}-data.otml" + (params[:overlay_params] ? "?#{params[:overlay_params]}" : ""))
       end
       
       @learners = []
@@ -295,7 +299,7 @@ class ReportsController < ApplicationController
           mem.attributes["uuid"] = l.user.uuid
           mem.attributes["isCurrentUser"] = "false"
           mem.attributes["passwordHash"] = l.user.password_hash
-          mem.attributes["dataURL"] = (params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{l.id}-data.otml"
+          mem.attributes["dataURL"] = CGI.escapeHTML((params[:overlay_root] ? params[:overlay_root] : OVERLAY_SERVER_ROOT) + "/#{@report.reportable.id}/#{l.id}-data.otml" + (params[:overlay_params] ? "?#{params[:overlay_params]}" : ""))
           user = mem.add_element("userObject").add_element("OTUserObject")
           user.attributes["id"] = l.uuid
         end
