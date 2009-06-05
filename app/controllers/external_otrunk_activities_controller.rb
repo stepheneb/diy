@@ -69,6 +69,15 @@ class ExternalOtrunkActivitiesController < ApplicationController
     end
     # setup overlay folder. These overlay files hold per-user customizations to the activity.
     @useOverlays = setup_overlay_folder(@external_otrunk_activity.id)
+    
+    if @useOverlays && params[:overlay_root]
+      @overlay_root = params[:overlay_root]
+    end
+    
+    if @useOverlays && params[:overlay_params]
+      @overlay_params = params[:overlay_params]
+    end
+      
     render(:template => "shared/ot_learner_data.builder", :layout => false)
   end
 

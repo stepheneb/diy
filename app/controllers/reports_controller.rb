@@ -225,11 +225,20 @@ class ReportsController < ApplicationController
         end
       end
       
-      if ! params.has_key? :users
-        learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable)
-      else 
-        learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable, :users => params[:users])      
+      learner_list_url_hash = {}
+      if params.has_key? :users
+        learner_list_url_hash[:users] = params[:users]
       end
+      
+      if params.has_key? :overlay_root
+        learner_list_url_hash[:overlay_root] = params[:overlay_root]
+      end
+      
+      if params.has_key? :overlay_params
+        learner_list_url_hash[:overlay_root] = params[:overlay_root]
+      end
+      
+      learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable, learner_list_url_hash)
       
       external_user_list = otml_report_template.elements["//*[@local_id='external_user_list_url']"]
       if external_user_list.blank?
