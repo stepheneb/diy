@@ -26,7 +26,7 @@
 <p>Overlays:
     <br /><small>Enabled: <%= USE_OVERLAYS %></small>
     <% if USE_OVERLAYS -%>
-      <br /><small>Server Root: <%= OVERLAY_SERVER_ROOT %></small>
-      <br /><small>Using auth: <%= (OVERLAY_SERVER_USERNAME != nil && OVERLAY_SERVER_PASSWORD != nil) %></small>
+      <br /><small>Server Root: <%= defined?(OVERLAY_SERVER_ROOT) ? get_overlay_server_root : "Undefined" %></small>
+      <br /><small>Using auth: <%= (defined?(OVERLAY_SERVER_USERNAME) && OVERLAY_SERVER_USERNAME != nil && defined?(OVERLAY_SERVER_PASSWORD) && OVERLAY_SERVER_PASSWORD != nil) %></small>
     <% end %>
 </p> 

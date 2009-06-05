@@ -142,17 +142,22 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def get_overlay_server_root(root = OVERLAY_SERVER_ROOT)
+    "#{root}/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/"
+  end
+  
   def setup_overlay_folder(runnable_id)
     # make sure the webdav subfolder(s) exist first
     useOverlays = false
+    overlay_root = nil
     begin
-      useOverlays = USE_OVERLAYS && OVERLAY_SERVER_ROOT
+      useOverlays = USE_OVERLAYS && (overlay_root = get_overlay_server_root)
     rescue Exception
       # don't use overlays
     end
     if useOverlays
       begin
-        mkcol URI.parse("#{OVERLAY_SERVER_ROOT}/#{runnable_id}")
+        mkcol URI.parse("#{overlay_root}/#{runnable_id}")
       rescue Exception => e
         useOverlays = false
         logger.warn "error in overlays: #{e}\n#{e.backtrace.join("\n")}"
@@ -165,7 +170,7 @@ class ApplicationController < ActionController::Base
     # make sure the webdav subfolder(s) exist first
     if setup_overlay_folder(runnable_id)
       # if the file doesn't exist...
-      uri = URI.parse("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml")
+      uri = URI.parse("#{get_overlay_server_root}/#{runnable_id}/#{overlay_id}.otml")
       useHttpAuth = false
       begin
         useHttpAuth = OVERLAY_SERVER_USERNAME && OVERLAY_SERVER_PASSWORD
@@ -174,9 +179,9 @@ class ApplicationController < ActionController::Base
       end
       begin
         if useHttpAuth
-          doc = open("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false, :http_basic_authentication => [OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD] ).read
+          doc = open("#{get_overlay_server_root}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false, :http_basic_authentication => [OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD] ).read
         else
-          doc = open("#{OVERLAY_SERVER_ROOT}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false).read
+          doc = open("#{get_overlay_server_root}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false).read
         end
       rescue => e
         logger.warn "Overlay file #{uri.to_s} doesn't exist. Creating it... \n#{e}"

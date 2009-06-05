@@ -186,11 +186,11 @@ class ExternalOtrunkActivitiesController < ApplicationController
     @activity_otml_url = activity.otml_url(@user, self, {:nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring})
     if group_id
       if setup_default_overlay(learner.runnable.id, group_id)
-        @group_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{group_id}.otml"
+        @group_overlay_url = "#{get_overlay_server_root}/#{learner.runnable.id}/#{group_id}.otml"
       end
     end
     if setup_default_overlay(learner.runnable.id, learner.id)
-      @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
+      @learner_overlay_url = "#{get_overlay_server_root}/#{learner.runnable.id}/#{learner.id}.otml"
     end
     
     @learners = [learner]
@@ -237,7 +237,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
     # params[:nobundles] == '' => false
     # params[:nobundles] == anything else => true
     nobundles = ((params[:nobundles] && ! params[:nobundles].empty?) ? true : false)
-    useOverlay = USE_OVERLAYS && OVERLAY_SERVER_ROOT
+    useOverlay = USE_OVERLAYS && get_overlay_server_root
         
     redirect_to @external_otrunk_activity.sds_url(@user, self, {:use_overlay => useOverlay, :nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring, :group_id => params[:group_id], :group_list => params[:group_list], :group_list_url => params[:group_list_url]})
   end

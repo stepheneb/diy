@@ -108,4 +108,8 @@ module ApplicationHelper
       items[0..len-2].join(', ') + ', and ' + items.last
     end
   end
+  
+  def get_overlay_server_root(root = OVERLAY_SERVER_ROOT)
+    "#{root}/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/"
+  end
 end

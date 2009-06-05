@@ -31,7 +31,7 @@ USE_OVERLAYS = false
 require 'socket'
 # If you want to use overlays, define OVERLAY_SERVER_ROOT
 # You MUST create this root directory manually!
-OVERLAY_SERVER_ROOT = "https://rails.dev.concord.org/webdav/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/"
+OVERLAY_SERVER_ROOT = "https://rails.dev.concord.org/webdav"
 # otherwise, make OVERLAY_SERVER_ROOT = false
 # OVERLAY_SERVER_ROOT = false
 

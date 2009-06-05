@@ -8,7 +8,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
           @learners.each do |learner|
             xml.OTUserDatabaseRef(
               "url" => "#{SdsConnect::Connect.config['host']}/workgroups/#{learner.sds_workgroup_id}/ot_learner_data.xml",
-              "overlayURL" => "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
+              "overlayURL" => "#{get_overlay_server_root}/#{learner.runnable.id}/#{learner.id}.otml"
             )
           end
         else

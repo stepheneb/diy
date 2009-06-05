@@ -24,7 +24,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
             xml.OTGroupListManager(hash) {
               xml.userList {
                 @learners.each do |l|
-                  xml.OTGroupMember("name" => l.user.name, "uuid" => l.user.uuid, "passwordHash" => l.user.password_hash, "dataURL" => "#{OVERLAY_SERVER_ROOT}/#{l.runnable.id}/#{l.id}-data.otml", "isCurrentUser" => (l.user_id == @user.id)) {
+                  xml.OTGroupMember("name" => l.user.name, "uuid" => l.user.uuid, "passwordHash" => l.user.password_hash, "dataURL" => "#{get_overlay_server_root}/#{l.runnable.id}/#{l.id}-data.otml", "isCurrentUser" => (l.user_id == @user.id)) {
                     xml.userObject {
                       xml.OTUserObject("id" => l.uuid)
                     }

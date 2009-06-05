@@ -171,11 +171,11 @@ class ModelsController < ApplicationController
     @activity_otml_url = activity.otml_url(@user, self, {:nobundles => nobundles, :reporting => reporting, :savedata => savedata, :authoring => authoring})
     if group_id
       if setup_default_overlay(learner.runnable.id, group_id)
-        @group_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{group_id}.otml"
+        @group_overlay_url = "#{get_overlay_server_root}/#{learner.runnable.id}/#{group_id}.otml"
       end
     end
     setup_default_overlay(learner.runnable.id, learner.id)
-    @learner_overlay_url = "#{OVERLAY_SERVER_ROOT}/#{learner.runnable.id}/#{learner.id}.otml"
+    @learner_overlay_url = "#{get_overlay_server_root}/#{learner.runnable.id}/#{learner.id}.otml"
     
     setup_overlay_requirements(activity)
     
