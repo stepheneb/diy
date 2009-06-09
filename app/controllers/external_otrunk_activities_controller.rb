@@ -62,7 +62,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
       # we should create real learners so that we can permanently create things like an overlay file for that user/learner
       @learners = []
       users_array.each do |uid|
-        if user = User.find(uid)
+        if user = User.find(:first, :conditions => {:id => uid})
           @learners << @external_otrunk_activity.find_or_create_learner(user)
         end
       end
