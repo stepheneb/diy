@@ -77,9 +77,9 @@ begin
     $stderr.puts "not using auth: #{e}"
   end
   if use_http_auth
-    doc = open(OVERLAY_SERVER_ROOT, { :ssl_verify => false, :http_basic_authentication => [OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD] }).read
+    doc = open("#{OVERLAY_SERVER_ROOT}/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/", { :ssl_verify => false, :http_basic_authentication => [OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD] }).read
   else
-    doc = open(OVERLAY_SERVER_ROOT, :ssl_verify => false).read
+    doc = open("#{OVERLAY_SERVER_ROOT}/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/", :ssl_verify => false).read
   end
   $stderr.puts "Using overlays"
 	end

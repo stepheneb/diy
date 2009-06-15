@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
         logger.info("not using auth in mkcol")
       end
       response = conn.request(req)
-      logger.info "response code: #{response.code}"
+      logger.info("response code: #{response.code}")
       # svndav returns 405 if a folder already exists
       if response.code.to_i < 200 || (response.code.to_i >= 400 && response.code.to_i != 405)
         raise "Error creating parent folder for overlay files"
@@ -152,15 +152,16 @@ class ApplicationController < ActionController::Base
     overlay_root = nil
     begin
       useOverlays = USE_OVERLAYS && (overlay_root = get_overlay_server_root)
-    rescue Exception
+    rescue Exception => e
       # don't use overlays
+      logger.warn("Couldn't create runnable overlay folder: #{e}")
     end
     if useOverlays
       begin
         mkcol URI.parse("#{overlay_root}/#{runnable_id}")
       rescue Exception => e
         useOverlays = false
-        logger.warn "error in overlays: #{e}\n#{e.backtrace.join("\n")}"
+        logger.warn("error in overlays: #{e}\n#{e.backtrace.join("\n")}")
       end
     end
     return useOverlays
@@ -168,6 +169,7 @@ class ApplicationController < ActionController::Base
   
   def setup_default_overlay(runnable_id, overlay_id)
     # make sure the webdav subfolder(s) exist first
+    logger.info("Setting up the overlay for runnable #{runnable_id}, #{overlay_id}")
     if setup_overlay_folder(runnable_id)
       # if the file doesn't exist...
       uri = URI.parse("#{get_overlay_server_root}/#{runnable_id}/#{overlay_id}.otml")
@@ -184,10 +186,10 @@ class ApplicationController < ActionController::Base
           doc = open("#{get_overlay_server_root}/#{runnable_id}/#{overlay_id}.otml", :ssl_verify => false).read
         end
       rescue => e
-        logger.warn "Overlay file #{uri.to_s} doesn't exist. Creating it... \n#{e}"
         doc = nil
       end
       if ! doc
+        logger.warn("Overlay file #{uri.to_s} doesn't exist. Creating it...")
         # create it
         uuid = UUID.timestamp_create().to_s
         otml = "<otrunk id='#{uuid}'><imports><import class='org.concord.otrunk.overlay.OTOverlay' /></imports><objects><OTOverlay /></objects></otrunk>"
@@ -203,7 +205,7 @@ class ApplicationController < ActionController::Base
             req.basic_auth OVERLAY_SERVER_USERNAME, OVERLAY_SERVER_PASSWORD
           end
           response = conn.request(req)
-          logger.info "response code: #{response.code}"
+          logger.info("response code: #{response.code}")
           if response.code.to_i < 200 || response.code.to_i >= 400
             return false
           end
