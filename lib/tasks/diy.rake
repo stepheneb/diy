@@ -49,7 +49,7 @@ namespace :diy do
     ["Pasco Science Workshop 500", 60, ["_auto_"], "pasco_sw500", 'serial', "SensorImages/Pasco500_sm.png",
       "The Pasco Science Workshop 500 has four input ports for connecting older Pasco sensors and communicates to your computer via a serial port."],
       
-    ["Pasco Airlink SI", 61, ["/dev/tty.PascoAirLink", "/dev/tty.PascoAirLink1"], "pasco_airlink", 'bluetooth', "SensorImages/pasportairlinksi_sm.png",
+    ["Pasco Airlink SI", 61, ["_auto_"], "pasco_airlink", 'bluetooth', "SensorImages/pasportairlinksi_sm.png",
       "The Pasco AirLink Si uses PASPORT sensors and communicates to your computer via Bluetooth wireless networking."],
       
     ["Texas Instruments CBL2", 20, ["none"], "ti_cbl2", 'usb', "SensorImages/CBL2_sm.png",
@@ -81,9 +81,13 @@ namespace :diy do
         :image => vi_data[5],
         :description => vi_data[6]
       }
+      configs = []
       vi_data[2].each do |config_string|
-        vendor_interface.device_configs.find_or_create_by_config_string(config_string)
+        configs << vendor_interface.device_configs.find_or_create_by_config_string(config_string)
       end
+      vendor_interface.reload
+      invalid_configs = vendor_interface.device_configs - configs
+      invalid_configs.each {|c| c.destroy }
       vendor_interface.save!
     end
   end
