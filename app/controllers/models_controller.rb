@@ -211,7 +211,7 @@ class ModelsController < ApplicationController
     # public_group = Group.find_by_name('Public')
     # m = Membership.find(:first, :conditions => ["user_id = ? and group_id = ?", current_user, public_group.id])
 
-    redirect_to @model.sds_url(@user, self, {:nobundles => nobundles, :reporting => false, :savedata => savedata, :authoring => authoring})
+    redirect_to @model.sds_url(@user, self, {:nobundles => nobundles, :reporting => false, :savedata => savedata, :authoring => authoring, :alternative_export => true})
   end
   
   def compare

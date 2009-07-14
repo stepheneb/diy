@@ -248,7 +248,7 @@ class ActivitiesController < ApplicationController
     # params[:nobundles] == anything else => true
     nobundles = ((params[:nobundles] && ! params[:nobundles].empty?) ? true : false)
 
-    redirect_to @activity.sds_url(@user, self, {:nobundles => nobundles, :reporting => false, :savedata => savedata, :authoring => authoring})
+    redirect_to @activity.sds_url(@user, self, {:nobundles => nobundles, :reporting => false, :savedata => savedata, :authoring => authoring, :alternative_export => true})
   end
 
   def otml
