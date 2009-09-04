@@ -269,12 +269,14 @@ class ReportsController < ApplicationController
         otml_report_template.elements["//OTMultiUserRoot"].attributes["groupOverlayURL"] = @groupOverlayURL
       end
       
-      # insert the OTGroupListManager, OTGroupMember imports
+      # insert the OTGroupListManager, OTGroupMember, OTProxyService imports
       imports = otml_report_template.elements["/otrunk/imports"]
       new_imports = []
       new_imports << "org.concord.otrunk.view.OTGroupListManager"
       new_imports << "org.concord.otrunk.view.OTGroupMember"
       new_imports << "org.concord.otrunk.user.OTUserObject"
+      new_imports << "org.concord.otrunk.intrasession.proxy.OTProxyService" if ((defined? OTRUNK_USE_LOCAL_CACHE) && OTRUNK_USE_LOCAL_CACHE)
+      new_imports << "org.concord.otrunk.intrasession.proxy.OTProxyConfig" if ((defined? OTRUNK_USE_LOCAL_CACHE) && OTRUNK_USE_LOCAL_CACHE)
       new_imports.each do |i|
         im = imports.add_element "import"
         im.attributes["class"] = i
@@ -284,6 +286,15 @@ class ReportsController < ApplicationController
       otglm_element = bundles.add_element "OTGroupListManager"
       if group_id
         otglm_element.attributes["groupDataURL"] = CGI.escapeHTML((params[:overlay_root] ? get_overlay_server_root(params[:overlay_root]) : get_overlay_server_root) + "/#{@report.reportable.id}/#{group_id}-data.otml" + (params[:overlay_params] ? "?#{params[:overlay_params]}" : ""))
+      end
+      
+      #insert the OTProxyService, if using the Local Cache is enabled
+      if ((defined? OTRUNK_USE_LOCAL_CACHE) && OTRUNK_USE_LOCAL_CACHE)
+        ot_proxy_config = bundles.add_element("OTProxyService").add_element("proxyConfig").add_element("OTProxyConfig")
+        # don't bother making this unique, as we'll shouldn't ever have 2 of these loaded at the same time
+        ot_proxy_config.attributes["id"] = "327ced8d-0b78-4cd8-9f87-5d2308fa716f"
+        ot_proxy_config.attributes["proxyMode"] = "SERVER"
+        ot_proxy_config.attributes["proxyPort"] = "8080"
       end
       
       @learners = []

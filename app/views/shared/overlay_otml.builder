@@ -14,7 +14,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
           xml.object("refid" => r)
         end
         if @learners.size > 0 || @userListURL
-        hash = {}
+          hash = {}
           if @group_overlay_url
             hash["groupDataURL"] = @group_overlay_url.gsub(/\.otml$/,"-data.otml")
           end
@@ -32,6 +32,13 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
                 end
               }
             }
+        end
+        if ((defined? OTRUNK_USE_LOCAL_CACHE) && OTRUNK_USE_LOCAL_CACHE)
+          xml.OTProxyService {
+            xml.proxyConfig {
+              xml.OTProxyConfig("id" => "327ced8d-0b78-4cd8-9f87-5d2308fa716f", "proxyMode" => "CLIENT")
+            }
+          }
         end
       }
       if @group_overlay_url || @learner_overlay_url || @overlays.size > 0

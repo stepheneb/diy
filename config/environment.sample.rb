@@ -21,6 +21,9 @@ RAILS_DATABASE_PREFIX = ''
 # This key is used to select the look and feel of the application
 RAILS_APPLICATION_KEY = 'diy'
 
+# set to true if you want to enable using the OTProxyService
+OTRUNK_USE_LOCAL_CACHE  = false
+
 # set to true if you want to use per-student and per-group overlays (customizations) with your activities
 USE_OVERLAYS = false
 

@@ -266,6 +266,8 @@ class ApplicationController < ActionController::Base
     @imports << "org.concord.otrunk.OTIncludeRootObject"
     @imports << "org.concord.otrunk.OTSystem"
     @imports << "org.concord.otrunk.OTInclude"
+    @imports << "org.concord.otrunk.intrasession.proxy.OTProxyService" if ((defined? OTRUNK_USE_LOCAL_CACHE) && OTRUNK_USE_LOCAL_CACHE)
+    @imports << "org.concord.otrunk.intrasession.proxy.OTProxyConfig" if ((defined? OTRUNK_USE_LOCAL_CACHE) && OTRUNK_USE_LOCAL_CACHE)
     
     # get the bundles from the original activity otml
     @bundles = []
