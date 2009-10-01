@@ -193,13 +193,10 @@ class ReportsController < ApplicationController
       end
     end
 
-    # authoring is enabled so the current user is not added to the list of users
-    # that the OTrunk activity sees.  this is not clean because we aren't
-    # really doing authoring just reporting.  However the way Sail/OTrunk currently 
-    # works this is the only way to do it.  
+    # set no_user to true since we're not authoring and shouldn't be trying to save learner or authored data
     redirect_to reportable.sds_url(current_user, self, {
       :otml_url => report_url_var, :nobundles => false, :savedata => false,
-      :authoring => true, :system_properties => system_properties, :custom_offering_id => @report.custom_offering_id, :custom_workgroup_id => @report.custom_workgroup_id})
+      :authoring => false, :no_user => true, :system_properties => system_properties, :custom_offering_id => @report.custom_offering_id, :custom_workgroup_id => @report.custom_workgroup_id})
 
   end
   

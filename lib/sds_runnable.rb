@@ -23,7 +23,7 @@ module SdsRunnable
   
   def sds_url(user, controller, options = {})
     # merge these values into the options hash if they don't exist
-    options.merge({:savedata => false, :nobundles => false, :author => false, :reporting => false, :group_id => nil, :alternative_export => false}) {|k,o,n| o}
+    options.merge({:savedata => false, :nobundles => false, :author => false, :reporting => false, :no_user => false, :group_id => nil, :alternative_export => false}) {|k,o,n| o}
     learner = self.find_or_create_learner(user)
     learner.create_session unless ! options[:savedata]
     sds_url = "#{SdsConnect::Connect.config['host']}/offering/#{options[:custom_offering_id] ? options[:custom_offering_id] : self.sds_offering_id}/jnlp/#{options[:custom_workgroup_id] ? options[:custom_workgroup_id] : learner.sds_workgroup_id}"
@@ -49,7 +49,11 @@ module SdsRunnable
       jnlp_props = options[:system_properties].clone
     end
     
-    if options[:authoring]
+    if options[:no_user]
+      jnlp_props << "otrunk.view.no_user=true"
+      jnlp_props << "otrunk.view.hide_tree=true"
+      jnlp_props << "otrunk.view.frame_title=#{APP_PROPERTIES[:application_name]}"
+    elsif options[:authoring]
       jnlp_props << "otrunk.view.author=true"
       if self.kind_of? ExternalOtrunkActivity
         jnlp_props << "otrunk.rest_enabled=true"
