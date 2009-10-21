@@ -155,7 +155,6 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
             if @activity.further_probe_active
               otml_datacollector(@activity.fourth_probe_type, @activity.further_probe_multi, calibration4, xml, "dc_id_4")
             end
-            otml_choice(xml)
           }
         }
       }
