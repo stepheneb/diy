@@ -81,6 +81,7 @@ namespace :diy do
         :image => vi_data[5],
         :description => vi_data[6]
       }
+      vendor_interface.save!
       configs = []
       vi_data[2].each do |config_string|
         configs << vendor_interface.device_configs.find_or_create_by_config_string(config_string)
