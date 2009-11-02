@@ -191,7 +191,7 @@ task :write_mongrel_conf, :roles => :app do
 end
 
 task :write_apache_conf, :roles => :app do
-  file = render "apache-conf"
+  file = render "apache-conf.rhtml"
   put file, "/web/#{version}/conf/#{application}.conf"
 end
 
@@ -210,7 +210,8 @@ task :set_db_vars, :roles => :db do
   set :local_password, "#{clean_app_name}"
   set :local_database_prefix, "#{version}_#{clean_app_name}"
   set :local_production_database_prefix, "production_#{clean_app_name}"
-  set :local_staging_database_prefix, "staging_#{clean_app_name}"end
+  set :local_staging_database_prefix, "staging_#{clean_app_name}"
+end
 
 task :create_local_dbs, :roles => :db do
   for i in ["prod", "test", "dev"] do
@@ -249,9 +250,11 @@ task :write_sds_conf, :roles => :app do
     sds_conf[i]["jnlp_id"] = sds_jnlp_id
     sds_conf[i]["curnit_id"] = sds_curnit_id
     sds_conf[i]["username"] = ""
-    sds_conf[i]["password"] = ""  end
+    sds_conf[i]["password"] = ""
+  end
   
-  put YAML::dump(sds_conf), "#{shared_path}/config/sds.yml"end
+  put YAML::dump(sds_conf), "#{shared_path}/config/sds.yml"
+end
 
 task :write_mailer_conf, :roles => :app do
   set :mailer_conf, {}
@@ -259,16 +262,19 @@ task :write_mailer_conf, :roles => :app do
   mailer_conf["port"] = "25"
   mailer_conf["domain"] = "concord.org"
   
-  put YAML::dump(mailer_conf), "#{shared_path}/config/mailer.yml"end
+  put YAML::dump(mailer_conf), "#{shared_path}/config/mailer.yml"
+end
 
 task :write_exception_notifier_config, :roles => :app do
   set :the_addresses, email_addresses.split(";")
   
-  put YAML::dump(email_addresses.split(";")), "#{shared_path}/config/exception_notifier_recipients.yml"end
+  put YAML::dump(email_addresses.split(";")), "#{shared_path}/config/exception_notifier_recipients.yml"
+end
 
 desc "set up the database on a brand new diy"
 task :setup_new_diy, :roles => :app do
-  run "cd #{current_release}; RAILS_ENV=production rake diy:setup_new_database"end
+  run "cd #{current_release}; RAILS_ENV=production rake diy:setup_new_database"
+end
 
 def render(template_file)
   require 'erb'
@@ -278,4 +284,5 @@ end
 
 desc "calls user.save for every user"
 task :save_all_users, :roles => :app do
-  run "cd #{current_release}; script/runner -e production 'User.find(:all).each{|u| u.save }'"end
+  run "cd #{current_release}; script/runner -e production 'User.find(:all).each{|u| u.save }'"
+end
