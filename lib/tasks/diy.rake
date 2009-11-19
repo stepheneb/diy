@@ -65,7 +65,13 @@ namespace :diy do
       "Vernier's LabPro interface works with many Vernier sensors."],
       
     ["Vernier LabQuest", 12, ["_auto_"], "vernier_labquest", 'usb', "SensorImages/labquest_sm.jpg",
-      "Vernier's LabQuest interface works with many Vernier sensors."]
+      "Vernier's LabQuest interface works with many Vernier sensors."],
+      
+    ["Pasco USBLink (PS-2100A)", 62, ["none"], "pasco_usblink", 'usb', "http://www.pasco.com/images/products/ps/PS2100A_330_28961.jpg",
+      "The Pasco USBLink uses PASPORT sensors and communicates to your computer via USB. Note: Currently only newer USBLinks are supported (devices with product ID PS-2100A)."],
+      
+    ["Pasco PowerLink", 62, ["none"], "pasco_powerlink", 'usb', "http://www.pasco.com/images/products/ps/PS2001_330_28943.jpg",
+      "The Pasco PowerLink uses PASPORT sensors and communicates to your computer via USB."],
   ]
 
   desc "update or create default vendor interfaces"
