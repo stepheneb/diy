@@ -3,6 +3,8 @@
 # via the :deploy_to variable:
 set :deploy_to, "/web/staging/#{application}"
 
+set :version, "staging"
+
 set :mongrel_conf, "/etc/mongrel_cluster/staging-#{application}.conf"
 set :num_servers, 3
 

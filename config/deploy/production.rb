@@ -3,6 +3,8 @@
 # via the :deploy_to variable:
 set :deploy_to, "/web/production/#{application}"
 
+set :version, "production"
+
 set :mongrel_conf, "/etc/mongrel_cluster/production-#{application}.conf"
 set :num_servers, 6
 

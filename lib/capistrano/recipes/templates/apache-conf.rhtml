@@ -1,42 +1,26 @@
-# This sets up a mongrel balancer (name should be servername-cluster)
-
-<Proxy balancer://<%= application %>-<%= version %>-cluster>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 0 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 1 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 2 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 3 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 4 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 5 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 6 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 7 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 8 %>
-  BalancerMember http://127.0.0.1:<%= start_port.to_i + 9 %>
-
-  # if you want to affect traffic to the proxied machines
-  # add a " loadfactor=n" parameter at the end of one of the above line
-</Proxy>
-
 <VirtualHost *:80 *:8080 *:443>
   ### Basic Configuration ###
+  PassengerEnabled on
 
   ServerAdmin webmaster@concord.org
-  ServerName <%= application %><%= version == "staging" ? ".staging" : ".diy" %>.concord.org
-  <%= version == "production" ? ("ServerAlias " + application + ".test.concord.org") : "" %>
+  <% dns_prefix = (version == "staging" ? "staging" : "diy") %>
+  ServerName <%= application %>.<%= dns_prefix %>.concord.org
+  
   DocumentRoot /web/<%= version %>/<%= application %>/current/public
 
   ### Logging Configuration ###
 
-  ErrorLog /var/log/httpd/<%= application %>.<%= version %>.concord.org-error_log
-  CustomLog /var/log/httpd/<%= application %>.<%= version %>.concord.org-access_log combined
-  CustomLog "|/usr/bin/logger -p local2.info -t <%= application %>.<%= version %>.concord.org" combined
+  ErrorLog /var/log/httpd/<%= application %>.<%= dns_prefix %>.concord.org-error_log
+  CustomLog /var/log/httpd/<%= application %>.<%= dns_prefix %>.concord.org-access_log combined
+  CustomLog "|/usr/bin/logger -p local2.info -t <%= application %>.<%= dns_prefix %>.concord.org" combined
 
   ### ModRewrite Configuration ###
 
   RewriteEngine On
         
   # Should perhaps use modrewrite to fix the www issue instead of the vhost below
-  RewriteCond %{HTTP_HOST} ^www\\.<%= application %><%= version == "staging" ? ('\.' + version) : ".diy" %>\\.concord\\.org$ [NC]
-  RewriteRule ^(.*)$ http://<%= application %><%= version == "staging" ? ('.' + version) : ".diy" %>.concord.org/$1 [R=301,L]
+  RewriteCond %{HTTP_HOST} ^www\\.<%= application %>\\.<%= dns_prefix %>\\.concord\\.org$ [NC]
+  RewriteRule ^(.*)$ http://<%= application %>.<%= dns_prefix %>.concord.org/$1 [R=301,L]
 
   # Uncomment for rewrite debugging
   #RewriteLog logs/myapp_rewrite_log
@@ -53,10 +37,6 @@
 
   # Rewrite to check for Rails cached page
   RewriteRule ^([^.]+)$ $1.html [QSA]
-
-  # Redirect all non-static requests to cluster
-  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
-  RewriteRule ^/(.*)$ balancer://<%= application %>-<%= version %>-cluster%{REQUEST_URI} [P,QSA,L]
 
   # Deflate
   AddOutputFilterByType DEFLATE text/html text/plain text/css

@@ -57,10 +57,6 @@ set(:subroot_pass) do
   Capistrano::CLI.password_prompt( "Enter the subroot mysql password: ")
 end
 
-set(:start_port) do
-  Capistrano::CLI.ui.ask "Enter the starting port number: "
-end
-
 set(:application) do
   Capistrano::CLI.ui.ask "Enter the instance name (eg itsi, udl, capa): "
 end
@@ -142,17 +138,9 @@ task :copy_current_config, :roles => :app do
   write_database_conf
   write_sds_conf
   write_environment
-  write_mongrel_conf
   write_apache_conf
   write_mailer_conf
   write_exception_notifier_config
-end
-
-task :write_mongrel_conf, :roles => :app do
-  file = render "mongrel-cluster-conf.rhtml"
-
-  put file, "#{shared_path}/config/mongrel_cluster.conf"
-  sudo "cp #{shared_path}/config/mongrel_cluster.conf /etc/mongrel_cluster/#{version}-#{application}.conf"
 end
 
 task :write_apache_conf, :roles => :app do
