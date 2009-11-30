@@ -45,6 +45,10 @@
 # where are they documented?
 require 'mongrel_cluster/recipes'
 
+set :stages, %w(staging production)
+set :default_stage, "staging"
+require 'capistrano/ext/multistage'
+
 set :mydebug, false
 
 set :erb_templates_folder, "lib/capistrano/recipes/templates"
@@ -120,47 +124,11 @@ task :chown_folders, :roles => :app do
   sudo "chmod -R g+w #{deploy_to}"
 end
 
-task :production do
-  set :version, "production"
-  set_vars
-end
-
-task :staging do
-  set :version, "staging"
-  set_vars
-end
-
-task :set_vars do
-  # If you aren't deploying to /u/apps/#{application} on the target
-   # servers (which is the default), you can specify the actual location
-  # via the :deploy_to variable:
-  set :deploy_to, "/web/#{version}/#{application}"
-  
-  set :mongrel_conf, "/etc/mongrel_cluster/#{version}-#{application}.conf"
-  
-  depend :remote, :file, "#{shared_path}/config/database.yml"
-  depend :remote, :file, "#{shared_path}/config/environment.rb"
-  depend :remote, :file, "#{shared_path}/config/sds.yml"
-  depend :remote, :file, "#{shared_path}/config/mailer.yml"
-  depend :remote, :file, "#{shared_path}/config/exception_notifier_recipients.yml"
-end
-
-desc "copies the production db over the staging db"
-task :reset_staging_db, :roles => :db do
-  set :version, "staging"
-  set_vars
-  set_db_vars
-  
-  # put the app into maintenance mode
-  !deploy::web::disable
-  # dump the production db into the staging db
-  run "mysqladmin -u subroot -p#{subroot_pass} -f drop #{local_database_prefix}_prod"
-  run "mysqladmin -u subroot -p#{subroot_pass} create #{local_database_prefix}_prod"
-  run "mysqldump -u subroot -p#{subroot_pass} --lock-tables=false --add-drop-table --quick --extended-insert #{local_production_database_prefix}_prod | mysql -u #{local_username} -p#{local_password} #{local_database_prefix}_prod"
-  # put app into running mode
-  !deploy::web::enable
-  puts "You'll probably want to run cap reset_staging_db on the SDS so that the database ids will match up correctly. Note that this can mess up references in other staging DIYs, so be careful!"
-end
+depend :remote, :file, "#{shared_path}/config/database.yml"
+depend :remote, :file, "#{shared_path}/config/environment.rb"
+depend :remote, :file, "#{shared_path}/config/sds.yml"
+depend :remote, :file, "#{shared_path}/config/mailer.yml"
+depend :remote, :file, "#{shared_path}/config/exception_notifier_recipients.yml"
 
 task :chown_to_current_user, :roles => :app do
   sudo "chown -R #{user}.users #{deploy_to}"
@@ -170,7 +138,6 @@ end
 task :copy_current_config, :roles => :app do
   set :config_dir, "#{shared_path}/config"
   run "mkdir -p #{config_dir}"
-  set_db_vars
   create_local_dbs
   write_database_conf
   write_sds_conf
@@ -182,8 +149,6 @@ task :copy_current_config, :roles => :app do
 end
 
 task :write_mongrel_conf, :roles => :app do
-  set :num_servers, version == "staging" ? 3 : 6
-  
   file = render "mongrel-cluster-conf.rhtml"
 
   put file, "#{shared_path}/config/mongrel_cluster.conf"
@@ -201,16 +166,6 @@ task :write_environment, :roles => :app do
   contents.gsub!(/'diy'/, "'#{application}'")
   contents.gsub!(/\# ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS/, "ActionController::CgiRequest::DEFAULT_SESSION_OPTIONS")
   put contents, "#{shared_path}/config/environment.rb"
-end
-
-task :set_db_vars, :roles => :db do
-  clean_app_name = application.gsub('-', '_')
-    
-  set :local_username, "#{clean_app_name}"
-  set :local_password, "#{clean_app_name}"
-  set :local_database_prefix, "#{version}_#{clean_app_name}"
-  set :local_production_database_prefix, "production_#{clean_app_name}"
-  set :local_staging_database_prefix, "staging_#{clean_app_name}"
 end
 
 task :create_local_dbs, :roles => :db do
