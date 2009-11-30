@@ -18,6 +18,7 @@ set :local_staging_database_prefix, "staging_#{clean_app_name}"
 
 desc "copies the production db over the staging db"
 task :reset_staging_db, :roles => :db do
+  return if version != 'staging'
   set_db_vars
   
   # put the app into maintenance mode

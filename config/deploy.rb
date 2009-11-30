@@ -46,7 +46,6 @@
 require 'mongrel_cluster/recipes'
 
 set :stages, %w(staging production)
-set :default_stage, "staging"
 require 'capistrano/ext/multistage'
 
 set :mydebug, false
