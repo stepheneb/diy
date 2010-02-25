@@ -22,7 +22,7 @@ class ReportsController < ApplicationController
   def setup_object
     if params[:id]
       if params[:id].length == 36
-        @report = Report.find(:first, :conditions => ['uuid=?',params[:id]])
+        @report = Report.find_by_uuid(params[:id])
       else
         @report = Report.find(params[:id])
       end
@@ -57,8 +57,6 @@ class ReportsController < ApplicationController
   # GET /reports/1
   # GET /reports/1.xml
   def show
-    @report = Report.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @report }
@@ -68,7 +66,6 @@ class ReportsController < ApplicationController
   # GET /reports/new
   # GET /reports/new.xml
   def new
-    @report = Report.new
     @ort = OtrunkReportTemplate.find(:all).map {|ort| [ort.name, ort.id]}
     @report.public = true
     @report.user = current_user
@@ -80,7 +77,6 @@ class ReportsController < ApplicationController
 
   # GET /reports/1/edit
   def edit
-    @report = Report.find(params[:id])
   end
 
   # POST /reports
@@ -96,7 +92,6 @@ class ReportsController < ApplicationController
     #
     # we can just create a new @report instance like this:
     #
-    @report = Report.new(params[:report])
     # 
     # This way all the parameters are set that are present in the
     # hash value for "report" in params.
@@ -128,7 +123,6 @@ class ReportsController < ApplicationController
   # PUT /reports/1.xml
   def update
     # debugger
-    @report = Report.find(params[:id])
 
     respond_to do |format|
       if @report.update_attributes(params[:report])
@@ -145,7 +139,6 @@ class ReportsController < ApplicationController
   # DELETE /reports/1
   # DELETE /reports/1.xml
   def destroy
-    @report = Report.find(params[:id])
     @report.destroy
 
     respond_to do |format|
@@ -155,7 +148,7 @@ class ReportsController < ApplicationController
   end
   
   def copy
-    @report = Report.find(params[:id]).clone
+    @report = @report.clone
     @report.user = current_user
     @report.public = false
     @report.name << " (copy)"
@@ -165,7 +158,6 @@ class ReportsController < ApplicationController
   
   
   def sail_jnlp
-    @report = Report.find(params[:id])
     reportable = @report.reportable
     
     # render :text => "#{@report.short_name}: #{@report.reportable.id}, #{@report.otrunk_report_template.id}"
@@ -210,7 +202,6 @@ class ReportsController < ApplicationController
   
   def otml
     begin
-      @report = Report.find(params[:id])
       otml_report_template = REXML::Document.new(report_template_otml).root
       
       activity = otml_report_template.elements["//*[@local_id='external_activity_url']"]
