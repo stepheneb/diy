@@ -1,0 +1,13 @@
+# /config/
+/config/database.yml
+/config/environment.rb
+/config/sds.yml
+
+# /db/
+/db/schema.rb
+
+# /log/
+/log/*
+
+# /tmp/
+/tmp/*
