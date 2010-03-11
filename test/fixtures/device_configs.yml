@@ -1,9 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-one:
-  vendor_interface_id: 1
-  config_string: MyString
-
-two:
-  vendor_interface_id: 1
-  config_string: MyString
