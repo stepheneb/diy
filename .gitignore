@@ -11,3 +11,4 @@
 
 # /tmp/
 /tmp/*
+db/development_structure.sql
