@@ -103,7 +103,8 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.activities 'activities/check_xhtml', :controller => 'activities', :action => 'check_xhtml'
-
+  map.activities 'activities/check_image_url', :controller => 'activities', :action => 'check_image_url'
+  
   map.resources :activities, :member => { :copy => :get }
   map.resources :activities, :member => { :usage => :get }
   map.resources :activities, :member => { :ot_learner_data => :get }
@@ -116,6 +117,9 @@ ActionController::Routing::Routes.draw do |map|
     activities.resources :subjects, :name_prefix => "activity_"
   end
 
+
+  map.models 'models/check_image_url', :controller => 'models', :action => 'check_image_url'
+  
   map.resources :models, :member => { :copy => :get }
   map.resources :models, :member => { :usage => :get }
   map.resources :models do |models|

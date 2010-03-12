@@ -230,6 +230,10 @@ class ActivitiesController < ApplicationController
     render :layout => false
   end
   
+  def check_image_url
+    render :layout => false, :partial => "shared/check_image_url"
+  end
+
   # needs set_current_user_vendor_interface in controller
 
   def sail_jnlp

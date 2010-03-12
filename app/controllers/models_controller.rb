@@ -218,4 +218,9 @@ class ModelsController < ApplicationController
     @other_model = Model.find(params[:other])
   end
   
+  def check_image_url
+    render :layout => false, :partial => "shared/check_image_url"
+  end
+  
+  
 end
