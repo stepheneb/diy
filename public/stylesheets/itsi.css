@@ -569,9 +569,21 @@ div.progressBar div.background {
 	padding: 1em;
 	margin: 1em;
 }
+
 .vi_image_float_right {
 	padding: 1em;
 	margin: -6em 0em 1em 0em;
 	border: 1px solid #99cc99;
 	float: right;
+}
+
+.image_preview {
+  max-width: 200px;
+  max-height: 200px;
+  overflow: hidden;
+  display: inline-block; 
+  border: 1px solid gray; 
+  padding: 1em; 
+  width: auto; 
+  margin-left: 1em;
 }
