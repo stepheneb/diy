@@ -1,9 +1,10 @@
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "/web/production/#{application}"
 
 set :version, "production"
+set :deploy_to,  "/web/#{version}/#{application}" 
+set :shared_path, File.join(deploy_to, "shared")
 
 set :mongrel_conf, "/etc/mongrel_cluster/production-#{application}.conf"
 set :num_servers, 6
