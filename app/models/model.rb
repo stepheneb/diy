@@ -6,8 +6,10 @@ class Model < ActiveRecord::Base
   
   include OtrunkSystem
   include SdsRunnable
-  self.extend SearchableModel
+  acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}models_versions"
+  include HasImage
   
+  self.extend SearchableModel
   @@searchable_attributes = %w{name description}
   class <<self
     def searchable_attributes
@@ -15,8 +17,7 @@ class Model < ActiveRecord::Base
     end
   end
   
-  acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}models_versions"
-  
+
   has_many :activities
   belongs_to :user
   belongs_to :model_type

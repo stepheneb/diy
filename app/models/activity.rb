@@ -6,10 +6,10 @@ class Activity < ActiveRecord::Base
   
   include OtrunkSystem
   include SdsRunnable
-  validate :valid_image?
-  
+  acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}activities_versions"
+  include HasImage
+
   self.extend SearchableModel
-  
   @@searchable_attributes = %w{name description}
   class <<self
     def searchable_attributes
@@ -18,8 +18,6 @@ class Activity < ActiveRecord::Base
     
   end
 
-  acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}activities_versions"
-  self.non_versioned_columns << 'image_url'
   belongs_to :user
   belongs_to :probe_type
   belongs_to :model
@@ -120,19 +118,6 @@ class Activity < ActiveRecord::Base
     if collectdata3_model_active then m << third_model.model_type.name end
     if further_model_active then m << fourth_model.model_type.name end
     m.length > 0
-  end
-  
-  def has_image?
-    return false if image_url.nil?
-    return false if image_url == ""
-    return false if image_url =~/^\s+$/
-    true
-  end
-  
-  def valid_image?
-    return unless self.has_image?
-    return if ImageChecker.valid?(self.image_url)
-    errors.add_to_base("bad image url: #{self.image_url}")
   end
   
 end
