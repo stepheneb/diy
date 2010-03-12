@@ -1,0 +1,6 @@
+<% image_url = ar_model.image_url %>
+<% if ImageChecker.valid?(image_url) %>
+    <%= image_tag image_url %>
+<% elsif defined? alternate_url %>
+    <%= image_tag alternate_url %>
+<% end %>

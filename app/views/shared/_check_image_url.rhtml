@@ -1,0 +1,7 @@
+<% image_url = params[:imageurl] || ar_model.image_url %>
+<% if ImageChecker.valid?(image_url)%>
+    <div class="image_preview">
+      <b>Preview</b><br/>
+      <%= image_tag image_url %>
+    </div>
+<% end %>
