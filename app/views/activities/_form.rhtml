@@ -4,7 +4,16 @@
 	<%= hidden_field 'activity', 'parent_version' %>
   <p><label for="activity_name"><span class="SectionTitle">Activity Name</span></label> <span class='required'>(required)</span><br/>
   <%= text_field 'activity', 'name', :size => 72  %></p>
-
+  <p><label for="activity_name"><span class="SectionTitle">Image URL</span></label><br/>
+  <%= text_field 'activity', 'image_url', :size => 72  %></p>
+  <%= observe_field :activity_image_url, 
+     :frequency => 3,
+     :update => 'activity_image_url_status',
+     :with => "'imageurl=' + escape(value)",
+     :url => { :action=>"check_image_url", :controller=>"activities" } %>
+  <div id="activity_image_url_status">
+    <%= render :partial => 'shared/check_image_url', :locals => {:ar_model => @activity} %>
+  </div>
   <p><label for="activity_description"><span class="SectionTitle">Description</span></label><br/>
   <%= text_area 'activity', 'description', "cols" => 72, :rows => 2 %></p>
 
@@ -33,7 +42,7 @@
     <label for="activity_introduction_drawing_response">  Drawing response:</label><%= check_box 'activity', 'introduction_drawing_response'  %>
   </p>
   <%= observe_field :activity_introduction, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_introduction_status',
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
     :url => { :action=>"check_xhtml", :controller=>"activities" } %>
@@ -58,7 +67,7 @@
     <%= text_area 'activity', 'standards', "cols" => 96, :rows => 12 %>
   </p>
   <%= observe_field :activity_standards, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_standards_status',
     :complete => "Element.show('activity_standards_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -72,7 +81,7 @@
     <%= text_area 'activity', 'materials', "cols" => 96, :rows => 12  %>
   </p>
   <%= observe_field :activity_materials, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_materials_status',
     :complete => "Element.show('activity_materials_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -86,7 +95,7 @@
     <%= text_area 'activity', 'safety', "cols" => 96, :rows => 12  %>
   </p>
   <%= observe_field :activity_safety, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_safety_status',
     :complete => "Element.show('activity_safety_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -102,7 +111,7 @@
     <label for="activity_proced_drawing_response">  Drawing response:</label><%= check_box 'activity', 'proced_drawing_response'  %>
   </p>
   <%= observe_field :activity_proced, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_proced_status',
     :complete => "Element.show('activity_proced_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -119,7 +128,7 @@
     <label for="activity_prediction_graph_response">  Prediction graph:</label><%= check_box 'activity', 'prediction_graph_response'  %>(for probe in first collect data section)
   </p>
   <%= observe_field :activity_predict, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_predict_status',
     :complete => "Element.show('activity_predict_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -133,7 +142,7 @@
     <%= text_area 'activity', 'collectdata', "cols" => 96, :rows => 12  %><br />
   </p>
   <%= observe_field :activity_collectdata, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_collectdata_status',
     :complete => "Element.show('activity_collectdata_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -170,7 +179,7 @@
     <%= text_area 'activity', 'collectdata2', "cols" => 96, :rows => 12  %><br />
   </p>
   <%= observe_field :activity_collectdata2, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_collectdata2_status',
     :complete => "Element.show('activity_collectdata2_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -205,7 +214,7 @@
     <%= text_area 'activity', 'collectdata3', "cols" => 96, :rows => 12  %><br />
   </p>
   <%= observe_field :activity_collectdata3, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_collectdata3_status',
     :complete => "Element.show('activity_collectdata3_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -242,7 +251,7 @@
     <label for="activity_analysis_drawing_response">  Drawing response:</label><%= check_box 'activity', 'analysis_drawing_response' %>
   </p>
   <%= observe_field :activity_analysis, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_analysis_status',
     :complete => "Element.show('activity_analysis_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -258,7 +267,7 @@
     <label for="activity_conclusion_drawing_response">  Drawing response:</label><%= check_box 'activity', 'conclusion_drawing_response' %>
   </p>
   <%= observe_field :activity_conclusion, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_conclusion_status',
     :complete => "Element.show('activity_conclusion_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
@@ -272,7 +281,7 @@
     <%= text_area 'activity', 'further', "cols" => 96, :rows => 12  %><br />
   </p>
   <%= observe_field :activity_further, 
-    :frequency => 10,
+    :frequency => 3,
     :update => 'activity_further_status',
     :complete => "Element.show('activity_further_status')", 
     :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
