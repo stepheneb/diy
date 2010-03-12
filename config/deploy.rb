@@ -103,6 +103,7 @@ after "deploy:setup", :copy_current_config
 after "deploy:cold", :setup_new_diy
 after "deploy:update_code", :copy_configs
 after "deploy:symlink", :chown_folders
+before "deploy", :verify_action
 
 task :copy_configs, :roles => :app do
   run "cp #{shared_path}/config/database.yml #{release_path}/config/database.yml"
@@ -227,4 +228,16 @@ end
 desc "calls user.save for every user"
 task :save_all_users, :roles => :app do
   run "cd #{current_release}; script/runner -e production 'User.find(:all).each{|u| u.save }'"
+end
+
+desc "verify the action"
+task :verify_action, :roles => :app do
+  puts <<-EOM
+  *******************************************************************
+  Running the #{version} stage
+  Deploying to #{deploy_to}
+  App name: #{clean_app_name}
+  *******************************************************************
+  EOM
+  abort unless Capistrano::CLI.ui.agree( "Does that sound right? (y/n) ",true)
 end
