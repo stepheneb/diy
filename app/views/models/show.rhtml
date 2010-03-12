@@ -15,6 +15,13 @@
 <p><span class="SectionTitle">Width: </span><%= @model.width %></p>
 <p><span class="SectionTitle">Height: </span><%= @model.height %></p>
 <% end -%>
+<p>
+  <%= render :partial => "shared/show_image_url", :locals => {  
+    :ar_model =>  @model,
+    :alternate_url =>  'otrunk_objects/model.gif' 
+    } 
+  %>
+</p>
 <p><span class="SectionTitle">Description: </span><br /><%= @model.description %></p>
 <p><span class="SectionTitle">Instructions: </span><br /><%= @model.instructions %></p>
 <p><span class="SectionTitle">Snapshot enabled: </span><strong><%= boolean_to_yes_no(@model.snapshot_active) %></strong></p>

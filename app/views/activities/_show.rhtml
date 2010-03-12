@@ -1,7 +1,11 @@
 <div class="otrunkActivity">
 
 <h1><%=h @activity.name %></h1>
-
+  <%= render :partial => "shared/show_image_url", :locals => {  
+    :ar_model =>  @activity,
+    :alternate_url =>  'otrunk_objects/model.gif' 
+    } 
+  %>
 <div class='otrunkActivitySection'>
   <h2>Introduction/Discovery Question</h2>
   <div class='otrunkActivityContent'>
@@ -108,7 +112,11 @@
     <% end %>
     <% if @activity.collectdata_model_active %>
       <div class='otrunkActivityObject'>
-        <%= image_tag 'otrunk_objects/model.gif '%>
+        <%= render :partial => "shared/show_image_url", :locals => {  
+          :ar_model =>  @activity.model,
+          :alternate_url =>  'otrunk_objects/model.gif' 
+          } 
+        %>
       </div>
     <% end %>
     <% if @activity.collectdata_text_response %>
@@ -139,7 +147,11 @@
     <% end %>
     <% if @activity.collectdata2_model_active %>
       <div class='otrunkActivityObject'>
-        <%= image_tag 'otrunk_objects/model.gif '%>
+        <%= render :partial => "shared/show_image_url", :locals => {  
+          :ar_model =>  @activity.second_model,
+          :alternate_url =>  'otrunk_objects/model.gif' 
+          } 
+        %>
       </div>
     <% end %>
     <% if @activity.collectdata2_text_response %>
@@ -165,7 +177,11 @@
     <% end %>
     <% if @activity.collectdata3_model_active %>
       <div class='otrunkActivityObject'>
-        <%= image_tag 'otrunk_objects/model.gif '%>
+        <%= render :partial => "shared/show_image_url", :locals => {  
+          :ar_model =>  @activity.third_model,
+          :alternate_url =>  'otrunk_objects/model.gif' 
+          } 
+        %>
       </div>
     <% end %>
     <% if @activity.collectdata3_text_response %>
@@ -237,7 +253,11 @@
       <% end %>
       <% if @activity.further_model_active %>
         <div class='otrunkActivityObject'>
-          <%= image_tag 'otrunk_objects/model.gif '%>
+          <%= render :partial => "shared/show_image_url", :locals => {  
+            :ar_model =>  @activity.fourth_model,
+            :alternate_url =>  'otrunk_objects/model.gif' 
+            } 
+          %>
         </div>
       <% end %>
     
