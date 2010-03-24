@@ -15,3 +15,6 @@
 # database files:
 db/development_structure.sql
 itsi_pro.sql
+
+# reports
+reports/*
