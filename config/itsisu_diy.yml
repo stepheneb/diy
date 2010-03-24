@@ -1,0 +1,12 @@
+--- 
+:application_name: ITSI-SU Do It Yourself
+:page_title_prefix: ITSI-SU DIY
+:logo: itsi_su_logo.gif
+:home_link: http://itsisu.diy.concord.org/
+:stylesheet: itsi
+:external_otrunk_activities_title: External OTrunk Activities
+:show_external_otrunk_activities: false
+:hide_activities: false
+:hide_models: false
+# run style options are: savedata, view, nobundles, preview, norun
+:anonymous_run_style: preview
