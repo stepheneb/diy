@@ -3,3 +3,15 @@
 The DIY is a Rails applicaion for authoring and running SAIL/OTrunk activities.
 
 The Trac instance for he DIY is located here: http://trac.cosmos.concord.org/diy/
+
+== TESTING ==
+
+right now, all tests live in spec/
+
+and testing is done like so:
+spec -fh spec > reports/spec.html
+
+TODO: Add rake tasks for testing.
+TODO: Output junit xml reports.
+TODO: Add to Hudson.
+
