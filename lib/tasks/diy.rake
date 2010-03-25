@@ -659,125 +659,23 @@ Save and mount your results and try it out with a different atmosphere!
 
   desc "Copy all of the external otrunk activities to a local location, including referenced artifacts"
   task :copy_otrunk_activities_locally => :environment do
-  require 'open-uri'
-  require 'ftools'
-  require 'cgi'
-  STDOUT.sync = true
-  STDERR.sync = true
-  cache_dir = "#{RAILS_ROOT}/public/cache/"
-  # url = "/"
-  # print "\nPlease enter the DIY's base url path: [#{url}]  "
-  # diy_url = STDIN.gets.chomp
-  # if diy_url.empty?
-  #   diy_url = url
-  # end
-  # diy_url.gsub!(/.\/$/,"")
-  @errors = {}
-  # for each external otrunk activity
-  ExternalOtrunkActivity.find(:all, :conditions => "public=1").each do |a|
-    # open the otml file from the specified url or grab the embedded content
-    content = ""
-    if (a.external_otml_url)
-      content = open(a.external_otml_url).read
-    else
-      content = a.otml
+    require 'fileutils'
+    begin
+      require 'concord_cacher'
+    rescue LoadError
+      raise "You need to have the concord_cacher gem installed to cache activities locally. Please run 'gem install concord_cacher'."
     end
-    parse_file("#{cache_dir}#{a.uuid}/#{a.uuid}.otml", content, cache_dir + "#{a.uuid}/", URI.parse(a.external_otml_url), true)
-    # update the url to point to the local copy
-    # we don't need to do this anymore, just be sure that :cache_external_otrunk_activities: true is set in the app config
-    # a.external_otml_url = "#{diy_url}/cache/#{a.uuid}/unit-#{a.uuid}.otml"
-    # if a.save
-    #   puts " done."
-    # else
-    #   puts "\n Couldn't save activity #{a.id}"
-    # end
-  end
 
-  puts "\nThere were #{@errors.length} artifacts with errors.\n"
-  @errors.each do |k,v|
-  	puts "In #{k}:"
-  	v.uniq.each do |e|
-      puts "    #{e}"
+    cache_dir = "#{RAILS_ROOT}/public/cache/"
+    
+    # for each external otrunk activity
+    ExternalOtrunkActivity.find(:all, :conditions => "public=1").each do |a|
+      FileUtils.mkdir_p(cache_dir + "#{a.uuid}/")
+      cacher = Concord::DiyLocalCacher.new(:url => a.external_otml_url, :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
+      cacher.cache
     end
-  end
-  puts "\nDon't forget to set :cache_external_otrunk_activities: true in the application config file.\n"
-  end
-  
-  def parse_file(filename, content, cache_dir, parent_url, recurse)
-    short_filename = /\/([^\/]+)$/.match(filename)[1]
-    print "\n#{short_filename}: "
-    lines = content.split("\n")
-    new_content = ""
-    lines.each do |line|
-      #   scan for anything that matches (http://[^'"]+)
-      url_regex = /(http:\/\/[^'"]+)/
-      src_regex = /src=['"]([^'"]+)/
-      match_indexes = []
-      while ( ((match = url_regex.match(line)) && (! match_indexes.include?(match.begin(1)))) ||
-                ((match = src_regex.match(line)) && (! match_indexes.include?(match.begin(1)))) )
-        # puts "Matched url: #{match[1]}"
-        match_indexes << match.begin(1)
-        #   get the resource from that location, save it locally
-        match_url = match[1].gsub(/\s+/,"").gsub(/[\?\#&;=\+\$,<>"\{\}\|\\\^\[\]].*$/,"")
-        # puts("pre: #{match[1]}, post: #{match_url}")
-        begin
-          resource_url = URI.parse(CGI.unescapeHTML(match_url))
-        rescue
-          @errors[parent_url] ||= []
-        @errors[parent_url] << "Bad URL: '#{CGI.unescapeHTML(match_url)}', skipping."
-          print 'x'
-          next
-        end
-        if (resource_url.relative?)
-          # relative URL's need to have their parent document's codebase appended before trying to download
-          resource_url = parent_url.merge(resource_url.to_s)
-        end
-        localFile = match_url
-        localFile = localFile.gsub("http://","")
-        localFile = localFile.gsub(/\/$/,"")
-        # localFile = localFile.gsub(/[\?\#&;=\+\$,<>"\{\}\|\\\^\[\]].*$/,"")
-        localDir = localFile.gsub(/[^\/]+$/,"")
-        File.makedirs(cache_dir + localDir)
-        
-        next if (localFile.length < 1)
-        next if (localFile =~ /^mailto/)
-        
-        # Uncomment the if/else if you want to skip downloading already existing files.
-        # if File.exist?(cache_dir + localFile)
-          # this already exists, so assume it's current and skip
-          # FIXME - possibly we could compare timestamps or something
-        #   print 's'
-        # else
-          # if it's an otml/html file, we should parse it too (only one level down)
-          if ((localFile =~ /otml$/ || localFile =~ /html/) && recurse)
-              parse_file(cache_dir + localFile, open(resource_url.to_s).read, cache_dir + localDir + "/", resource_url, false)
-          else
-            f = File.new(cache_dir + localFile, "w")
-            begin
-              f.write(open(resource_url.to_s).read)
-              print "."
-            rescue => e
-              @errors[parent_url] ||= []
-              @errors[parent_url] << "Problem getting or writing file: #{resource_url.to_s},   Error: #{e}"
-              print 'X'
-            end
-            f.flush
-            f.close
-          end
-        # end
-        #   replace the url reference with a url to the local resource
-        line = line.gsub(match_url, localFile)
-        
-      end
-      new_content << line
-      new_content << "\n"
-    end
-    # save the file in the local server directories
-    f = File.new(filename, "w")
-    f.write(new_content)
-    f.flush
-    f.close
-    print ".\n"
+    
+    puts "Be sure to set :cache_external_otrunk_activities: true in your application config file!"
   end
   
   desc "Copy all of the external mw models which reside in zip files (created in MW 1.3) locally"
