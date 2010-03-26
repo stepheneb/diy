@@ -671,8 +671,18 @@ Save and mount your results and try it out with a different atmosphere!
     # for each external otrunk activity
     ExternalOtrunkActivity.find(:all, :conditions => "public=1").each do |a|
       FileUtils.mkdir_p(cache_dir + "#{a.uuid}/")
-      cacher = Concord::DiyLocalCacher.new(:url => a.external_otml_url, :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
-      cacher.cache
+      if a.external_otml_url
+        cacher = Concord::DiyLocalCacher.new(:url => a.external_otml_url, :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
+        cacher.cache
+      elsif a.otml
+        # save the otml into the filesystem, then run the cacher on that file
+        File.open(cache_dir + "#{a.uuid}/original.otml") do |f|
+          f.write(a.otml)
+          f.flush
+        end
+        cacher = Concord::DiyLocalCacher.new(:url => cache_dir + "#{a.uuid}/original.otml", :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
+        cacher.cache
+      end
     end
     
     puts "Be sure to set :cache_external_otrunk_activities: true in your application config file!"
