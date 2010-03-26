@@ -75,9 +75,9 @@ set(:email_addresses) do
 end
 
 set :repository,  "https://svn.concord.org/svn/diy/trunk"
-
 set :mongrel_user, "mongrel"
 set :mongrel_group, "users"
+set :use_passenger, false
 
 # Caches the svn co in shared and just does a svn up before copying the code to a new release
 # see: http://blog.innerewut.de/tags/capistrano%20deployment%20webistrano%20svn%20subversion%20cache
@@ -104,6 +104,7 @@ after "deploy:cold", :setup_new_diy
 after "deploy:update_code", :copy_configs
 after "deploy:symlink", :chown_folders
 before "deploy", :verify_action
+before "verify_action", :set_server_type
 
 task :copy_configs, :roles => :app do
   run "cp #{shared_path}/config/database.yml #{release_path}/config/database.yml"
@@ -116,7 +117,11 @@ task :copy_configs, :roles => :app do
 end
 
 task :chown_folders, :roles => :app do
-  sudo "chown -R mongrel.users #{deploy_to}"
+  if use_passenger
+    sudo "chown -R apache.users #{deploy_to}"
+  else
+    sudo "chown -R mongrel.users #{deploy_to}"
+  end
   sudo "chmod -R g+w #{deploy_to}"
 end
 
@@ -225,6 +230,8 @@ def render(template_file)
   result = ERB.new(template).result(binding)  
 end
 
+
+
 desc "calls user.save for every user"
 task :save_all_users, :roles => :app do
   run "cd #{current_release}; script/runner -e production 'User.find(:all).each{|u| u.save }'"
@@ -237,7 +244,35 @@ task :verify_action, :roles => :app do
   Running the #{version} stage
   Deploying to #{deploy_to}
   App name: #{clean_app_name}
+  Server Type: #{server_type}
   *******************************************************************
   EOM
   abort unless Capistrano::CLI.ui.agree( "Does that sound right? (y/n) ",true)
+end
+
+desc "set the server type (passenger or mogrel)"
+task :set_server_type do
+  if use_passenger
+    set :server_type, "passenger"
+    
+    namespace :deploy do
+      #############################################################
+      #  Passenger
+      #############################################################
+      # Restart passenger on deploy
+      desc "Restarting passenger with restart.txt"
+      task :restart, :roles => :app, :except => { :no_release => true } do
+        sudo "touch #{current_path}/tmp/restart.txt"
+      end
+
+      [:start, :stop].each do |t|
+        desc "#{t} task is a no-op with passenger"
+        task t, :roles => :app do ; end
+      end
+    end
+  else
+    # this is the default, and the stages were defined elsewhere..
+    # TODO: Where are the mongrel tasks defined?
+    set :server_type, "mogrel"
+  end
 end

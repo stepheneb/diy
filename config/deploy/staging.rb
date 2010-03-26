@@ -16,6 +16,7 @@ set :local_password, "#{clean_app_name}"
 set :local_database_prefix, "staging_#{clean_app_name}"
 set :local_production_database_prefix, "production_#{clean_app_name}"
 set :local_staging_database_prefix, "staging_#{clean_app_name}"
+set :use_passenger, true
 
 desc "copies the production db over the staging db"
 task :reset_staging_db, :roles => :db do
@@ -31,21 +32,4 @@ task :reset_staging_db, :roles => :db do
   # put app into running mode
   !deploy::web::enable
   puts "You'll probably want to run cap reset_staging_db on the SDS so that the database ids will match up correctly. Note that this can mess up references in other staging DIYs, so be careful!"
-end
-
-namespace :deploy do
-  #############################################################
-  #  Passenger
-  #############################################################
-      
-  # Restart passenger on deploy
-  desc "Restarting passenger with restart.txt"
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    sudo "touch #{current_path}/tmp/restart.txt"
-  end
-  
-  [:start, :stop].each do |t|
-    desc "#{t} task is a no-op with passenger"
-    task t, :roles => :app do ; end
-  end
 end
