@@ -685,7 +685,7 @@ Save and mount your results and try it out with a different atmosphere!
       end
     end
     
-    puts "Be sure to set :cache_external_otrunk_activities: true in your application config file!"
+    puts "\nDone!\n\nBe sure to set :cache_external_otrunk_activities: true in your application config file!"
   end
   
   desc "Copy all of the external mw models which reside in zip files (created in MW 1.3) locally"
