@@ -671,10 +671,10 @@ Save and mount your results and try it out with a different atmosphere!
     # for each external otrunk activity
     ExternalOtrunkActivity.find(:all, :conditions => "public=1").each do |a|
       FileUtils.mkdir_p(cache_dir + "#{a.uuid}/")
-      if a.external_otml_url
+      if a.external_otml_url && a.external_otml_url > 5
         cacher = Concord::DiyLocalCacher.new(:url => a.external_otml_url, :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
         cacher.cache
-      elsif a.otml
+      elsif a.otml && a.otml > 10
         # save the otml into the filesystem, then run the cacher on that file
         File.open(cache_dir + "#{a.uuid}/original.otml") do |f|
           f.write(a.otml)
