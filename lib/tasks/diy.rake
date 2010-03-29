@@ -662,6 +662,7 @@ Save and mount your results and try it out with a different atmosphere!
   
   desc "Copy all of the external otrunk report templates to a local location, including referenced artifacts"
   task :copy_otrunk_reports_locally => :environment do
+    require 'fileutils'
     begin
       require 'concord_cacher'
     rescue LoadError
@@ -669,6 +670,7 @@ Save and mount your results and try it out with a different atmosphere!
     end
     
     cache_dir = "#{RAILS_ROOT}/public/cache/"
+    FileUtils.mkdir_p(cache_dir)
     
     OtrunkReportTemplate.find(:all).each do |rt|
       rt.save
@@ -689,6 +691,7 @@ Save and mount your results and try it out with a different atmosphere!
     end
 
     cache_dir = "#{RAILS_ROOT}/public/cache/"
+    FileUtils.mkdir_p(cache_dir)
     
     # for each external otrunk activity
     ExternalOtrunkActivity.find(:all).each do |a|
