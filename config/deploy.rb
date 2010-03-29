@@ -224,6 +224,16 @@ task :setup_new_diy, :roles => :app do
   run "cd #{current_release}; RAILS_ENV=production rake diy:setup_new_database"
 end
 
+task :disable_web, :roles => :web do
+  on_rollback { run "rm #{current_path}/public/system/maintenance.html" }
+
+  put render("maintenance.rhtml"), "#{current_path}/public/system/maintenance.html"
+end
+
+task :enable_web, :roles => :web do
+  run "rm #{current_path}/public/system/maintenance.html"
+end
+
 def render(template_file)
   require 'erb'
   template = File.read(erb_templates_folder + "/" + template_file)
