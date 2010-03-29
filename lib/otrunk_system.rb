@@ -64,6 +64,9 @@ module OtrunkSystem
       begin
         cacher = Concord::DiyLocalCacher.new(:url => self.external_otml_url, :activity => self, :cache_dir => cache_dir)
         cacher.cache
+        self.external_otml_always_update = false
+        self.otml = File.open(File.join(cache_dir,self.uuid,"#{self.uuid}.otml")).read
+        self.save
       rescue
       end
     end
