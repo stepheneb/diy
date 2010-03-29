@@ -672,6 +672,7 @@ Save and mount your results and try it out with a different atmosphere!
     
     OtrunkReportTemplate.find(:all).each do |rt|
       rt.save
+      puts "\nCaching:\n    #{rt.id}: #{rt.name} -- #{rt.external_otml_url} -- #{rt.otml ? "true" : "false"}\n"
       rt.cache_external_otml
     end
     
@@ -691,6 +692,7 @@ Save and mount your results and try it out with a different atmosphere!
     
     # for each external otrunk activity
     ExternalOtrunkActivity.find(:all).each do |a|
+      puts "\nCaching:\n    #{a.id}: #{a.name} -- #{a.external_otml_url} -- #{a.otml ? "true" : "false"}\n"
       FileUtils.mkdir_p(cache_dir + "#{a.uuid}/")
       if a.external_otml_url && a.external_otml_url.size > 5
         cacher = Concord::DiyLocalCacher.new(:url => a.external_otml_url, :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
