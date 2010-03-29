@@ -9,6 +9,7 @@ module OtrunkSystem
   
   require 'hpricot'
   require 'concord_cacher'
+  require 'fileutils'
 
   # The short_name is used as part of the jnlp filename.
   # It should be run whenever the name of the runnable changes.
@@ -60,14 +61,16 @@ module OtrunkSystem
   
   def cache_external_otml
     if self.external_otml_url && self.external_otml_url.size > 5
-      cache_dir = File.join("#{RAILS_ROOT}",'public','cache') + '/'
+      cache_dir = File.join("#{RAILS_ROOT}",'public','cache',self.uuid) + '/'
+      FileUtils.mkdir_p(cache_dir)
       begin
         cacher = Concord::DiyLocalCacher.new(:url => self.external_otml_url, :activity => self, :cache_dir => cache_dir)
         cacher.cache
         self.external_otml_always_update = false
-        self.otml = File.open(File.join(cache_dir,self.uuid,"#{self.uuid}.otml")).read
+        self.otml = File.open(File.join(cache_dir,"#{self.uuid}.otml")).read
         self.save
-      rescue
+      rescue => e
+        puts "#{e}"
       end
     end
   end
