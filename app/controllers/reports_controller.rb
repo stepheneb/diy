@@ -1,5 +1,6 @@
 require 'hpricot'
 require 'open-uri'
+require 'concord_cacher'
 
 class ReportsController < ApplicationController
 
@@ -207,7 +208,11 @@ class ReportsController < ApplicationController
       activity = otml_report_template.elements["//*[@local_id='external_activity_url']"]
       unless activity.blank?
         if ((@report.reportable.kind_of? ExternalOtrunkActivity) && ! @report.reportable.external_otml_url.blank?)
-          activity.attributes["href"] = @report.reportable.external_otml_url
+          if (APP_PROPERTIES[:cache_external_otrunk_activities] == true)
+            activity.attributes["href"] = @report.reportable.cached_otml_url
+          else
+            activity.attributes["href"] = @report.reportable.external_otml_url
+          end
         else 
           activity.attributes["href"] = otml_external_otrunk_activity_report_url(@report.reportable)
         end

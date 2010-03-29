@@ -656,6 +656,27 @@ Save and mount your results and try it out with a different atmosphere!
   # TODO List each failed artifact.
 		} # end timeout
   end
+  
+  desc "Copy all otrunk activities and reports to the local filesystem"
+  task :copy_otrunk_locally => [:environment, :copy_otrunk_reports_locally, :copy_otrunk_activities_locally]
+  
+  desc "Copy all of the external otrunk report templates to a local location, including referenced artifacts"
+  task :copy_otrunk_reports_locally => :environment do
+    begin
+      require 'concord_cacher'
+    rescue LoadError
+      raise "You need to have the concord_cacher gem installed to cache activities locally. Please run 'gem install concord_cacher'."
+    end
+    
+    cache_dir = "#{RAILS_ROOT}/public/cache/"
+    
+    OtrunkReportTemplate.find(:all).each do |rt|
+      rt.save
+      rt.cache_external_otml
+    end
+    
+    puts "\nDone!\n\nBe sure to set :cache_external_otrunk_activities: true in your application config file!"
+  end
 
   desc "Copy all of the external otrunk activities to a local location, including referenced artifacts"
   task :copy_otrunk_activities_locally => :environment do
@@ -669,12 +690,12 @@ Save and mount your results and try it out with a different atmosphere!
     cache_dir = "#{RAILS_ROOT}/public/cache/"
     
     # for each external otrunk activity
-    ExternalOtrunkActivity.find(:all, :conditions => "public=1").each do |a|
+    ExternalOtrunkActivity.find(:all).each do |a|
       FileUtils.mkdir_p(cache_dir + "#{a.uuid}/")
-      if a.external_otml_url && a.external_otml_url > 5
+      if a.external_otml_url && a.external_otml_url.size > 5
         cacher = Concord::DiyLocalCacher.new(:url => a.external_otml_url, :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
         cacher.cache
-      elsif a.otml && a.otml > 10
+      elsif a.otml && a.otml.size > 10
         # save the otml into the filesystem, then run the cacher on that file
         File.open(cache_dir + "#{a.uuid}/original.otml") do |f|
           f.write(a.otml)

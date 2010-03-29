@@ -8,6 +8,7 @@ module OtrunkSystem
   include ActionController::UrlWriter
   
   require 'hpricot'
+  require 'concord_cacher'
 
   # The short_name is used as part of the jnlp filename.
   # It should be run whenever the name of the runnable changes.
@@ -57,6 +58,14 @@ module OtrunkSystem
     end
   end
   
+  def cache_external_otml
+    if self.external_otml_url
+      cache_dir = File.join("#{RAILS_ROOT}",'public','cache') + '/'
+      cacher = Concord::DiyLocalCacher.new(:url => self.external_otml_url, :activity => self, :cache_dir => cache_dir)
+      cacher.cache
+    end
+  end
+  
   def otml=(otml)
     self[:otml] = otml
   end
@@ -64,7 +73,7 @@ module OtrunkSystem
   def otml
     check_for_external_otml if should_update_from_external_url?
     generated_otml = self[:otml]
-    unless existing_codebase?
+    if use_cached_location? || ! existing_codebase?
       generated_codebase = generate_otml_codebase
       if generated_codebase
         otml_xml_doc = Hpricot.XML(generated_otml)
@@ -75,6 +84,9 @@ module OtrunkSystem
     generated_otml
   end
   
+  def use_cached_location?
+    return (APP_PROPERTIES[:cache_external_otrunk_activities] == true) && (self.kind_of?(ExternalOtrunkActivity) || self.kind_of?(OtrunkReportTemplate))
+  end
 
   # Figure out the codebase of the otml file 
   # nil is returned if a codebase is not necessary 
@@ -83,7 +95,7 @@ module OtrunkSystem
     if external_otml_always_update 
       # set the codebase to the dir on the external web server that delivered the otml 
       File.dirname(external_otml_url) 
-    elsif (APP_PROPERTIES[:cache_external_otrunk_activities] == true) && (self.kind_of? ExternalOtrunkActivity) 
+    elsif use_cached_location?
       # this won't be a reasonable codebase unless we first run a script 
       # which creates a local cache directory and copies all the resources there. 
       # in that case the :cache_external_otrunk_activities property should be true 
@@ -97,7 +109,7 @@ module OtrunkSystem
   end
 
   def existing_codebase?
-    existing_codebase = self[:otml][/<otrunk.*?codebase=["'](.*?)["'']>/, 1] 
+    existing_codebase = self[:otml][/<otrunk.*?codebase=["'](.*?)["']>/, 1] 
   end
 
   # If external_otml_url is not nil and either
