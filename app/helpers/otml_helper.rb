@@ -232,7 +232,8 @@ module OtmlHelper
   end
 
   def otml_drawing(xml, id)
-    xml.OTDrawingTool("name" => "Drawing", "local_id" => id)
+    xml.OTDrawingTool("name" => "Drawing", "local_id" => id,"isVectorStyle" => false)
+    # xml.OTDrawingTool("name" => "Drawing", "local_id" => id)
   end
 
   def otml_model(model, xml, id)
