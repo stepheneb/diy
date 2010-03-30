@@ -3,6 +3,18 @@
 
 RAILS_ROOT = "#{File.dirname(__FILE__)}/.." unless defined?(RAILS_ROOT)
 
+unless defined? Rails.root
+  # HACK: Support newer Rails.root method in older rails version.
+  # required by generated cucumber.rb file.
+  module Rails
+    class << self
+      def root
+        RAILS_ROOT
+      end
+    end
+  end
+end
+
 module Rails
   class << self
     def boot!
