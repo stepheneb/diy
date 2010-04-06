@@ -675,7 +675,7 @@ Save and mount your results and try it out with a different atmosphere!
     OtrunkReportTemplate.find(:all).each do |rt|
       rt.save
       puts "\nCaching:\n    #{rt.id}: #{rt.name} -- #{rt.external_otml_url} -- #{rt.otml ? "true" : "false"}\n"
-      rt.cache_external_otml
+      rt.cache_external_otml(true)
     end
     
     puts "\nDone!\n\nBe sure to set :cache_external_otrunk_activities: true in your application config file!"

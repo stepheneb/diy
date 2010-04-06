@@ -59,12 +59,12 @@ module OtrunkSystem
     end
   end
   
-  def cache_external_otml
+  def cache_external_otml(verbose = false)
     if self.external_otml_url && self.external_otml_url.size > 5
       cache_dir = File.join("#{RAILS_ROOT}",'public','cache',self.uuid) + '/'
       FileUtils.mkdir_p(cache_dir)
       begin
-        cacher = Concord::DiyLocalCacher.new(:url => self.external_otml_url, :activity => self, :cache_dir => cache_dir)
+        cacher = Concord::DiyLocalCacher.new(:url => self.external_otml_url, :activity => self, :cache_dir => cache_dir, :verbose => verbose)
         cacher.cache
         self.external_otml_always_update = false
         self.otml = File.open(File.join(cache_dir,"#{self.uuid}.otml")).read
