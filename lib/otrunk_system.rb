@@ -48,7 +48,9 @@ module OtrunkSystem
   def cached_otml_url
     if Thread.current[:request] && self.uuid
       u = URI.parse("#{Thread.current[:request].protocol}#{Thread.current[:request].host}:#{Thread.current[:request].port}/#{Thread.current[:request].path}")
-      path = "/cache/#{self.uuid}/#{self.uuid}.otml"
+      path = "/cache/#{self.uuid}.otml"
+      path = "/cache/#{self.uuid}/#{self.uuid}.otml" if APP_PROPERTIES[:maintain_separate_caches]
+      
       if ActionController::AbstractRequest.relative_url_root
         path = "#{ActionController::AbstractRequest.relative_url_root}#{path}"
       end
@@ -61,14 +63,17 @@ module OtrunkSystem
   
   def cache_external_otml(verbose = false)
     if self.external_otml_url && self.external_otml_url.size > 5
-      cache_dir = File.join("#{RAILS_ROOT}",'public','cache',self.uuid) + '/'
+      cache_dir = File.join("#{RAILS_ROOT}",'public','cache')
+      cache_dir = File.join(cache_dir, self.uuid) if APP_PROPERTIES[:maintain_separate_caches]
+      cache_dir += '/'
+      
       FileUtils.mkdir_p(cache_dir)
       begin
         cacher = Concord::DiyLocalCacher.new(:url => self.external_otml_url, :activity => self, :cache_dir => cache_dir, :verbose => verbose)
         cacher.cache
         self.external_otml_always_update = false
         self.otml = File.open(File.join(cache_dir,"#{self.uuid}.otml")).read
-        self.save
+        self.save!
       rescue => e
         puts "#{e}"
       end

@@ -660,6 +660,10 @@ Save and mount your results and try it out with a different atmosphere!
   desc "Copy all otrunk activities and reports to the local filesystem"
   task :copy_otrunk_locally => [:environment, :copy_otrunk_reports_locally, :copy_otrunk_activities_locally]
   
+  def make_cache_dir
+    FileUtils.mkdir_p("#{RAILS_ROOT}/public/cache/")
+  end
+  
   desc "Copy all of the external otrunk report templates to a local location, including referenced artifacts"
   task :copy_otrunk_reports_locally => :environment do
     require 'fileutils'
@@ -668,10 +672,7 @@ Save and mount your results and try it out with a different atmosphere!
     rescue LoadError
       raise "You need to have the concord_cacher gem installed to cache activities locally. Please run 'gem install concord_cacher'."
     end
-    
-    cache_dir = "#{RAILS_ROOT}/public/cache/"
-    FileUtils.mkdir_p(cache_dir)
-    
+
     OtrunkReportTemplate.find(:all).each do |rt|
       rt.save
       puts "\nCaching:\n    #{rt.id}: #{rt.name} -- #{rt.external_otml_url} -- #{rt.otml ? "true" : "false"}\n"
@@ -696,19 +697,7 @@ Save and mount your results and try it out with a different atmosphere!
     # for each external otrunk activity
     ExternalOtrunkActivity.find(:all).each do |a|
       puts "\nCaching:\n    #{a.id}: #{a.name} -- #{a.external_otml_url} -- #{a.otml ? "true" : "false"}\n"
-      FileUtils.mkdir_p(cache_dir + "#{a.uuid}/")
-      if a.external_otml_url && a.external_otml_url.size > 5
-        cacher = Concord::DiyLocalCacher.new(:url => a.external_otml_url, :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
-        cacher.cache
-      elsif a.otml && a.otml.size > 10
-        # save the otml into the filesystem, then run the cacher on that file
-        File.open(cache_dir + "#{a.uuid}/original.otml") do |f|
-          f.write(a.otml)
-          f.flush
-        end
-        cacher = Concord::DiyLocalCacher.new(:url => cache_dir + "#{a.uuid}/original.otml", :activity => a, :verbose => true, :cache_dir => cache_dir + "#{a.uuid}/")
-        cacher.cache
-      end
+      a.cache_external_otml(true)
     end
     
     puts "\nDone!\n\nBe sure to set :cache_external_otrunk_activities: true in your application config file!"

@@ -7,6 +7,15 @@
 :external_otrunk_activities_title: Custom Activities
 :show_external_otrunk_activities: false
 :cache_external_otrunk_activities: false
+# maintain_separate_caches will cause the external otrunk activities to be cached
+# into individual cache directories, instead of into one big shared directory.
+# This does 3 things:
+#   1) Activities are isolated, and can be updated individually without worrying about
+#      affecting other activities
+#   2) Makes the caching process a little slower, as multiple activities might reference
+#      the same resources, but they will need to be cached once per activity
+#   3) Requires slightly more disk space to store the cached files (for the same reason as #2)
+:maintain_separate_caches: false
 :hide_activities: false
 :hide_models: false
 # run style options are: savedata, view, nobundles, preview, norun
