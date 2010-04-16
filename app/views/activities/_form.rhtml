@@ -4,16 +4,7 @@
 	<%= hidden_field 'activity', 'parent_version' %>
   <p><label for="activity_name"><span class="SectionTitle">Activity Name</span></label> <span class='required'>(required)</span><br/>
   <%= text_field 'activity', 'name', :size => 72  %></p>
-  <p><label for="activity_name"><span class="SectionTitle">Image URL</span></label><br/>
-  <%= text_field 'activity', 'image_url', :size => 72  %></p>
-  <%= observe_field :activity_image_url, 
-     :frequency => 3,
-     :update => 'activity_image_url_status',
-     :with => "'imageurl=' + escape(value)",
-     :url => { :action=>"check_image_url", :controller=>"activities" } %>
-  <div id="activity_image_url_status">
-    <%= render :partial => 'shared/check_image_url', :locals => {:ar_model => @activity} %>
-  </div>
+      
   <p><label for="activity_description"><span class="SectionTitle">Description</span></label><br/>
   <%= text_area 'activity', 'description', "cols" => 72, :rows => 2 %></p>
 
