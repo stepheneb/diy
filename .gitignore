@@ -14,9 +14,11 @@
 
 # database files:
 db/development_structure.sql
-itsi_pro.sql
+*pro.sql
 
 # reports
 reports/*
-
 hudson/*
+
+# misc local resources
+local_resources/*
