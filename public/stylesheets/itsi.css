@@ -578,8 +578,6 @@ div.progressBar div.background {
 }
 
 .image_preview {
-  max-width: 200px;
-  max-height: 200px;
   overflow: hidden;
   display: inline-block; 
   border: 1px solid gray; 
