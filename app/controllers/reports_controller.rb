@@ -201,9 +201,24 @@ class ReportsController < ApplicationController
     @report.otrunk_report_template.otml
   end
   
+  def reference_list(list)
+    out = []
+    list.each do |b|
+      out << "<object refid='#{b}' />"
+    end
+    return out.join("\n")
+  end
+  
   def otml
     begin
-      otml_report_template = REXML::Document.new(report_template_otml).root
+      report_template_xml = report_template_otml
+      
+      setup_overlay_requirements(@report.reportable) # initializes @bundles, @overlays, @rootObjectID
+      report_template_xml.sub!(/<!-- BUNDLES -->/, reference_list(@bundles))
+      report_template_xml.sub!(/<!-- OVERLAYS -->/, reference_list(@overlays))
+      report_template_xml.sub!(/<!-- ROOT OBJECT -->/, "<object refid='#{@rootObjectID}' />")
+      
+      otml_report_template = REXML::Document.new(report_template_xml).root
       
       activity = otml_report_template.elements["//*[@local_id='external_activity_url']"]
       unless activity.blank?
@@ -317,6 +332,7 @@ class ReportsController < ApplicationController
           user.attributes["id"] = l.uuid
         end
       end
+      
       render :xml => otml_report_template.to_s
       rescue => e
       render :xml => "#{$!}\n#{e.backtrace.join("\n")}", :layout => "otml_message"
