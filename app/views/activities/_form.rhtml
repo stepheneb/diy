@@ -158,7 +158,7 @@
   <p>
     <label for="activity_collectdata_model_active"><span class="SectionTitle">Model: </span></label>
     <%= check_box 'activity', 'collectdata_model_active'  %>
-    <%= select 'activity', 'model_id',  Model.find(:all).map {|m| [m.name, m.id] }  %>
+    <%= select 'activity', 'model_id',  Model.find(:all).map {|m| ["#{m.id}: #{m.name}", m.id] }  %>
   </p>
   <label for="activity_collectdata_text_response">Open text response:</label><%= check_box 'activity', 'collectdata_text_response'  %><br />
   <label for="activity_collectdata_drawing_response">  Drawing response:</label><%= check_box 'activity', 'collectdata_drawing_response'  %><br />
@@ -194,7 +194,7 @@
   <p>
     <label for="activity_collectdata2_model_active"><span class="SectionTitle">Model: </span></label>
     <%= check_box 'activity', 'collectdata2_model_active'  %>
-    <%= select 'activity', 'collectdata2_model_id',  Model.find(:all).map {|m| [m.name, m.id] }  %>
+    <%= select 'activity', 'collectdata2_model_id',  Model.find(:all).map {|m| ["#{m.id}: #{m.name}", m.id] }  %>
   </p>
   <label for="activity_collectdata2_text_response">Open text response:</label><%= check_box 'activity', 'collectdata2_text_response'  %><br />
   <label for="activity_collectdata2_drawing_response">  Drawing response:</label><%= check_box 'activity', 'collectdata2_drawing_response'  %>
@@ -229,7 +229,7 @@
   <p>
     <label for="activity_collectdata3_model_active"><span class="SectionTitle">Model: </span></label>
     <%= check_box 'activity', 'collectdata3_model_active'  %>
-    <%= select 'activity', 'collectdata3_model_id',  Model.find(:all).map {|m| [m.name, m.id] }  %>
+    <%= select 'activity', 'collectdata3_model_id',  Model.find(:all).map {|m| ["#{m.id}: #{m.name}", m.id] }  %>
   </p>
   <label for="activity_collectdata3_text_response">Open text response:</label><%= check_box 'activity', 'collectdata3_text_response'  %><br />
   <label for="activity_collectdata3_drawing_response">  Drawing response:</label><%= check_box 'activity', 'collectdata3_drawing_response'  %>
@@ -295,7 +295,7 @@
   <p>
     <label for="activity_further_model_active"><span class="SectionTitle">Model: </span></label>
     <%= check_box 'activity', 'further_model_active'  %>
-    <%= select 'activity', 'further_model_id',  Model.find(:all).map {|m| [m.name, m.id] }  %>
+    <%= select 'activity', 'further_model_id',  Model.find(:all).map {|m| ["#{m.id}: #{m.name}", m.id] }  %>
   </p>
   <label for="activity_further_text_response">Open text response: </label><%= check_box 'activity', 'further_text_response'  %><br />
   <label for="activity_further_drawing_response">  Drawing response:</label><%= check_box 'activity', 'further_drawing_response'  %>
