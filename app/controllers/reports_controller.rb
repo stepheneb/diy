@@ -274,7 +274,8 @@ class ReportsController < ApplicationController
         setup_default_overlay(@report.reportable.id, group_id)
         
         # insert the overlay URL into the template
-        otml_report_template.elements["//OTMultiUserRoot"].attributes["groupOverlayURL"] = @groupOverlayURL
+        multi_root = otml_report_template.elements["//OTMultiUserRoot"]
+        multi_root.attributes["groupOverlayURL"] = @groupOverlayURL if multi_root
       end
       
       # insert the OTGroupListManager, OTGroupMember, OTProxyService imports
