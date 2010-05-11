@@ -1,11 +1,13 @@
 <div class="otrunkActivity">
 
 <h1><%=h @activity.name %></h1>
-  <%= render :partial => "shared/show_image_url", :locals => {  
-    :ar_model =>  @activity,
-    :alternate_url =>  'otrunk_objects/model.gif' 
-    } 
-  %>
+  <% unless APP_PROPERTIES[:hide_activity_image] %>
+    <%= render :partial => "shared/show_image_url", :locals => {  
+      :ar_model =>  @activity,
+      :alternate_url =>  'otrunk_objects/model.gif' 
+      } 
+    %>
+  <% end %>
 <div class='otrunkActivitySection'>
   <h2>Introduction/Discovery Question</h2>
   <div class='otrunkActivityContent'>

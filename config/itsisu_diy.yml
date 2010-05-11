@@ -10,3 +10,5 @@
 :hide_models: false
 # run style options are: savedata, view, nobundles, preview, norun
 :anonymous_run_style: preview
+# show an activity preview image? (usually just a generic model image)
+:hide_activity_image: true
