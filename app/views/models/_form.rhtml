@@ -12,23 +12,22 @@
       <span class="modelAttribute">Enter a web url on where the authored model can be loaded from.</span>
     </p>
     
-    <p>
-      <span class="SectionTitle">Image Url: <%= form.text_field :image_url, :size => 72 %></span><br />
-      <span class="modelAttribute">Enter a web url for a preview image.</span>
-      <%= observe_field :model_image_url, 
-         :frequency => 3,
-         :update => 'model_image_url_status',
-         :with => "'imageurl=' + escape(value)",
-         :url => { :action=>"check_image_url", :controller=>"models" } %>
-
-      <div id="model_image_url_status">
-        <%= render :partial => 'shared/check_image_url', :locals => {:ar_model => @model} %>
-      </div>
-    </p>
-    
   <% else %>
     <% @model.model_type.name %>
   <% end %>
+  <p>
+    <span class="SectionTitle">Image Url: <%= form.text_field :image_url, :size => 72 %></span><br />
+    <span class="modelAttribute">Enter a web url for a preview image.</span>
+    <%= observe_field :model_image_url, 
+       :frequency => 3,
+       :update => 'model_image_url_status',
+       :with => "'imageurl=' + escape(value)",
+       :url => { :action=>"check_image_url", :controller=>"models" } %>
+
+    <div id="model_image_url_status">
+      <%= render :partial => 'shared/check_image_url', :locals => {:ar_model => @model} %>
+    </div>
+  </p>
 <p>
   <span class="SectionTitle">Public </span><%= form.check_box :public %> 
   <span class="SectionTitle">  Textile </span><%= form.check_box :textile %>
