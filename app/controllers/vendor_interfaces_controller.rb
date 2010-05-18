@@ -1,6 +1,6 @@
 class VendorInterfacesController < ApplicationController
 
-  access_rule 'admin', :only => [:create, :new, :update]
+  access_rule 'admin', :only => [:create, :new, :update, :edit, :index, :destroy]
 
   layout "standard"
 
