@@ -1,6 +1,6 @@
 class VendorInterfacesController < ApplicationController
 
-  access_rule 'admin'
+  access_rule 'admin', :only => [:create, :new, :update]
 
   layout "standard"
 
@@ -57,6 +57,13 @@ class VendorInterfacesController < ApplicationController
       format.xml  { render :xml => @vendor_interface }
     end
   end
+
+  # GET /vendor_interfaces/small_show/1
+  def small_show
+    @vendor_interface = VendorInterface.find(params[:id])
+    render :layout => false
+  end
+  
 
   # GET /vendor_interfaces/new
   # GET /vendor_interfaces/new.xml

@@ -1,0 +1,29 @@
+<html>
+<head>
+  <style type="text/css">
+    .SectionTitle {font-weight: bold;}
+  </style>
+<head>
+<body>
+
+  <table cellpadding="20px">
+    <tr>
+      <td width="50%" valign="top" align="right" padding="12px">
+        <p><span class="SectionTitle">Name: </span><%= @vendor_interface.name %></p>
+        <p><%= image_tag @vendor_interface.image %></p>
+      </td>
+      <td width="50%" valign="top">
+        <p><span class="SectionTitle">Description: </span><%= @vendor_interface.description %></p>
+        <p><span class="SectionTitle">Communications Protocol: </span><%= @vendor_interface.communication_protocol %></p>
+        <p><span class="SectionTitle">Device Config Strings: </span><p>
+        <% if device_configs = @vendor_interface.device_configs %>
+          <ol>
+            <% device_configs.each do |dc| %>
+              <li><%= link_to dc.config_string, device_config_path(dc) %>
+            <% end %>
+          </ol>
+        <% end %>
+      </td>
+    </tr>
+</body>
+</html>

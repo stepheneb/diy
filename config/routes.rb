@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :vendor_interfaces
+  map.resources :vendor_interfaces, :member => {:small_show => :get }
 
   map.resources :device_configs
   map.resources :vendor_interfaces
