@@ -45,5 +45,15 @@ describe Activity do
       @activity.has_image?.should be false
     end
   end
-  
+
+  it "should not throw NPE when misconfigured with futher models" do
+    model = mock_model(Model, {
+      :name => 'fake'
+    })
+    @activity = Activity.create(@valid_attributes)
+    @activity.further_model_active = true
+    @activity.save
+    @activity.contains_active_model(model).should be false
+    @activity.interactive_components.should_not be_nil
+  end
 end
