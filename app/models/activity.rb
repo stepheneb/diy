@@ -115,7 +115,7 @@ class Activity < ActiveRecord::Base
     m = []
     if collectdata_model_active && model == model_object then m << model end
     if collectdata2_model_active && second_model == model_object then m << second_model end
-    if collectdata3_model_active then m << third_model.model_type.name end
+    if (collectdata3_model_active && third_model) then m << third_model.model_type.name end
     if (further_model_active && fourth_model) then m << fourth_model.model_type.name end
     m.length > 0
   end
