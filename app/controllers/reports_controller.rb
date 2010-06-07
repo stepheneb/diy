@@ -29,6 +29,8 @@ class ReportsController < ApplicationController
       end
     elsif params[:model]
       @report = Report.new(params[:model])
+    elsif params[:report]
+      @report = Report.new(params[:report])
     else
       @report = Report.new
     end
