@@ -123,7 +123,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
             otml_drawing(xml, "draw_id_9")
             if @activity.collectdata_probe_active
               if @activity.prediction_graph_response
-                otml_prediction(@activity.probe_type, xml, "predict_id_1")
+                otml_prediction(@activity.probe_type, xml, "predict_id_1",calibration1)
                 otml_datacollector(@activity.probe_type, @activity.collectdata_probe_multi, calibration1, xml, "dc_id_1", "predict_id_1")
               else
                 otml_datacollector(@activity.probe_type, @activity.collectdata_probe_multi, calibration1, xml, "dc_id_1")
@@ -131,7 +131,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
             end
             if @activity.collectdata2_probe_active
               if @activity.collectdata_graph_response
-                otml_prediction(@activity.second_probe_type, xml, "predict_id_2")
+                otml_prediction(@activity.second_probe_type, xml, "predict_id_2",calibration2)
                 otml_datacollector(@activity.second_probe_type, @activity.collectdata2_probe_multi, calibration2, xml, "dc_id_2", "predict_id_2")
               else
                 otml_datacollector(@activity.second_probe_type, @activity.collectdata2_probe_multi, calibration2, xml, "dc_id_2")

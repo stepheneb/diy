@@ -197,13 +197,7 @@ module OtmlHelper
           xml.dataStore { xml.OTDataStore("local_id" => "ds_#{id}") } 
         } 
       }
-      if calibration
-        xml.xDataAxis { xml.OTDataAxis("min" => calibration.x_axis_min, "max" => calibration.x_axis_max, "label" => "Time", "units" => "s") }
-        xml.yDataAxis { xml.OTDataAxis("min" => calibration.y_axis_min, "max" => calibration.y_axis_max, "label" => calibration.physical_unit.quantity.capitalize, "units" => calibration.physical_unit.unit_symbol_text) }
-      else
-        xml.xDataAxis { xml.OTDataAxis("min" => "0", "max" => "60", "label" => "Time", "units" => "s") }
-        xml.yDataAxis { xml.OTDataAxis("min" => pt.min, "max" => pt.max, "label" => pt.name, "units" => pt.unit) }
-      end
+      ot_calibration(pt,xml,calibration)
     }
     if pt.ptype == 5 # force
       xml.OTButton("text" => "Zero Force", "local_id" => "force_zero_button_#{id}") {
@@ -214,16 +208,26 @@ module OtmlHelper
     end
   end
 
-  def otml_prediction(pt, xml, id)
+  def otml_prediction(pt, xml, id,calibration = nil)
     xml.OTDataCollector("local_id" => id, "name" => "prediction") {
       xml.source { xml.OTDataGraphable("connectPoints" => "true", "controllable" => "true", "color" => "0xff0000", "drawMarks" => "false", "name" => "Prediction Graph", "xColumn" => "0", "yColumn" => "1") {
         xml.dataStore { xml.OTDataStore("local_id" => "#{id}_datastore") }
       }}
       xml.dataSetFolder { xml.OTFolderObject }
-      xml.xDataAxis { xml.OTDataAxis("min" => "0", "max" => "60", "label" => "Time", "units" => "s") }
-      xml.yDataAxis { xml.OTDataAxis("min" => pt.min, "max" => pt.max, "label" => pt.name, "units" => pt.unit) }
+      ot_calibration(pt,xml,calibration)
     }
   end          
+  
+  def ot_calibration(pt,xml,calibration)
+      if calibration
+        xml.xDataAxis { xml.OTDataAxis("min" => calibration.x_axis_min, "max" => calibration.x_axis_max, "label" => "Time", "units" => "s") }
+        xml.yDataAxis { xml.OTDataAxis("min" => calibration.y_axis_min, "max" => calibration.y_axis_max, "label" => calibration.physical_unit.quantity.capitalize, "units" => calibration.physical_unit.unit_symbol_text) }
+      else
+        xml.xDataAxis { xml.OTDataAxis("min" => "0", "max" => "60", "label" => "Time", "units" => "s") }
+        xml.yDataAxis { xml.OTDataAxis("min" => pt.min, "max" => pt.max, "label" => pt.name, "units" => pt.unit) }
+      end
+  end
+  
 
   def otml_textbox(xml, id)
     xml.OTText("local_id" => id) {
