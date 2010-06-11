@@ -12,3 +12,4 @@
 :anonymous_run_style: preview
 # show an activity preview image? (usually just a generic model image)
 :hide_activity_image: true
+:enable_career_stem: true

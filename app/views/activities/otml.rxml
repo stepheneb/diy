@@ -42,6 +42,11 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
                 if @activity.introduction_drawing_response then response_options << {:drawing => "draw_id_6"} end
                 otml_content_section(xml, "Introduction/Discovery Question", @activity.introduction, @activity.textile, response_options)
                 otml_content_section(xml, "Standards", @activity.standards, @activity.textile) unless @activity.standards.blank?
+                unless @activity.career_stem.blank?
+                  response_options = []
+                  if @activity.career_stem_text_response then response_options << {:textbox => "to_id_career"} end
+                  otml_content_section(xml,"Career Stem Question", @activity.career_stem, @activity.textile, response_options)
+                end
                 otml_content_section(xml, "Materials", @activity.materials, @activity.textile) unless @activity.materials.blank?
                 otml_content_section(xml, "Safety", @activity.safety, @activity.textile) unless @activity.safety.blank?
                 unless @activity.proced.blank?
@@ -112,6 +117,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
             otml_textbox(xml, "to_id_7")
             otml_textbox(xml, "to_id_8")
             otml_textbox(xml, "to_id_9")
+            otml_textbox(xml, "to_id_career")
             otml_drawing(xml, "draw_id_1")
             otml_drawing(xml, "draw_id_2")
             otml_drawing(xml, "draw_id_3")

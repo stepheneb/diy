@@ -67,6 +67,23 @@
   <div id="activity_standards_status" class="fieldPreview"><%= web_content(@activity.standards) %></div>
   <hr />
 
+  <% if APP_PROPERTIES[:enable_career_stem] %>
+    <p>
+      <label for="activity_career_stem"><span class="SectionTitle">Career Stem Question</span></label><br />
+      <%= text_area 'activity', 'career_stem', "cols" => 96, :rows => 12  %><br />
+      <label for="activity_career_stem_text_response">Open text response:</label><%= check_box 'activity', 'career_stem_text_response'  %><br />
+    </p>
+    <%= observe_field :activity_career_stem, 
+      :frequency => 3,
+      :update => 'activity_career_stem_status',
+      :complete => "Element.show('activity_career_stem_status')", 
+      :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+      :url => {:action => 'check_xhtml'} %>
+    <b>Preview:</b>
+    <div id="activity_career_stem_status" class="fieldPreview"><%= web_content(@activity.career_stem) %></div>
+    <hr />
+  <% end %>
+
   <p>
     <label for="activity_materials"><span class="SectionTitle">Materials</span></label><br/>
     <%= text_area 'activity', 'materials', "cols" => 96, :rows => 12  %>
