@@ -65,6 +65,7 @@ module OtmlHelper
       xml.import("class" => "org.concord.sensor.state.OTInterfaceManager")
       xml.import("class" => "org.concord.sensor.state.OTSensorDataProxy")
       xml.import("class" => "org.concord.sensor.state.OTSensorRequest")
+      xml.import("class" => "org.concord.otrunk.OTInclude")
       # model_types
       ModelType.find(:all).each do |mt|
         xml.import("class" => mt.otrunk_object_class)
