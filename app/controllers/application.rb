@@ -258,11 +258,11 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  def setup_overlay_requirements(activity)
+  def setup_overlay_requirements(otml_str)
     require 'hpricot'
       # setup the imports
-    otmlDoc = Hpricot.XML(activity.otml)
-    @imports = []
+    otmlDoc = Hpricot.XML(otml_str)
+    @imports ||= []
     @imports << "org.concord.otrunk.OTIncludeRootObject"
     @imports << "org.concord.otrunk.OTSystem"
     @imports << "org.concord.otrunk.OTInclude"
@@ -270,7 +270,7 @@ class ApplicationController < ActionController::Base
     @imports << "org.concord.otrunk.intrasession.proxy.OTProxyConfig" if ((defined? OTRUNK_USE_LOCAL_CACHE) && OTRUNK_USE_LOCAL_CACHE)
     
     # get the bundles from the original activity otml
-    @bundles = []
+    @bundles ||= []
     bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles").first
     if bundles_elem
       bundles = bundles_elem.children.select {|c| c.elem? }
@@ -281,7 +281,7 @@ class ApplicationController < ActionController::Base
     end
     
     # get the overlays from the original activity otml
-    @overlays = []
+    @overlays ||= []
     overlays_elem = otmlDoc.search("/otrunk/objects/OTSystem/overlays").first
     if overlays_elem
       overlays = overlays_elem.children.select {|c| c.elem? }

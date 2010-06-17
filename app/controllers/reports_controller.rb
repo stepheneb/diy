@@ -215,7 +215,7 @@ class ReportsController < ApplicationController
     begin
       report_template_xml = report_template_otml
       
-      setup_overlay_requirements(@report.reportable) # initializes @bundles, @overlays, @rootObjectID
+      setup_overlay_requirements(@report.reportable.otml) # initializes @bundles, @overlays, @rootObjectID
       report_template_xml.sub!(/<!-- BUNDLES -->/, reference_list(@bundles))
       report_template_xml.sub!(/<!-- OVERLAYS -->/, reference_list(@overlays))
       report_template_xml.sub!(/<!-- ROOT OBJECT -->/, "<object refid='#{@rootObjectID}' />")

@@ -186,7 +186,7 @@ class ModelsController < ApplicationController
     setup_default_overlay(learner.runnable.id, learner.id)
     @learner_overlay_url = "#{get_overlay_server_root}/#{learner.runnable.id}/#{learner.id}.otml"
     
-    setup_overlay_requirements(activity)
+    setup_overlay_requirements(activity.otml)
     
     # otherwise render the default template
     render(:template => 'shared/overlay_otml.builder', :layout => false)

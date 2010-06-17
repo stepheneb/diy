@@ -279,6 +279,10 @@ class ActivitiesController < ApplicationController
     end
     @savedata = params[:savedata]
     @nobundles = params[:nobundles] == 'nobundles'
+    
+    # set up @bundles, @overlays for any external otml models
+    init_external_otml_model_requirements
+    
     render :layout => false
   end
   
@@ -301,7 +305,7 @@ class ActivitiesController < ApplicationController
     setup_default_overlay(learner.runnable.id, learner.id)
     @learner_overlay_url = "#{get_overlay_server_root}/#{learner.runnable.id}/#{learner.id}.otml"
     
-    setup_overlay_requirements(activity)
+    setup_overlay_requirements(activity.otml)
     
     # otherwise render the default template
     render(:template => 'shared/overlay_otml.builder', :layout => false)
@@ -340,4 +344,30 @@ class ActivitiesController < ApplicationController
     end
   end
 
+  private
+  
+  def init_external_otml_model_requirements
+    models = {}
+    models[@activity.model] = @activity.collectdata_model_active
+    models[@activity.collectdata2_model] = @activity.collectdata2_model_active
+    models[@activity.collectdata3_model] = @activity.collectdata3_model_active
+    models[@activity.further_model] = @activity.further_model_active
+    
+    @bundles = []
+    @overlays = []
+    @imports = []
+    models.each do |model,active|
+      if active && model.model_type.otrunk_object_class == "org.concord.otrunk.diy.util.OTDIYExternalRef"
+        begin
+          model_content = open(model.url).read
+          setup_overlay_requirements(model_content)
+        rescue Exception
+          # FIXME What do we do here? Probably the model won't work anyway...
+        end
+      end
+    end
+    @bundles.uniq!
+    @overlays.uniq!
+    @imports.uniq!
+  end
 end

@@ -78,6 +78,11 @@ module OtmlHelper
 
   def otml_services(xml)
     xml.services {
+      if @bundles
+        @bundles.each do |r|
+          xml.object("refid" => r)
+        end
+      end
       xml.OTViewService("showLeftPanel" => "false") {
         xml.viewEntries {
           xml.OTViewEntry("viewClass" => "org.concord.otrunk.view.document.OTDocumentView", "objectClass" => "org.concord.otrunk.view.document.OTDocument")
