@@ -356,11 +356,13 @@ class ActivitiesController < ApplicationController
     @bundles = []
     @overlays = []
     @imports = []
+    @includes = []
     models.each do |model,active|
       if active && model.model_type.otrunk_object_class == "org.concord.otrunk.diy.util.OTDIYExternalRef"
         begin
           model_content = open(model.url).read
           setup_overlay_requirements(model_content)
+          @includes << model.url
         rescue Exception
           # FIXME What do we do here? Probably the model won't work anyway...
         end

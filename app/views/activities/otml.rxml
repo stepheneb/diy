@@ -28,6 +28,13 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
   otml_imports(xml)
   xml.objects {
     xml.OTSystem {
+      if @includes
+        @includes.each do |url|
+          xml.includes {
+            xml.OTInclude("href" => url)
+          }
+        end
+      end
       otml_services(xml)
       xml.root {
         xml.OTCompoundDoc {
