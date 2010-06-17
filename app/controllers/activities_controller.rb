@@ -349,9 +349,9 @@ class ActivitiesController < ApplicationController
   def init_external_otml_model_requirements
     models = {}
     models[@activity.model] = @activity.collectdata_model_active
-    models[@activity.collectdata2_model] = @activity.collectdata2_model_active
-    models[@activity.collectdata3_model] = @activity.collectdata3_model_active
-    models[@activity.further_model] = @activity.further_model_active
+    models[@activity.second_model] = @activity.collectdata2_model_active
+    models[@activity.third_model] = @activity.collectdata3_model_active
+    models[@activity.fourth_model] = @activity.further_model_active
     
     @bundles = []
     @overlays = []
