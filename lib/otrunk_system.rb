@@ -90,10 +90,22 @@ module OtrunkSystem
     generated_otml = self[:otml]
     if use_cached_location? || ! existing_codebase?
       generated_codebase = generate_otml_codebase
-      if generated_codebase
-        otml_xml_doc = Hpricot.XML(generated_otml)
-        otml_xml_doc.search("/otrunk").set(:codebase,  generated_codebase)
-        generated_otml = otml_xml_doc.to_s
+      if generated_codebase && generated_otml =~ /<otrunk/
+        # Older versions of Hpricot (<= 0.6.164) have problems if you declare lots of entities in the doctype
+        # use regular expressions for now
+        
+        sub_happened = generated_otml.sub!(/(<otrunk[^>]*codebase=['"])(.*?)(['"])/) do |text|
+          "#{$1}#{generated_codebase}#{$3}"
+        end
+        
+        if (sub_happened == nil)
+          generated_otml.sub!(/(<otrunk.*?)>/) do |text|
+            "#{$1} codebase='#{generated_codebase}'>"
+          end
+        end
+        # otml_xml_doc = Hpricot.XML(generated_otml)
+        # otml_xml_doc.search("/otrunk").set(:codebase,  generated_codebase)
+        # generated_otml = otml_xml_doc.to_s
       end
     end
     generated_otml
