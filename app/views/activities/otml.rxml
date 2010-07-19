@@ -52,7 +52,7 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
                 unless @activity.career_stem.blank?
                   response_options = []
                   if @activity.career_stem_text_response then response_options << {:textbox => "to_id_career"} end
-                  otml_content_section(xml,"Career Stem Question", @activity.career_stem, @activity.textile, response_options)
+                  otml_content_section(xml,"Career STEM Question", @activity.career_stem, @activity.textile, response_options)
                 end
                 otml_content_section(xml, "Materials", @activity.materials, @activity.textile) unless @activity.materials.blank?
                 otml_content_section(xml, "Safety", @activity.safety, @activity.textile) unless @activity.safety.blank?
