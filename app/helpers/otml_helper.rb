@@ -266,8 +266,16 @@ module OtmlHelper
       eval("xml.#{element_name}('local_id' => id, 'authoredDataURL' => url)")
     end
     if model.snapshot_active
-      xml.OTSnapshotButton("local_id" => "#{id}_snapshot_button", "target" => "${#{id}}", "snapshotAlbum" => "${#{id}_snapshot_album}")    
-      xml.OTSnapshotAlbum("local_id" => "#{id}_snapshot_album")
+      xml.OTSnapshotButton(
+          "local_id" => "#{id}_snapshot_button", 
+          "target" => "${#{id}}", 
+          "snapshotAlbum" => "${#{id}_snapshot_album}"
+      )    
+      xml.OTSnapshotAlbum(
+          "local_id" => "#{id}_snapshot_album",
+          "limitEntries" => "true",
+          "limit" => "3"
+          )
     end
   end
 
