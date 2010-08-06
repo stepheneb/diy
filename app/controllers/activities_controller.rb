@@ -42,6 +42,8 @@ class ActivitiesController < ApplicationController
     end
   end
 
+  # all_viewable_activities only seems to be
+  # used in the index method when format is XML. 
   def find_collections
     if params[:user_id]
       user = User.find(params[:user_id])
@@ -52,7 +54,7 @@ class ActivitiesController < ApplicationController
       @all_viewable_activities = unit.activities
       @all_editable_activities = @all_viewable_activities
     else
-      @all_viewable_activities = Activity.find(:all, :conditions => "public=true or user_id='#{current_user.id}'", :order => 'name')
+      @all_viewable_activities = Activity.find(:all, :conditions => "(public=true or user_id='#{current_user.id}') and archived=false", :order => 'name')
       @all_editable_activities = @all_viewable_activities.find_all{|a| a.user_id == current_user.id}
     end
   end
@@ -84,6 +86,8 @@ class ActivitiesController < ApplicationController
   # GET /activities.xml
   def index
     @activities = Activity.search(params[:search], params[:page], current_user, [{:learners => :learner_sessions}])
+    # remove the archived ones:
+    @activities.reject! { |a| a.archived }
     @paginated_objects = @activities
     current_user.vendor_interface ||= VendorInterface.find(6)
     params[:list_conditions] = 'all'
@@ -99,6 +103,7 @@ class ActivitiesController < ApplicationController
 
   # GET /activities/1
   # GET /activities/1.xml
+  # should we show archived activities?
   def show
     @learner = @activity.find_or_create_learner(current_user)
     respond_to do |format|
@@ -182,7 +187,10 @@ class ActivitiesController < ApplicationController
   # DELETE /activities/1
   # DELETE /activities/1.xml
   def destroy
-    @activity.destroy
+    # @activity.destroy
+    # instead lets be lets be more gentle:
+    @activity.archived = true;
+    @activity.save
     respond_to do |format|
       format.html { redirect_to(:action => 'index', :page => params[:page] || 1) }
       format.xml  { head :ok }
