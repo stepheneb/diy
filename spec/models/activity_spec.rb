@@ -56,4 +56,24 @@ describe Activity do
     @activity.contains_active_model(model).should be false
     @activity.interactive_components.should_not be_nil
   end
+
+  it "should respond to archived" do
+    @activity = Activity.create(@valid_attributes)
+    @activity.should respond_to :archived
+  end
+
+  it "should respond to archived=" do
+    @activity = Activity.create(@valid_attributes)
+    @activity.should respond_to "archived="
+  end
+
+  it "should be archivable" do
+    @activity = Activity.create(@valid_attributes)
+    @activity.archived = true
+    @activity.save.should be true
+    @activity.archived.should be true
+    @activity.archived = false
+    @activity.archived.should be false
+  end
+
 end
