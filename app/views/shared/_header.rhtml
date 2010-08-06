@@ -39,10 +39,8 @@
         <% if function == 'Show' %>
           <% if changeable %>
               <%= link_to 'Edit', eval("edit_#{@class_name}_path(authorable_object)"), :title => "Make changes in #{authorable_object.name}." %> | 
-              <% restrict_to 'admin || manager' do %> 
-                <% unless no_delete %>
-                  <%= link_to 'Delete', eval("#{@class_name}_path(authorable_object)"), :confirm => "Are you sure you want to delete the #{@class_name_titleized}: #{authorable_object.name}?", :method => :delete, :title => "Delete the #{@class_name_titleized}: #{authorable_object.name}" %> |
-                  <% end %>
+              <% unless no_delete %>
+                <%= link_to 'Delete', eval("#{@class_name}_path(authorable_object)"), :confirm => "Are you sure you want to delete the #{@class_name_titleized}: #{authorable_object.name}?", :method => :delete, :title => "Delete the #{@class_name_titleized}: #{authorable_object.name}" %> |
               <% end %>
           <% end %>        
         <% else %>

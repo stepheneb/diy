@@ -27,12 +27,16 @@
       <%= link_to 'Copy', {:action => 'copy', :id => activity, :page => params[:page] },
       :title => "Make a copy of the activity: '#{activity.name}' and start editing it. You will be listed as the author of the copy. Please give credit to the original author." %><br />
       <% if activity.changeable?(current_user) %>
-        <%= link_to 'Edit', {:action => 'edit', :id => activity, :page => params[:page] },
-        :title => "Make changes in #{activity.name}. As soon as you save your changes you can try it out." %><br />
-        <% restrict_to 'admin || manager' do %> 
-          <%= link_to 'Delete', activity, :confirm => "Are you sure you want to delete Activity: #{activity.id} #{activity.name}?", 
-          :method => :delete, :title => "Delete Activity: #{activity.id} #{activity.name}" %>              
-        <% end %>
+        <%= link_to 'Edit', {
+          :action => 'edit', 
+          :id => activity, 
+          :page => params[:page] },
+          :title => "Make changes in #{activity.name}. As soon as you save your changes you can try it out." %><br />
+        <%= link_to 'Delete', 
+          activity, 
+          :confirm => "Are you sure you want to delete Activity: #{activity.id} #{activity.name}?", 
+          :method => :delete, 
+          :title => "Delete Activity: #{activity.id} #{activity.name}" %>              
       <% end %>
     <% end %> 
   </td>
