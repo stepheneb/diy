@@ -224,7 +224,7 @@ class ReportsController < ApplicationController
   def otml
     begin
       report_template_xml = report_template_otml
-      
+      # see application controller
       setup_overlay_requirements(@report.reportable.otml) # initializes @bundles, @overlays, @rootObjectID
       report_template_xml.sub!(/<!-- BUNDLES -->/, reference_list(@bundles))
       report_template_xml.sub!(/<!-- OVERLAYS -->/, reference_list(@overlays))
