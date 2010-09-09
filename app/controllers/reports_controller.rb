@@ -257,9 +257,12 @@ class ReportsController < ApplicationController
       if params.has_key? :overlay_params
         learner_list_url_hash[:overlay_root] = params[:overlay_root]
       end
-      
-      learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable, learner_list_url_hash)
-      
+      if (@report.reportable.kind_of? ExternalOtrunkActivity) 
+        learner_list_url = ot_learner_data_external_otrunk_activity_url(@report.reportable, learner_list_url_hash)
+      elsif (@report.reportable.kind_of? Activity)
+        learner_list_url = ot_learner_data_activity_url(@report.reportable, learner_list_url_hash)
+      end
+
       external_user_list = otml_report_template.elements["//*[@local_id='external_user_list_url']"]
       if external_user_list.blank?
         raise "Need to have a user_list object with a local_id='external_user_list_url'"
