@@ -293,6 +293,7 @@ class ReportsController < ApplicationController
       # insert the OTGroupListManager, OTGroupMember, OTProxyService imports
       imports = otml_report_template.elements["/otrunk/imports"]
       new_imports = []
+      new_imports << "org.concord.otrunk.script.jruby.OTJRuby"      
       new_imports << "org.concord.otrunk.view.OTGroupListManager"
       new_imports << "org.concord.otrunk.view.OTGroupMember"
       new_imports << "org.concord.otrunk.user.OTUserObject"
