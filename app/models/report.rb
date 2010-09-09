@@ -27,6 +27,38 @@ class Report < ActiveRecord::Base
   def short_name
     self.otrunk_report_template.short_name + '_for_' + self.reportable.short_name
   end
+
+  def self.reportable_serialize_token
+    ":"
+  end
+
+  def self.serialize_reportable(activity)
+   return [activity.class.name.to_s,activity.id].join(reportable_serialize_token)
+  end
+  
+  def reportable_s
+    if self.reportable
+      return Report.serialize_reportable(self.reportable)
+    end
+    return nil
+  end
+
+  def reportable_from_s(string)
+    type,id= string.split(Report.reportable_serialize_token)
+    
+    if id.to_i > 0 && reportable_types.index(type.constantize)
+      self.reportable=type.constantize.find(id.to_i)  
+    else
+      logger.error("Error: bad reportable: #{string}")
+    end
+    return self.reportable
+  end
+
+  def reportable_s=(rep)
+    if rep.is_a? String
+      self.reportable_from_s(rep)
+    end
+  end
   
   protected
   
@@ -40,4 +72,7 @@ class Report < ActiveRecord::Base
     end
   end
 
+  def reportable_types
+    [Activity,ExternalOtrunkActivity]
+  end
 end

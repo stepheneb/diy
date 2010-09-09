@@ -11,7 +11,7 @@ class ReportsController < ApplicationController
   before_filter :setup_vars
   before_filter :setup_object
   before_filter :find_collections, :except => [:destroy]
-
+  before_filter :find_activities, :only =>[:new, :edit]
   protected
   
   def setup_vars
@@ -35,12 +35,23 @@ class ReportsController < ApplicationController
       @report = Report.new
     end
   end
+  
 
+  def update_reportable
+    if params[:reportable]
+      type,id = params[:reportable].split(reportable_split_char)
+    end
+  end
+  
   def find_collections
     @all_viewable_reports = Report.find(:all)
     @all_editable_reports = Report.find_all_by_user_id(current_user.id)
   end
-  
+ 
+  def find_activities
+    @activities = Activity.find(:all).collect                {|i| ["#{i.id}: #{i.name}", Report.serialize_reportable(i)]}
+    @activities << ExternalOtrunkActivity.find(:all).collect {|i| ["#{i.id}: (external) #{i.name}", Rerport.serialize_reportable(i)]}
+  end
   public
   
   # GET /reports
@@ -102,7 +113,6 @@ class ReportsController < ApplicationController
     # but do need to handle hard-coding the reportable_type because
     # it isn't handled more generally yet by the view or the DIY
     #
-    @report.reportable_type = "ExternalOtrunkActivity"
     #
     # eot_id = params[:report][:reportable_id]
     # ort_id = params[:report][:otrunk_report_template_id]
