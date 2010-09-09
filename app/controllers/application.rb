@@ -262,6 +262,7 @@ class ApplicationController < ActionController::Base
     require 'hpricot'
       # setup the imports
     otmlDoc = Hpricot.XML(otml_str)
+    docroot = otmlDoc.children.select{ |c| c.name =~ /otrunk/i }.first #otmlDoc.root was failing because of 'multiple roots' on xml prefix stanza
     @imports ||= []
     @imports << "org.concord.otrunk.OTIncludeRootObject"
     @imports << "org.concord.otrunk.OTSystem"
@@ -276,7 +277,7 @@ class ApplicationController < ActionController::Base
       bundles = bundles_elem.children.select {|c| c.elem? }
       bundles.each_with_index do |b, i|
         # get the object reference for this element
-        @bundles << getOtrunkID(b, otmlDoc.root, i)
+        @bundles << getOtrunkID(b, docroot, i)
       end
     end
     
@@ -287,7 +288,7 @@ class ApplicationController < ActionController::Base
       overlays = overlays_elem.children.select {|c| c.elem? }
       overlays.each_with_index do |o, i|
         # get the object reference for this element
-        @overlays << getOtrunkID(o, otmlDoc.root, i)
+        @overlays << getOtrunkID(o, docroot, i)
       end
     end
     
@@ -298,12 +299,12 @@ class ApplicationController < ActionController::Base
       otsystem = otsystem_elem.children.select {|c| c.elem? && c.name == "root"}[0]
       if otsystem
         rootObj = otsystem.children.select {|c| c.elem? }[0]
-        @rootObjectID = getOtrunkID(rootObj, otmlDoc.root, nil)
+        @rootObjectID = getOtrunkID(rootObj, docroot, nil)
       end
     else
       objects_elem = otmlDoc.search("/otrunk/objects").first
       if objects_elem
-        @rootObjectID = getOtrunkID(objects_elem.children.select {|c| c.elem? }[0], otmlDoc.root, 0)
+        @rootObjectID = getOtrunkID(objects_elem.children.select {|c| c.elem? }[0], docroot, 0)
       end
     end
   end
