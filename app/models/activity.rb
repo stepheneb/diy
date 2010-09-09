@@ -120,4 +120,45 @@ class Activity < ActiveRecord::Base
     m.length > 0
   end
   
+  class MyOtmlHelper
+    include ApplicationHelper
+    include OtmlHelper
+    include ERB::Util
+    attr_accessor :xml
+
+    def initialize(activity)
+      @probetypes = ProbeType.find(:all)
+      @vendor_interface = VendorInterface.find(:first)
+      @savedata = false
+      @nobundles = true
+      # for now maybe this will work
+      @includes = []
+      @overlays = []
+      @bundles = []
+      @activity = activity
+      @xml = Builder::XmlMarkup.new
+    end
+
+    def get_binding
+      binding
+    end
+    def process_local_image_urls(html)
+      html
+    end
+    def process_local_url(url)
+      url 
+    end
+    def link_to(a,b,c)
+      ""
+    end
+  end 
+  
+  def otml
+    helper = MyOtmlHelper.new(self)
+    view_file = "#{RAILS_ROOT}/app/views/activities/otml.rxml"
+    # requires open-uri
+    template = open(view_file).read
+    eval template,helper.get_binding
+    return helper.xml.clone
+  end
 end
