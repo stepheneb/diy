@@ -262,7 +262,7 @@ class ApplicationController < ActionController::Base
     require 'hpricot'
       # setup the imports
     otmlDoc = Hpricot.XML(otml_str)
-    docroot = otmlDoc.children.select{ |c| c.name =~ /otrunk/i }.first #otmlDoc.root was failing because of 'multiple roots' on xml prefix stanza
+    docroot = otmlDoc.children_of_type('otrunk').first #{ |c| c.name =~ /otrunk/i }.first #otmlDoc.root was failing because of 'multiple roots' on xml prefix stanza
     @imports ||= []
     @imports << "org.concord.otrunk.OTIncludeRootObject"
     @imports << "org.concord.otrunk.OTSystem"
