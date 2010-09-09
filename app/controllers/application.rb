@@ -259,9 +259,9 @@ class ApplicationController < ActionController::Base
   end
   
   def setup_overlay_requirements(otml_str)
-    require 'nokogiri'
+    require 'hpricot'
       # setup the imports
-    otmlDoc = Nokogiri.XML(otml_str)
+    otmlDoc = Hpricot.XML(otml_str)
     @imports ||= []
     @imports << "org.concord.otrunk.OTIncludeRootObject"
     @imports << "org.concord.otrunk.OTSystem"
