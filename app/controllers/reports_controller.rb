@@ -50,7 +50,7 @@ class ReportsController < ApplicationController
  
   def find_activities
     @activities = Activity.find(:all).collect                {|i| ["#{i.id}: #{i.name}", Report.serialize_reportable(i)]}
-    @activities << ExternalOtrunkActivity.find(:all).collect {|i| ["#{i.id}: (external) #{i.name}", Report.serialize_reportable(i)]}
+    @activities = @activities + ExternalOtrunkActivity.find(:all).collect {|i| ["#{i.id}: (external) #{i.name}", Report.serialize_reportable(i)]}
   end
   public
   
