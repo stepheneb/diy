@@ -240,7 +240,11 @@ class ReportsController < ApplicationController
           else
             activity.attributes["href"] = @report.reportable.external_otml_url
           end
-        else 
+        elsif (@report.reportable.kind_of? Activity)
+          act = @report.reportable
+          act_otml_url = otml_run_url(:controller => :activities, :id => act.id, :vid => 1, :uid => 1, :nobundles => "nobundles")
+          activity.attributes["href"] = act_otml_url
+        else
           activity.attributes["href"] = otml_external_otrunk_activity_report_url(@report.reportable)
         end
       end
