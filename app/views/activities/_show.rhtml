@@ -259,6 +259,22 @@
   </div>
 <% end %>
 
+<% if @activity.career_stem2 != "" %>
+  <div class='otrunkActivitySection'>
+    <h2>Career STEM Question</h2>
+    <div class='otrunkActivityContent'>
+      <%= web_content(@activity.career_stem2) %>
+      <% if @activity.career_stem2_text_response %>
+        <div class='otrunkActivityTextBox'>
+          <div class='otrunkActivityOpenTextResponse'>
+            <p>Place answer here!</p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
 <% if @activity.further != "" %>
   <div class='otrunkActivitySection'>
     <h2>Further Investigation</h2>

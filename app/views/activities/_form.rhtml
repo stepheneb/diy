@@ -284,6 +284,24 @@
   <div id="activity_conclusion_status" class="fieldPreview"><%= web_content(@activity.conclusion) %></div>
   <hr />
 
+  <% if APP_PROPERTIES[:enable_career_stem] %>
+    <p>
+      <label for="activity_career_stem2"><span class="SectionTitle">Second Career STEM Question</span></label><br />
+      <%= text_area 'activity', 'career_stem2', "cols" => 96, :rows => 12  %><br />
+      <label for="activity_career_stem2_text_response">Open text response:</label><%= check_box 'activity', 'career_stem2_text_response'  %><br />
+    </p>
+    <%= observe_field :activity_career_stem2, 
+      :frequency => 3,
+      :update => 'activity_career_stem2_status',
+      :complete => "Element.show('activity_career_stem2_status')", 
+      :with => "'content=' + escape(value) + '&textile=' + $('activity_textile').checked",
+      :url => {:action => 'check_xhtml'} %>
+    <b>Preview:</b>
+    <div id="activity_career_stem2_status" class="fieldPreview"><%= web_content(@activity.career_stem2) %></div>
+    <hr />
+  <% end %>
+
+
   <p>
     <label for="activity_further"><span class="SectionTitle">Further Investigation</span></label><br/>
     <%= text_area 'activity', 'further', "cols" => 96, :rows => 12  %><br />
