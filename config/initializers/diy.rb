@@ -1,6 +1,10 @@
 # http://rubyreports.org
 # require 'ruport'
 
+require 'hpricot'
+# See http://groups.google.com/group/New-Haven-Ruby-Brigade/msg/3568cd66a6d73581
+Hpricot.buffer_size = 262144 
+
 # see: http://github.com/mislav/will_paginate/wikis/installation
 require 'will_paginate'
 
