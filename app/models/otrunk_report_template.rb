@@ -16,6 +16,23 @@ class OtrunkReportTemplate < ActiveRecord::Base
     def searchable_attributes
       @@searchable_attributes
     end
+  
+    def find_or_create_by_url(url,name="default")
+      found = self.find_by_external_otml_url(url)
+      unless found.nil?
+        return found
+      end
+      options = {
+        :public => true,
+        :description => name,
+        :short_name => name,
+        :name => name,
+        :external_otml_url => url,
+        :external_otml_always_update => true
+      }
+      return self.create(options)
+    end
+
   end
   
   acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}otrunk_report_templates_versions" 
