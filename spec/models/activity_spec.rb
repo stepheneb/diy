@@ -76,4 +76,39 @@ describe Activity do
     @activity.archived.should be false
   end
 
+  describe "creates reports in the diy that" do
+    it "should trigger a callback to create_reportable" do
+      @activity = Activity.new(@valid_attributes)
+      @activity.should_receive(:create_reportable)
+      @activity.save
+    end
+  end
+
+  describe "public activities" do
+    before(:each) do
+      @valid_attributes[:public] = true
+    end
+
+    it "should have one (and only one) report when saved or updated" do
+      @activity = Activity.new(@valid_attributes)
+      @activity.save  
+      Report.find(:all, :conditions => {:reportable_id => @activity.id}).size.should eql 1
+      @activity.update_attributes({:name => "other name"})
+      Report.find(:all, :conditions => {:reportable_id => @activity.id}).size.should eql 1
+    end
+  end
+
+  describe "private activites" do
+    before(:each) do
+      @valid_attributes[:public] = false
+    end
+
+    it "should have have no reports when saved or updated" do
+      @activity = Activity.new(@valid_attributes)
+      @activity.save  
+      Report.find(:all, :conditions => {:reportable_id => @activity.id}).size.should eql 0
+      @activity.update_attributes({:name => "other name"})
+      Report.find(:all, :conditions => {:reportable_id => @activity.id}).size.should eql 0
+    end
+  end
 end
