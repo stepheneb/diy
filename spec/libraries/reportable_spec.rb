@@ -44,8 +44,8 @@ describe Reportable do
   describe "applications without default templates" do
     before(:all) do
       @test = TestClass.new
-      APP_PROPERTIES["#{@test.class.name.camelcase}_report_template_url".to_sym]  = nil
-      APP_PROPERTIES["#{@test.class.name.camelcase}_report_template_name".to_sym] = nil
+      APP_PROPERTIES["#{@test.class.name.underscore}_report_template_url".to_sym]  = nil
+      APP_PROPERTIES["#{@test.class.name.underscore}_report_template_name".to_sym] = nil
     end
     it "shouldn't have default templates" do
       @test.default_template_url.should be_nil
@@ -57,8 +57,8 @@ describe Reportable do
       @test = TestClass.new
       @test_url = "foo"
       @test_name = "foo_name"
-      APP_PROPERTIES["#{@test.class.name.camelcase}_report_template_url".to_sym]  = @test_url
-      APP_PROPERTIES["#{@test.class.name.camelcase}_report_template_name".to_sym] = @test_name
+      APP_PROPERTIES["#{@test.class.name.underscore}_report_template_url".to_sym]  = @test_url
+      APP_PROPERTIES["#{@test.class.name.underscore}_report_template_name".to_sym] = @test_name
     end
     it "should have default templates with expected text values" do
       @test = TestClass.new
