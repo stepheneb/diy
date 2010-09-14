@@ -10,6 +10,7 @@ class ExternalOtrunkActivity < ActiveRecord::Base
     
   include OtrunkSystem
   include SdsRunnable
+  include Reportable
   self.extend SearchableModel
   
   @@searchable_attributes = %w{name description}

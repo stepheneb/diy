@@ -8,6 +8,7 @@ class Activity < ActiveRecord::Base
   include SdsRunnable
   acts_as_versioned :table_name => "#{RAILS_DATABASE_PREFIX}activities_versions"
   include HasImage
+  include Reportable
 
   self.extend SearchableModel
   @@searchable_attributes = %w{name description}
@@ -56,7 +57,6 @@ class Activity < ActiveRecord::Base
   before_save :generate_short_name
   before_save :generate_digest
   before_save :fix_nobundles
-
   def self.new(options=nil)
     a = super(options)
     temperature = ProbeType.find_by_name("Temperature") 
