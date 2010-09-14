@@ -13,3 +13,8 @@
 # show an activity preview image? (usually just a generic model image)
 :hide_activity_image: true
 :enable_career_stem: true
+:activity_report_template_url: http://github.com/concord-consortium/itsisu_reports/raw/master/reports/diy-full-report.otml
+:activity_report_template_name: DIY default activity report template
+:external_otrunk_activity_report_template_url: http://github.com/concord-consortium/itsisu_reports/raw/master/reports/pre-test-report.otml
+:external_otrunk_activity_report_template_name: Pre and Post test report template
+
