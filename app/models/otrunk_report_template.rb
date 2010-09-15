@@ -27,6 +27,7 @@ class OtrunkReportTemplate < ActiveRecord::Base
         :description => name,
         :short_name => name,
         :name => name,
+        :user => User.find_by_login('cstaudt') || User.find(:first),
         :external_otml_url => url,
         :external_otml_always_update => true
       }

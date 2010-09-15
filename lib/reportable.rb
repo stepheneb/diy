@@ -28,6 +28,7 @@ module Reportable
           :description => "#{self.name} report",
           :public => true,
           :reportable => self,
+          :user => self.user,
           :otrunk_report_template => OtrunkReportTemplate.find_or_create_by_url(default_template_url,default_template_name)
         })
       end
