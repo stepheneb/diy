@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<% if @activity.standards != "" %>
+ <% unless @activity.standards.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Standards</h2>
     <div class='otrunkActivityContent'>
@@ -36,7 +36,7 @@
   </div>
 <% end %>
 
-<% if @activity.career_stem != "" %>
+ <% unless @activity.career_stem.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Career STEM Question</h2>
     <div class='otrunkActivityContent'>
@@ -52,7 +52,7 @@
   </div>
 <% end %>
 
-<% if @activity.materials != "" %>
+ <% unless @activity.materials.blank? %>
   <div class   = 'otrunkActivitySection'>
     <h2>Materials</h2>
     <div class = 'otrunkActivityContent'>
@@ -61,7 +61,7 @@
   </div>
 <% end %>
 
-<% if @activity.safety != "" %>
+ <% unless @activity.safety.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Safety</h2>
     <div class='otrunkActivityContent'>
@@ -70,7 +70,7 @@
   </div>
 <% end %>
 
-<% if @activity.proced != "" %>
+ <% unless @activity.proced.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Procedure</h2>
     <div class='otrunkActivityContent'>
@@ -91,7 +91,7 @@
   </div>
 <% end %>
 
-<% if @activity.predict != "" %>
+ <% unless @activity.predict.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Prediction</h2>
     <div class='otrunkActivityContent'>
@@ -120,7 +120,7 @@
 <div class='otrunkActivitySection'>
   <h2>Collect Data</h2>
   <div class='otrunkActivityContent'>
-    <% if @activity.collectdata != "" %>
+     <% unless @activity.collectdata.blank? %>
       <%= web_content(@activity.collectdata) %>
     <% end %>
     <% if @activity.collectdata_probe_active %>
@@ -155,7 +155,7 @@
       </div>
     <% end %>
     
-    <% if @activity.collectdata2 != "" %>
+     <% unless @activity.collectdata2.blank? %>
       <%= web_content(@activity.collectdata2) %>
     <% end %>
     <% if @activity.collectdata2_probe_active %>
@@ -185,7 +185,7 @@
       </div>
     <% end %>
 
-    <% if @activity.collectdata3 != "" %>
+     <% unless @activity.collectdata3.blank? %>
       <%= web_content(@activity.collectdata3) %>
     <% end %>
     <% if @activity.collectdata3_probe_active %>
@@ -217,7 +217,7 @@
   </div>
 </div>
 
-<% if @activity.analysis != "" %>
+ <% unless @activity.analysis.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Analysis</h2>
     <div class='otrunkActivityContent'>
@@ -238,7 +238,7 @@
   </div>
 <% end %>
 
-<% if @activity.conclusion != "" %>
+ <% unless @activity.conclusion.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Conclusion</h2>
     <div class='otrunkActivityContent'>
@@ -259,7 +259,7 @@
   </div>
 <% end %>
 
-<% if @activity.career_stem2 != "" %>
+ <% unless @activity.career_stem2.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Career STEM Question</h2>
     <div class='otrunkActivityContent'>
@@ -275,7 +275,7 @@
   </div>
 <% end %>
 
-<% if @activity.further != "" %>
+ <% unless @activity.further.blank? %>
   <div class='otrunkActivitySection'>
     <h2>Further Investigation</h2>
     <div class='otrunkActivityContent'>
