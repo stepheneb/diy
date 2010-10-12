@@ -282,6 +282,8 @@ class ApplicationController < ActionController::Base
 
         # store reference to the InterfaceManager
         if b.find_element("OTInterfaceManager")
+          @imports << "org.concord.sensor.state.OTDeviceConfig"
+          @imports << "org.concord.sensor.state.OTInterfaceManager"
           @interface_bundle_ref = getOtrunkID(b, docroot, i)
         end
       end
