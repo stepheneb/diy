@@ -301,7 +301,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
   end
   
   def find_vendor_interface
-    unless defined? @vendor_id
+    unless defined? @vendor_interface
       if (params[:vid])
         @vendor_interface = VendorInterface.find(params[:vid])
       end
