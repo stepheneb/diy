@@ -272,12 +272,18 @@ class ApplicationController < ActionController::Base
     
     # get the bundles from the original activity otml
     @bundles ||= []
+    @interface_bundle_ref = nil
     bundles_elem = otmlDoc.search("/otrunk/objects/OTSystem/bundles").first
     if bundles_elem
       bundles = bundles_elem.children.select {|c| c.elem? }
       bundles.each_with_index do |b, i|
         # get the object reference for this element
         @bundles << getOtrunkID(b, docroot, i)
+
+        # store reference to the InterfaceManager
+        if b.find_element("OTInterfaceManager")
+          @interface_bundle_ref = getOtrunkID(b, docroot, i)
+        end
       end
     end
     
