@@ -182,6 +182,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
 
   def overlay_otml
     @user = User.find(params[:uid])
+    find_vendor_interface
     activity = @external_otrunk_activity
     learner = activity.find_or_create_learner(@user)
     group_id = params[:group_id]
@@ -298,5 +299,14 @@ class ExternalOtrunkActivitiesController < ApplicationController
       end
     end
   end
+  
+  def find_vendor_interface
+    unless defined? @vendor_id
+      if (params[:vid])
+        @vendor_interface = VendorInterface.find(params[:vid])
+      end
+    end
+  end
+
   
 end

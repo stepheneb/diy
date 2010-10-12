@@ -107,12 +107,16 @@ module OtmlHelper
           end
         }
       }
-      xml.OTInterfaceManager {
-        xml.deviceConfigs {
-          @vendor_interface.device_configs.each do |dc|
-            xml.OTDeviceConfig("configString" => dc.config_string, "deviceId" => @vendor_interface.device_id)
-          end
-        }
+      otml_device_config(xlm)
+    }
+  end
+
+  def otml_device_config(xml)
+    xml.OTInterfaceManager {
+      xml.deviceConfigs {
+        @vendor_interface.device_configs.each do |dc|
+          xml.OTDeviceConfig("configString" => dc.config_string, "deviceId" => @vendor_interface.device_id)
+        end
       }
     }
   end

@@ -11,7 +11,12 @@ xml.otrunk("xmlns:fo" => "http://www.w3.org/1999/XSL/Format", "xmlns:lxslt" => "
       }
       xml.bundles {
         @bundles.each do |r|
-          xml.object("refid" => r)
+          # use the DIY configured interface manager:
+          if (r.to_s =~/interface_manager/) 
+            otml_device_config(xml)
+          else
+            xml.object("refid" => r)
+          end
         end
         if @learners.size > 0 || @userListURL
           hash = {}
