@@ -107,7 +107,7 @@ module OtmlHelper
           end
         }
       }
-      otml_device_config(xlm)
+      otml_device_config(xml)
     }
   end
 
