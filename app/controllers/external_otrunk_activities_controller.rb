@@ -1,9 +1,9 @@
 require 'hpricot'
 
 class ExternalOtrunkActivitiesController < ApplicationController
+  include ReportableController 
   # GET /external_otrunk_activities
   # GET /external_otrunk_activities.xml
-
   access_rule 'admin || manager || teacher || member', :only => [:new, :edit, :create, :update, :copy, :destroy]
 
   layout "standard"
@@ -46,40 +46,12 @@ class ExternalOtrunkActivitiesController < ApplicationController
     @learner = @external_otrunk_activity.find_or_create_learner(current_user)
   end
 
+  def get_reportable
+    return @external_otrunk_activity
+  end
+
   public
     
-  # GET /learners/1/ot_learner_data.xml
-  def ot_learner_data
-    @learners = @external_otrunk_activity.learners      
-    if params.has_key? :users
-      users_array = params[:users].split ',' 
-      # @learners = @learners.find(:all, :conditions => { :user_id => users_array})
-      
-      # inorder to support running reports for users that haven't run this activity
-      # passed in users that don't have learners should either get learners created
-      # or temporary learners should be created.
-      
-      # we should create real learners so that we can permanently create things like an overlay file for that user/learner
-      @learners = []
-      users_array.each do |uid|
-        if user = User.find(:first, :conditions => {:id => uid})
-          @learners << @external_otrunk_activity.find_or_create_learner(user)
-        end
-      end
-    end
-    # setup overlay folder. These overlay files hold per-user customizations to the activity.
-    @useOverlays = setup_overlay_folder(@external_otrunk_activity.id)
-    
-    if @useOverlays && params[:overlay_root]
-      @overlay_root = params[:overlay_root]
-    end
-    
-    if @useOverlays && params[:overlay_params]
-      @overlay_params = params[:overlay_params]
-    end
-      
-    render(:template => "shared/ot_learner_data.builder", :layout => false)
-  end
 
   def index
 	  @external_otrunk_activities = ExternalOtrunkActivity.search(params[:search], params[:page], current_user)

@@ -1,10 +1,9 @@
 require 'open-uri'
 class ActivitiesController < ApplicationController
-
+  include ReportableController
   access_rule 'admin || manager || teacher || member', :only => [:create, :edit, :copy, :destroy, :usage]
   
   layout "standard", :except => [:otml, :sail_jnlp, :check_xhtml, :save_draft]
-
   before_filter :login_required
 
   # before_filter do |controller|
@@ -63,24 +62,14 @@ class ActivitiesController < ApplicationController
     @learner = @activity.find_or_create_learner(current_user)
   end
 
-  public
-  
-  # GET /learners/1/ot_learner_data.xml
-  def ot_learner_data
-    @learners = @activity.learners
-    # setup overlay folder. These overlay files hold per-user customizations to the activity.
-    @useOverlays = setup_overlay_folder(@activity.id)
-    
-    if @useOverlays && params[:overlay_root]
-      @overlay_root = params[:overlay_root]
-    end
-    
-    if @useOverlays && params[:overlay_params]
-      @overlay_params = params[:overlay_params]
-    end
-    
-    render(:template => "shared/ot_learner_data.builder", :layout => false)
+  def get_reportable
+    return @activity
   end
+
+  public
+ 
+
+
   
   # GET /activities
   # GET /activities.xml
