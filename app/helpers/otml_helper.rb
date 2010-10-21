@@ -175,6 +175,22 @@ module OtmlHelper
     } 
   end
 
+  def otml_calibration(pt,calibration,xml,id)
+    if calibration
+      attributes = []
+      %w{ k0 k1 k2 k3 }.each do |coeff|
+        if calibration.data_filter.send("#{coeff}_active")
+          attributes << "'#{coeff}' => '#{calibration.send(coeff)}'"
+        end
+        attributes << "'sourceChannel' => '1'"
+      end
+      element_name = calibration.data_filter.otrunk_object_class[/(.*\.)(.*)/, 2]
+      eval("xml.#{element_name}(#{attributes.join(',')}) { xml.source { otml_sensor_data_proxy(xml, pt, id) } }")
+    else
+      otml_sensor_data_proxy(xml, pt, id)
+    end
+  end
+
   def otml_datacollector(pt, multi, calibration, xml, id, predict_id=nil)
     xml.OTDataCollector("local_id" => id, "name" => "datacollector", "multipleGraphableEnabled" => multi, 
       "title" => "#{pt.name} Sensor#{if predict_id then ' and Prediction' end} Graph", "autoScaleEnabled" => "true") {
@@ -187,27 +203,34 @@ module OtmlHelper
           } 
         }
       end
+      graphableOpts = {
+        "connectPoints" => "true",
+        "color" => "0x0000ff",
+        "drawMarks" => "false",
+        "name" => "Sensor",
+        "xColumn" => "0",
+        "yColumn" => "1"
+      }
+      if multi
+        # (used as prototype when 'new' is clicked in multigraph
+        xml.prototypeGraphables {
+          xml.OTDataGraphable(graphableOpts) {
+            xml.dataProducer { 
+              otml_calibration(pt,calibration,xml,"proto_#{id}")
+            }
+          } 
+        }
+      end
+
       xml.source { 
-        xml.OTDataGraphable("connectPoints" => "true", "color" => "0x0000ff", "drawMarks" => "false", "name" => "Sensor", "xColumn" => "0", "yColumn" => "1") {
+        xml.OTDataGraphable(graphableOpts) {
           xml.dataProducer { 
-            if calibration
-              attributes = []
-              %w{ k0 k1 k2 k3 }.each do |coeff|
-                if calibration.data_filter.send("#{coeff}_active")
-                  attributes << "'#{coeff}' => '#{calibration.send(coeff)}'"
-                end
-                attributes << "'sourceChannel' => '1'"
-              end
-              element_name = calibration.data_filter.otrunk_object_class[/(.*\.)(.*)/, 2]
-              eval("xml.#{element_name}(#{attributes.join(',')}) { xml.source { otml_sensor_data_proxy(xml, pt, id) } }")
-            else
-              otml_sensor_data_proxy(xml, pt, id)
-            end
+            otml_calibration(pt,calibration,xml,id)
           }
           xml.dataStore { xml.OTDataStore("local_id" => "ds_#{id}") } 
         } 
       }
-      ot_calibration(pt,xml,calibration)
+      ot_axis(pt,xml,calibration)
     }
     if pt.ptype == 5 # force
       xml.OTButton("text" => "Zero Force", "local_id" => "force_zero_button_#{id}") {
@@ -224,11 +247,11 @@ module OtmlHelper
         xml.dataStore { xml.OTDataStore("local_id" => "#{id}_datastore") }
       }}
       xml.dataSetFolder { xml.OTFolderObject }
-      ot_calibration(pt,xml,calibration)
+      ot_axis(pt,xml,calibration)
     }
   end          
   
-  def ot_calibration(pt,xml,calibration)
+  def ot_axis(pt,xml,calibration)
       if calibration
         xml.xDataAxis { xml.OTDataAxis("min" => calibration.x_axis_min, "max" => calibration.x_axis_max, "label" => "Time", "units" => "s") }
         xml.yDataAxis { xml.OTDataAxis("min" => calibration.y_axis_min, "max" => calibration.y_axis_max, "label" => calibration.physical_unit.quantity.capitalize, "units" => calibration.physical_unit.unit_symbol_text) }
@@ -237,7 +260,6 @@ module OtmlHelper
         xml.yDataAxis { xml.OTDataAxis("min" => pt.min, "max" => pt.max, "label" => pt.name, "units" => pt.unit) }
       end
   end
-  
 
   def otml_textbox(xml, id)
     xml.OTText("local_id" => id) {
