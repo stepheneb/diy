@@ -17,4 +17,4 @@
 :activity_report_template_name: DIY default activity report template
 :external_otrunk_activity_report_template_url: http://github.com/concord-consortium/itsisu_reports/raw/master/reports/pre-test-report.otml
 :external_otrunk_activity_report_template_name: Pre and Post test report template
-
+:help_email: itsi-su-support@concord.org

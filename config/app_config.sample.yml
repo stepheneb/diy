@@ -20,3 +20,4 @@
 :hide_models: false
 # run style options are: savedata, view, nobundles, preview, norun
 :anonymous_run_style: preview
+:help_email: diy-support@concord.org

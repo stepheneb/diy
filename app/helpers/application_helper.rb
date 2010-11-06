@@ -112,4 +112,8 @@ module ApplicationHelper
   def get_overlay_server_root(root = OVERLAY_SERVER_ROOT)
     "#{root}/#{Socket::gethostname}/#{RAILS_APPLICATION_KEY}/"
   end
+ 
+  def help_email
+    return APP_PROPERTIES[:help_email] || "stephen@concord.org" 
+  end
 end
