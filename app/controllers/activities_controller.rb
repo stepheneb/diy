@@ -1,7 +1,8 @@
 require 'open-uri'
 class ActivitiesController < ApplicationController
   include ReportableController
-  access_rule 'admin || manager || teacher || member', :only => [:create, :edit, :copy, :destroy, :usage]
+  access_rule 'admin || manager || teacher || member', :only => [:create, :edit, :copy, :destroy]
+  access_rule 'admin', :only => [:usage]
   
   layout "standard", :except => [:otml, :sail_jnlp, :check_xhtml, :save_draft]
   before_filter :login_required

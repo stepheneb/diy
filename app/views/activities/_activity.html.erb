@@ -53,7 +53,7 @@
 	  <% end %>
     </span><br />
     <% @learners = activity.learners.select {|l| l.learner_sessions.count > 0 } %>
-    <% restrict_to 'admin || manager || teacher || member || student' do %>
+    <% restrict_to 'admin' do %>
     <%= link_to "#{pluralize(@learners.length, 'person has', 'people have')} used this Activity", usage_activity_path(activity), :class => 'activityListUseage',
     :title => "A list of everybody who has run the activity: '#{activity.name}'. You can view each persons work." %><br />
     <% end %>

@@ -5,6 +5,7 @@ class ExternalOtrunkActivitiesController < ApplicationController
   # GET /external_otrunk_activities
   # GET /external_otrunk_activities.xml
   access_rule 'admin || manager || teacher || member', :only => [:new, :edit, :create, :update, :copy, :destroy]
+  access_rule 'admin', :only => [:usage]
 
   layout "standard"
 
