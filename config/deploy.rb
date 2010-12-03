@@ -107,11 +107,12 @@ before "deploy", :verify_action
 before "verify_action", :set_server_type
 
 task :copy_configs, :roles => :app do
-  run "cp #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-  run "cp #{shared_path}/config/environment.rb #{release_path}/config/environment.rb"
-  run "cp #{shared_path}/config/sds.yml #{release_path}/config/sds.yml"
-  run "cp #{shared_path}/config/mailer.yml #{release_path}/config/mailer.yml"
-  run "cp #{shared_path}/config/exception_notifier_recipients.yml #{release_path}/config/exception_notifier_recipients.yml"
+  files = %w(database.yml environment.rb sds.yml mail.yml exception_notifier_recipients.yml newrelic.yml)
+  files.each do |file|
+    src =  "#{shared_path}/config/#{file}"
+    dst = "#{release_path}/config/#{file}"
+    run "if [ -r #{src} ]; then cp #{src} #{dst}; fi"
+  end
   
   run "ln -sf #{shared_path}/xls #{release_path}/tmp/xls"
 end
