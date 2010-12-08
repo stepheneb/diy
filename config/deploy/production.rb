@@ -25,5 +25,5 @@ set(:use_passenger) do
     # Capistrano::CLI.ui.agree( "Use passenger for deployment? (y/n) ", false)
     # We could ask... but nothing else really uses passenger I think..
   # false
-  end
+  # end
 end
