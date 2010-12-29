@@ -39,6 +39,13 @@ namespace :diy do
     end
   end
 
+  desc "Create reports for all reportables if they don't already exist"
+  task :create_reports => :environment do
+    Activity.find(:all).each{|a| a.create_reportable }
+    Model.find(:all).each{|m| m.create_reportable }
+    ExternalOtrunkActivity.find(:all).each{|o| o.create_reportable }
+  end
+
   VENDOR_INTERFACES = [
     ["Fourier Ecolog", 30, ["_auto_"], "fourier_ecolog", 'usb', "SensorImages/EcoLogXL_sm.png",
       "The Fourier EcoLog has several built-in sensors, can read external Fourier sensors, and communicates via USB."],
