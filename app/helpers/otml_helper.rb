@@ -67,6 +67,7 @@ module OtmlHelper
       xml.import("class" => "org.concord.sensor.state.OTSensorRequest")
       xml.import("class" => "org.concord.otrunk.OTInclude")
       # model_types
+      #
       ModelType.find(:all).each do |mt|
         xml.import("class" => mt.otrunk_object_class)
       end
@@ -381,7 +382,7 @@ module OtmlHelper
   def otml_content(xml, content, textile)
     if content
       if textile 
-        xml << process_local_image_urls(RedCloth.new(content).to_html)
+        xml << process_local_image_urls(RedCloth.new(content.rstrip).to_html)
       else
         xml << content
       end
@@ -431,7 +432,7 @@ module OtmlHelper
   def web_content(content, textile=@activity.textile)
     unless content.blank?
       if textile
-        RedCloth.new(content).to_html.gsub("src=\"/", "src=\"#{request.relative_url_root.to_s}/")
+        RedCloth.new(content.rstrip).to_html.gsub("src=\"/", "src=\"#{request.relative_url_root.to_s}/")
       else
   #      content
         simple_format(content)
@@ -495,12 +496,12 @@ module OtmlHelper
       xml.div('style' => "text-align: center; font-style: italic; font-family: Optima; color: rgb(0, 102, 0); margin-top: 0px; margin-bottom: 4px; padding-top: 0px; padding-bottom: 10px; border-style: solid; border-width: 1px; border-color: silver; background-color: rgb(255, 249, 249);") {
         if msg.length > 1
           xml.div('style' => "font-size: #{font_size};") { 
-            xml << RedCloth.new(msg).to_html
+            xml << RedCloth.new(msg.rstrip).to_html
           }
         end
         if has_probes
           xml.div('style' => 'font-size: 1.0em; color: rgb(0, 0, 102);') {
-            xml << RedCloth.new(probeware_msg).to_html
+            xml << RedCloth.new(probeware_msg.rstrip).to_html
           }
         end
       }
@@ -512,7 +513,7 @@ module OtmlHelper
       xml.hr
       xml.div('style' => 'text-align: center; font-style: normal; font-family: Optima; color: rgb(0, 102, 0); margin: 0px 20px 0px 20px; padding: 0px 0px 0px 0px;') { 
         xml.font('size' => '-1') {
-          xml << RedCloth.new("SensorPortfolio (c) 2005-2006 by the Concord Consortium, developed by the \"TEEMSS2\":http://teemss2.concord.org project.\nThis activity was created by #{@activity.user.name} using the #{link_to APP_PROPERTIES[:application_name], {:action => 'index', :only_path => false}, :title => 'tooltip test'} portal.\n" + probeware_msg).to_html
+          xml << RedCloth.new("SensorPortfolio (c) 2005-2006 by the Concord Consortium, developed by the \"TEEMSS2\":http://teemss2.concord.org project.\nThis activity was created by #{@activity.user.name} using the #{link_to APP_PROPERTIES[:application_name], {:action => 'index', :only_path => false}, :title => 'tooltip test'} portal.\n" + probeware_msg.rstrip).to_html
         }
       }
     }
