@@ -301,7 +301,7 @@ module OtmlHelper
       xml.OTSnapshotAlbum(
           "local_id" => "#{id}_snapshot_album",
           "limitEntries" => "true",
-          "limit" => "3"
+          "limit" => "4"
           )
     end
   end
