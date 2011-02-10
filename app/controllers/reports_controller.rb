@@ -21,6 +21,7 @@ class ReportsController < ApplicationController
   end
   
   def setup_object
+    Thread.current[:request] = request
     if params[:id]
       if params[:id].length == 36
         @report = Report.find_by_uuid(params[:id])
