@@ -41,7 +41,16 @@ class Learner < ActiveRecord::Base
   def check_sds_workgroup
     if self.sds_workgroup_id.blank?
       self.sds_workgroup_id = SdsConnect::Connect.create_workgroup(self.user.name, self.runnable.sds_offering_id)
-      SdsConnect::Connect.create_workgroup_membership(self.sds_workgroup_id, self.user.sds_sail_user_id)
+      if self.sds_workgroup_id
+        SdsConnect::Connect.create_workgroup_membership(self.sds_workgroup_id, self.user.sds_sail_user_id)
+        w = SdsConnect::Connect.workgroup(self.sds_workgroup_id)
+        if w
+          wg = w["workgroup"]
+          if wg
+            self.sds_workgroup_uuid = wg["uuid"]
+          end
+        end
+      end   
     end
   end
 end
