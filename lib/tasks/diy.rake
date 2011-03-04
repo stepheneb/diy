@@ -39,6 +39,14 @@ namespace :diy do
     end
   end
 
+  desc "load the sds_workgroup_uuid into the learner models"
+  task :load_sds_workgroup_uuids => :environment do
+    Learner.find(:all).each do |l|
+      l.sds_workgroup_uuid = SdsConnect::Connect.workgroup(l.sds_workgroup_id)["workgroup"]["uuid"] if l.sds_workgroup_id
+      l.save
+    end
+  end
+
   desc "Create reports for all reportables if they don't already exist"
   task :create_reports => :environment do
     Activity.find(:all).each{|a| a.create_reportable }
