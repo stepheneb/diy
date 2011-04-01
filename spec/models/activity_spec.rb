@@ -104,6 +104,8 @@ describe Activity do
     end
 
     it "should have have no reports when saved or updated" do
+      pending
+      # seems like this assertion is no longer valid -- we *DO* make report private acts.
       @activity = Activity.new(@valid_attributes)
       @activity.save  
       Report.find(:all, :conditions => {:reportable_id => @activity.id}).size.should eql 0
