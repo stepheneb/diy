@@ -3,9 +3,9 @@ describe OtrunkReportTemplate  do
 
   describe "class mathods" do
     before(:each) do
-      @diy_template_url = "http://github.com/concord-consortium/itsisu_reports/raw/master/reports/diy-full-report.otml"
+      @diy_template_url = "https://github.com/concord-consortium/itsisu_reports/raw/master/reports/diy-full-report.otml"
       @diy_template_name = "testing template"
-      @pretest_template_url = "http://github.com/concord-consortium/itsisu_reports/raw/master/reports/pre-test-report.otml"
+      @pretest_template_url = "https://github.com/concord-consortium/itsisu_reports/raw/master/reports/pre-test-report.otml"
       @pretest_template_name = "pretest testing template"
     end
 
