@@ -48,7 +48,8 @@ describe Activity do
 
   it "should not throw NPE when misconfigured with futher models" do
     model = mock_model(Model, {
-      :name => 'fake'
+      :name => 'fake',
+      :included_activities => []
     })
     @activity = Activity.create(@valid_attributes)
     @activity.further_model_active = true
