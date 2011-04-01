@@ -56,4 +56,9 @@ class Model < ActiveRecord::Base
   def included_activities
     return (activities + activities_2 + activities_3 + activities_4).compact.uniq.sort { |a,b| a.name <=> b.name }
   end
+
+  def activity_use_count
+    included_activities.size
+  end
+
 end

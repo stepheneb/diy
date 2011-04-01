@@ -66,7 +66,7 @@ class ModelsController < ApplicationController
     current_user.vendor_interface ||= VendorInterface.find(6)
     respond_to do |format|
       format.html # index.rhtml
-      format.xml  { render :xml => @all_viewable_models.to_xml }
+      format.xml  { render :xml => @all_viewable_models.to_xml(:methods => [:activity_use_count])}
     end
   end
 
@@ -77,7 +77,7 @@ class ModelsController < ApplicationController
     @model_activities = @model.included_activities
     respond_to do |format|
       format.html # show.rhtml
-      format.xml  { render :xml => @model.to_xml }
+      format.xml  { render :xml => @model.to_xml(:methods => [:activity_use_count])}
     end
   end
 
