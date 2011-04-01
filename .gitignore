@@ -17,8 +17,15 @@ db/development_structure.sql
 *pro.sql
 
 # reports
-reports/*
-hudson/*
+#hudson/reports/*.xml
+#hudson/reports/*.html
+hudson/reports/spec/*.xml
+hudson/reports/spec/*.hmtl
+hudson/reports/features/*.xml
+hudson/reports/features/*.hmtl
+reports/*.html
+reports/*.xml
+
 
 # misc local resources
 local_resources/*
