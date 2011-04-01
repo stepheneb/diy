@@ -10,7 +10,8 @@
 <div class="activityList">
 <table cellpadding="5" cellspacing="0">
     <% for model in @models
-      model_activities =  model.activities.select {|a| a.contains_active_model(model) } %>
+      model_activities =  model.included_activities
+    %>
     <tr align="left" class="ListLine<%= cycle('0', '1') -%>">
       <td width="20px" >
         <% nobundles_val = (if model.nobundles then "nobundles" else "" end) %>

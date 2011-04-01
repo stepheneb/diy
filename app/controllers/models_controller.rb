@@ -74,7 +74,7 @@ class ModelsController < ApplicationController
   # GET /models/1.xml
   def show
     @model = Model.find(params[:id])
-    @model_activities = @model.activities.select {|a| a.contains_active_model(@model) }
+    @model_activities = @model.included_activities
     respond_to do |format|
       format.html # show.rhtml
       format.xml  { render :xml => @model.to_xml }
