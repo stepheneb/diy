@@ -19,10 +19,10 @@ db/development_structure.sql
 # reports
 #hudson/reports/*.xml
 #hudson/reports/*.html
-hudson/reports/spec/*.xml
-hudson/reports/spec/*.hmtl
-hudson/reports/features/*.xml
-hudson/reports/features/*.hmtl
+hudson/reports/spec/*
+hudson/reports/spec/*
+hudson/reports/features/*
+hudson/reports/features/*
 reports/*.html
 reports/*.xml
 
