@@ -18,7 +18,15 @@ class Model < ActiveRecord::Base
   end
   
 
-  has_many :activities
+  has_many :activities, 
+    :conditions => {:collectdata_model_active => true  }
+  has_many :activities_2, :class_name => "Activity", :foreign_key => :collectdata2_model_id, 
+    :conditions => {:collectdata2_model_active => true }
+  has_many :activities_3, :class_name => "Activity", :foreign_key => :collectdata3_model_id,
+    :conditions => {:collectdata3_model_active => true }
+  has_many :activities_4, :class_name => "Activity", :foreign_key => :further_model_id, 
+    :conditions => {:further_model_active => true}
+  
   belongs_to :user
   belongs_to :model_type
   
@@ -45,4 +53,7 @@ class Model < ActiveRecord::Base
     end
   end
 
+  def included_activities
+    return (activities + activities_2 + activities_3 + activities_4).compact.uniq.sort { |a,b| a.name <=> b.name }
+  end
 end
