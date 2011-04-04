@@ -44,7 +44,8 @@
             <% if model_activities.length == 0 -%>
               <%= link_to 'Delete', model_path(model), :confirm => "Are you sure you want to delete the model: #{model.name}?", :method => :delete %>
             <% else -%>
-              <%= link_to 'Delete', '#', :title => "This model can't be deleted because it is used by #{pluralize(model.activities.length, 'activity')}." %>
+              <% sorry_message = "This model can't be deleted because it is used by #{pluralize(model.activities.length, 'activity')}." %>
+              <%= link_to_function 'Delete', "alert(\"#{sorry_message}\")", :title => sorry_message %>
             <% end -%>
           <% end -%>
         <% end %>
