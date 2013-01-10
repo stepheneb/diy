@@ -110,3 +110,9 @@ require 'diff/lcs'
 require 'diff/lcs/string'
 require 'htmldiff'
 require 'symboldiff'
+
+# see https://groups.google.com/forum/?fromgroups=#!topic/rubyonrails-security/61bkgvnSGTQ
+# security issue (CVE-2013-0156)
+ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING.delete('symbol') 
+ActiveSupport::CoreExtensions::Hash::Conversions::XML_PARSING.delete('yaml') 
+
