@@ -112,7 +112,12 @@ class Activity < ActiveRecord::Base
   end
 
   def contains_active_model(model_object)
-    return model_object.included_activities.include?(self)
+    m = []
+    if collectdata_model_active && model == model_object then m << model end
+    if collectdata2_model_active && second_model == model_object then m << second_model end
+    if collectdata3_model_active then m << third_model.model_type.name end
+    if (further_model_active && fourth_model) then m << fourth_model.model_type.name end
+    m.length > 0
   end
   
   class MyOtmlHelper
