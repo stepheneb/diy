@@ -5,10 +5,24 @@
     <title><%= APP_PROPERTIES[:page_title_prefix] %>: <%= controller.controller_name.humanize %>: <%= controller.action_name %></title>
     <%= stylesheet_link_tag APP_PROPERTIES[:stylesheet] %>
     <%= javascript_include_tag :defaults unless current_user.disable_javascript %>
-    <%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
     <%= yield :head %>
   </head>
   <body>
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-6899787-30']);
+    _gaq.push(['_setDomainName', '<%= APP_PROPERTIES[:home_link].gsub("http:","").gsub("/","") %>']);
+    _gaq.push(['_setAllowLinker', true]);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <%= image_tag 'loading.gif', :id=>'spinner', :style=>"display:none; float:right;" %>
 
 
   <div id="container">
