@@ -13,7 +13,7 @@
 
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-6899787-30']);
-    _gaq.push(['_setDomainName', <%= APP_PROPERTIES[:home_link].gsub("http://","") %>']);
+    _gaq.push(['_setDomainName', '<%= APP_PROPERTIES[:home_link].gsub("http:","").gsub("/","") %>']);
     _gaq.push(['_setAllowLinker', true]);
     _gaq.push(['_trackPageview']);
 
