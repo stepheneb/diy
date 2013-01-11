@@ -43,6 +43,7 @@
 
 # maybe use these recipes because we are using mongrel_cluster on the server
 # where are they documented?
+default_run_options[:pty] = true
 require 'mongrel_cluster/recipes'
 
 set :stages, %w(staging production)
@@ -92,7 +93,7 @@ set :deploy_via, :remote_cache
 # set :user, "httpd"
 # if SSH user defined in ~/.ssh/config use that name as the user
 # otherwise use the user defined in ENV
-set :user, File.open("#{ENV['HOME']}/.ssh/config", 'r') {|f| f.read}[/User (.*)/, 1] || ENV['USER']
+#set :user, File.open("#{ENV['HOME']}/.ssh/config", 'r') {|f| f.read}[/User (.*)/, 1] || ENV['USER']
 
 role :app, "seymour.concord.org"
 role :web, "seymour.concord.org"
